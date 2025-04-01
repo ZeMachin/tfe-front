@@ -10,7 +10,7 @@ import { NavBarItemComponent } from './nav-bar-item/nav-bar-item.component';
 export class NavBarComponent {
   navBarItems: NavBarItem[] = [
     {
-      label: 'House Chores',
+      label: 'Chores',
       icon: 'home',
       link: 'chores'
     },
