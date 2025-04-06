@@ -2,4 +2,11 @@ i {
     font-weight: bold;
     font-size: 2em;
     cursor: pointer;
+    transition: cubic-bezier(0.075, 0.82, 0.165, 1) .5s;
+    height: 1em;
+    width: 1em;
+
+    &.rotate {
+        transform: rotate(90deg);
+    }
 }

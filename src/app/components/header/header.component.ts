@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { VignetteComponent } from "./vignette/vignette.component";
 
 @Component({
@@ -8,5 +8,9 @@ import { VignetteComponent } from "./vignette/vignette.component";
   styleUrl: './header.component.less'
 })
 export class HeaderComponent {
+  @Input('headerSettings') headerSettings: { showNavBar: boolean } = { showNavBar: true };
 
+  toggleNavBar() {
+    this.headerSettings.showNavBar = !this.headerSettings.showNavBar;
+  }
 }
