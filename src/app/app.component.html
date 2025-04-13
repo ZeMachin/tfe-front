@@ -1,7 +1,8 @@
 <div class="main-content">
-  <app-header [headerSettings]="headerSettings"></app-header>
+  <p-toast></p-toast>
+ @if(isLoggedIn()) {<app-header [headerSettings]="headerSettings"></app-header>}
   <div>
-    <app-nav-bar [class]="headerSettings.showNavBar ? '' : 'left-hidden'"></app-nav-bar>
+    @if(isLoggedIn()) {<app-nav-bar [class]="headerSettings.showNavBar ? '' : 'left-hidden'"></app-nav-bar>}
     <router-outlet />
   </div>
 </div>

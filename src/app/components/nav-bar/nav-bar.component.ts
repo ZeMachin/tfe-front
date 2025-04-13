@@ -11,7 +11,7 @@ export class NavBarComponent {
   navBarItems: NavBarItem[] = [
     {
       label: 'Chores',
-      icon: 'home',
+      icon: 'list-check',
       link: 'chores'
     },
     {

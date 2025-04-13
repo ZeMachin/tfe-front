@@ -1,4 +1,5 @@
 <div class="flex flex-row justify-content-between w-full p-3">
     <i [class]="'pi pi-bars ' + (headerSettings.showNavBar ? 'rotate' : '')" (click)="toggleNavBar()"></i>
-    <app-vignette></app-vignette>
+    {{ displayName }}
+    <i class="pi pi-home " (click)="navigateHome()"></i>
 </div>

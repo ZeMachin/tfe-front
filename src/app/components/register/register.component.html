@@ -1,0 +1,66 @@
+<div class="register-wrapper">
+    @if(registerForm) {
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="p-fluid">
+        <div class="p-field">
+            <label for="email">Email</label>
+            <input id="email" type="email" pInputText formControlName="email"
+                [class.p-invalid]="registerForm.get('email')?.invalid && registerForm.get('email')?.touched" />
+            @if (registerForm.get('email')?.invalid && registerForm.get('email')?.touched) {
+            @if (registerForm.get('email')?.errors?.['required']) {<small class="p-error">Email is required.</small>
+            }
+            @if (registerForm.get('email')?.errors?.['email']) {<small class="p-error">Invalid email format.</small>
+            }
+            }
+        </div>
+
+        <div class="p-field">
+            <label for="password">Password</label>
+            <p-password id="password" formControlName="password" [feedback]="false" [inputStyle]="{ width: '100%' }" [toggleMask]="true"
+                [class.p-invalid]="registerForm.get('password')?.invalid && registerForm.get('password')?.touched"></p-password>
+            @if (registerForm.get('password')?.invalid && registerForm.get('password')?.touched) {
+            @if(registerForm.get('password')?.errors?.['required']) {<small class="p-error">Password is
+                required.</small>
+            }
+            @if(registerForm.get('password')?.errors?.['minlength']){<small class="p-error">
+                Password must be at least 6 characters.
+            </small>
+            }
+            }
+        </div>
+
+        <div class="p-field">
+            <label for="password-confirm">Password Confirmation</label>
+            <p-password id="password-confirm" formControlName="passwordConfirm" [feedback]="false"
+                [inputStyle]="{ width: '100%' }"
+                [class.p-invalid]="registerForm.get('password')?.invalid && registerForm.get('password')?.touched" [toggleMask]="true"></p-password>
+            @if (registerForm.get('passwordConfirm')?.invalid && registerForm.get('passwordConfirm')?.touched) {
+            @if(registerForm.get('passwordConfirm')?.errors?.['required']) {<small class="p-error">Password confirmation
+                is required.</small>
+            }
+            }
+            @if (registerForm.invalid && registerForm.get('passwordConfirm')?.touched) {
+            @if(registerForm.errors?.['PasswordNoMatch']) {<small class="p-error">The 2 passwords do not match.</small>
+            }
+            }
+        </div>
+
+        <div class="p-field">
+            <label for="display-name">Family Name</label>
+            <input id="display-name" type="text" pInputText formControlName="displayName"
+                [class.p-invalid]="registerForm.get('displayName')?.invalid && registerForm.get('displayName')?.touched" />
+            @if (registerForm.get('displayName')?.invalid && registerForm.get('displayName')?.touched) {
+            @if(registerForm.get('displayName')?.errors?.['required']) {<small class="p-error">A name for your family is
+                required. You will be able to change it later.</small>
+            }
+            }
+        </div>
+
+        <button type="submit" pButton label="Register" class="p-button-primary"
+            [disabled]="registerForm.invalid"></button>
+    </form>
+    }
+
+    <div>
+        You already have an account for your family? <a href="login">Log in</a>
+    </div>
+</div>
