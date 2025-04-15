@@ -47,7 +47,7 @@ export class LoginComponent implements OnInit {
         this.router.navigateByUrl('login');
       }
     } else {
-      console.log('Form Invalid');
+      console.error('Form invalid');
     }
   }
 }
