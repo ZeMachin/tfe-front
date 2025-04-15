@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { CommunicationService } from './communication.service';
 import { RoutesService } from './routes.service';
+import { UserService } from './user.service';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +14,9 @@ export class AuthService {
 
   constructor(
     private communicationService: CommunicationService,
-    private rs: RoutesService
+    private rs: RoutesService,
+    private userService: UserService,
+    private router: Router
   ) {
     this.isAuthenticated = !!localStorage.getItem(this.authSecretKey);
   }
@@ -31,6 +35,7 @@ export class AuthService {
       const authToken = login.token;
       localStorage.setItem(this.authSecretKey, authToken);
       this.isAuthenticated = true;
+      await this.userService.loadFamily(authToken);
       return true;
     } else {
       return false;
@@ -44,5 +49,7 @@ export class AuthService {
   logout(): void {
     localStorage.removeItem(this.authSecretKey);
     this.isAuthenticated = false;
+    this.userService.family = undefined;
+    this.router.navigateByUrl('login');
   }
 }

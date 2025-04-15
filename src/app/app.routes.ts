@@ -6,10 +6,12 @@ import { ChoresComponent } from './components/chores/chores.component';
 import { LoginComponent } from './components/login/login.component';
 import { AuthGuard } from './guards/auth.guard';
 import { RegisterComponent } from './components/register/register.component';
+import { ConfigureComponent } from './components/configure/configure.component';
 
 export const routes: Routes = [
     { path: 'login', component: LoginComponent },
     { path: 'register', component: RegisterComponent },
+    { path: 'configure', component: ConfigureComponent },
     { path: 'budget', component: BudgetComponent, canActivate: [AuthGuard] },
     { path: 'chores', component: ChoresComponent, canActivate: [AuthGuard] },
     { path: 'settings', component: SettingsComponent, canActivate: [AuthGuard] },

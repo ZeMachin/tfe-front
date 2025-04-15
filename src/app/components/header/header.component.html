@@ -1,5 +1,9 @@
 <div class="flex flex-row justify-content-between w-full p-3">
-    <i [class]="'pi pi-bars ' + (headerSettings.showNavBar ? 'rotate' : '')" (click)="toggleNavBar()"></i>
-    {{ displayName }}
     <i class="pi pi-home " (click)="navigateHome()"></i>
+    {{ displayName }} household
+    <div>
+        <i [class]="'pi pi-bars ' + (headerSettings.showNavBar ? 'rotate' : '')" (click)="toggleNavBar()"></i>
+        <button pButton (click)="logout()">Log Out</button>
+    </div>
+    
 </div>

@@ -19,6 +19,11 @@ export class RoutesService implements OnInit {
     url: `${this.baseUrl}/families/login`,
     method: 'POST'
   };
+
+  getFamily: Connection = {
+    url: `${this.baseUrl}/families/:id`,
+    method: 'GET'
+  };
 }
 
 export interface Connection {

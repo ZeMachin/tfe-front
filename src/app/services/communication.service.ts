@@ -25,7 +25,6 @@ export class CommunicationService {
       case 'GET':
         return firstValueFrom(this.httpClient.get<T>(connection.url));
       case 'POST':
-        console.log("I'm definitely posting")
         return firstValueFrom(this.httpClient.post<T>(connection.url, body));
       case 'PUT':
         return firstValueFrom(this.httpClient.put<T>(connection.url, body));

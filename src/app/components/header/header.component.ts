@@ -1,10 +1,11 @@
 import { Component, Input } from '@angular/core';
-import { VignetteComponent } from "./vignette/vignette.component";
 import { Router } from '@angular/router';
+import { ButtonModule } from 'primeng/button';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-header',
-  imports: [VignetteComponent],
+  imports: [ButtonModule],
   templateUrl: './header.component.html',
   styleUrl: './header.component.less'
 })
@@ -13,7 +14,8 @@ export class HeaderComponent {
   displayName: string =  'Soupart-Bautista';
 
   constructor(
-    private router: Router
+    private router: Router,
+    private authService: AuthService
   ) {}
 
   toggleNavBar() {
@@ -22,5 +24,9 @@ export class HeaderComponent {
 
   navigateHome() {
     this.router.navigateByUrl('home');
+  }
+
+  logout() {
+    this.authService.logout();
   }
 }
