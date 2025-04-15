@@ -1,9 +1,9 @@
 @switch (currentStep) {
     @case (0) {
-        <app-configure-first-member ></app-configure-first-member>
+        <app-configure-first-member (nextStep)="checkStep()"></app-configure-first-member>
     }
     @case (1) {
-        <app-configure-household-type></app-configure-household-type>
+        <app-configure-household-type (nextStep)="checkStep()"></app-configure-household-type>
     }
     @case (2) {
         <app-configure-create-tasks></app-configure-create-tasks>

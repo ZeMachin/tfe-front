@@ -19,7 +19,10 @@ export class ConfigureComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    console.log('family:', this.userService.family);
+    this.checkStep();
+  }
+
+  checkStep(): void {
     this.currentStep = this.userService.family?.configStep;
   }
 

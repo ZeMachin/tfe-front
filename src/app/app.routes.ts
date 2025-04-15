@@ -11,7 +11,7 @@ import { ConfigureComponent } from './components/configure/configure.component';
 export const routes: Routes = [
     { path: 'login', component: LoginComponent },
     { path: 'register', component: RegisterComponent },
-    { path: 'configure', component: ConfigureComponent },
+    { path: 'configure', component: ConfigureComponent, canActivate: [AuthGuard] },
     { path: 'budget', component: BudgetComponent, canActivate: [AuthGuard] },
     { path: 'chores', component: ChoresComponent, canActivate: [AuthGuard] },
     { path: 'settings', component: SettingsComponent, canActivate: [AuthGuard] },

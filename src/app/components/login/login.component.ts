@@ -4,7 +4,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { PasswordModule } from 'primeng/password';
 import { ButtonModule } from 'primeng/button';
 import { AuthService } from '../../services/auth.service';
-import { MessageService, ToastMessageOptions } from 'primeng/api';
+import { MessageService } from 'primeng/api';
 import { Router } from '@angular/router';
 
 @Component({

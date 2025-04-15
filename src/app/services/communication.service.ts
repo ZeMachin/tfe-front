@@ -12,7 +12,7 @@ export class CommunicationService {
     private httpClient: HttpClient
   ) { }
 
-  call<T>(connection: Connection, body: any, params: { [key: string]: string | number } = {}, queryParams: { [key: string]: string | number } = {}): Promise<T> {
+  call<T>(connection: Connection, body: any = {}, params: { [key: string]: string | number } = {}, queryParams: { [key: string]: string | number } = {}): Promise<T> {
     for (const param of Object.keys(params)) 
       connection.url = connection.url.replace(':' + param, params[param].toString());
 

@@ -18,7 +18,7 @@ export class AuthService {
     private userService: UserService,
     private router: Router
   ) {
-    this.isAuthenticated = !!sessionStorage.getItem(this.authSecretKey);
+    this.isAuthenticated = !!localStorage.getItem(this.authSecretKey);
   }
 
   register(registerForm: {
@@ -33,7 +33,7 @@ export class AuthService {
     const login = await this.communicationService.call<{ success: boolean, message: string, token: string | undefined }>(this.rs.login, { email, password });
     if (login.success && login.token) {
       const authToken = login.token;
-      sessionStorage.setItem(this.authSecretKey, authToken);
+      localStorage.setItem(this.authSecretKey, authToken);
       this.isAuthenticated = true;
       await this.userService.loadFamily(authToken);
       return true;
@@ -47,9 +47,12 @@ export class AuthService {
   }
 
   logout(): void {
-    sessionStorage.removeItem(this.authSecretKey);
+    localStorage.removeItem(this.authSecretKey);
+    localStorage.removeItem('family');
+    localStorage.removeItem('member');
     this.isAuthenticated = false;
     this.userService.family = undefined;
+    this.userService.member = undefined;
     this.router.navigateByUrl('login');
   }
 }

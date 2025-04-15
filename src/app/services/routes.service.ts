@@ -24,6 +24,36 @@ export class RoutesService implements OnInit {
     url: `${this.baseUrl}/families/:id`,
     method: 'GET'
   };
+
+  updateFamily: Connection = {
+    url: `${this.baseUrl}/families/:id`,
+    method: 'PUT'
+  };
+
+  getFamilyMemberStatuses: Connection = {
+    url: `${this.baseUrl}/families/statuses`,
+    method: 'GET'
+  };
+
+  createFamilyMember: Connection = {
+    url: `${this.baseUrl}/families/:id/member`,
+    method: 'POST'
+  };
+  
+  createMemberAndMoveToNextStep: Connection = {
+    url: `${this.baseUrl}/families/:id/member_and_next_step`,
+    method: 'POST'
+  };
+
+  getFamilyMember: Connection = {
+    url: `${this.baseUrl}/families/member/:id`,
+    method: 'GET'
+  };
+
+  updateFamilyMember: Connection = {
+    url: `${this.baseUrl}/families/member/:id`,
+    method: 'PUT'
+  };
 }
 
 export interface Connection {
