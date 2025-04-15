@@ -4,7 +4,7 @@ import { UserService } from '../../services/user.service';
 import { AuthService } from '../../services/auth.service';
 import { MessageService } from 'primeng/api';
 
-const NUMBER_OF_CONFIGURATION_STEPS = 8;
+const NUMBER_OF_CONFIGURATION_STEPS = 5;
 
 @Component({
   selector: 'app-home',

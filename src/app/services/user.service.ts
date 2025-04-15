@@ -10,10 +10,15 @@ export class UserService {
 
   constructor(
     private familyService: FamilyService
-  ) { }
+  ) {
+    const familyStorage = sessionStorage.getItem('family');
+    if (familyStorage)
+      this.family = JSON.parse(familyStorage);
+  }
 
   async loadFamily(id: string | number): Promise<void> {
     this.family = await this.familyService.getFamily(id);
+    sessionStorage.setItem('family', JSON.stringify(this.family));
   }
 
   family?: Family;

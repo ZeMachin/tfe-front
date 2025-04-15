@@ -1,1 +1,20 @@
-<p>configure works!</p>
+@switch (currentStep) {
+    @case (0) {
+        <app-configure-first-member ></app-configure-first-member>
+    }
+    @case (1) {
+        <app-configure-household-type></app-configure-household-type>
+    }
+    @case (2) {
+        <app-configure-create-tasks></app-configure-create-tasks>
+    }
+    @case (3) {
+        <app-configure-leaderboard></app-configure-leaderboard>
+    }
+    @case (4) {
+        <app-configure-rewards></app-configure-rewards>
+    }
+    @case (5) {
+        <app-configure-summary></app-configure-summary>
+    }
+}
