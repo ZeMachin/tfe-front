@@ -1,0 +1,23 @@
+<div class="task">
+    <div class="task-name">
+        @if(editingName) {
+        <input type="text" pInputText [(ngModel)]="task.name" />
+        <p-button icon="pi pi-check" (onClick)="toggleEditingName()" />
+        } @else {
+        <h3>{{task.name}}</h3>
+        <p-button icon="pi pi-pencil" (onClick)="toggleEditingName()" />
+        }
+    </div>
+
+    <div class="task-metrics">
+        @for (metric of task.metrics; track $index) {
+            <div class="task-metric">
+                <label [for]="metric.name">{{ metric.name }}</label>
+                <p-inputnumber [(ngModel)]="metric.weight" [min]="0" [max]="10" />
+                <p-slider [(ngModel)]="metric.weight" [step]="1" [min]="0" [max]="10"/>
+            </div>
+        }
+    </div>
+
+    <p-button icon="pi pi-save" (onClick)="save()" />
+</div>

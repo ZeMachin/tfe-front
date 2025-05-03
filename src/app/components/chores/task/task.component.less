@@ -1,0 +1,31 @@
+.task {
+    border: solid 1px grey;
+    border-radius: 1em;
+    padding: 1em;
+    width: fit-content;
+    margin: 1em;
+
+    .task-name {
+        display: flex;
+
+        > * {
+            margin: 1em;
+        }
+    }
+
+    .task-metrics {
+        display: flex;
+        flex-direction: column;
+
+        .task-metric {
+            display: flex;
+            flex-direction: column;
+            margin: 1em;
+
+            > * {
+                margin-bottom: .5em;
+            }
+            
+        }
+    }
+}

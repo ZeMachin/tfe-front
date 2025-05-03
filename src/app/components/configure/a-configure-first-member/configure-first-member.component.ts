@@ -4,13 +4,12 @@ import { UserService } from '../../../services/user.service';
 import { ButtonModule } from 'primeng/button';
 import { ColorPickerModule } from 'primeng/colorpicker';
 import { InputOtpModule } from 'primeng/inputotp';
-import { SelectModule } from 'primeng/select';
 import { FamilyMemberStatus } from '../../../models/FamilyMemberStatus';
 import { FamilyService } from '../../../services/family.service';
 
 @Component({
   selector: 'app-configure-first-member',
-  imports: [ReactiveFormsModule, ButtonModule, ColorPickerModule, InputOtpModule, SelectModule],
+  imports: [ReactiveFormsModule, ButtonModule, ColorPickerModule, InputOtpModule],
   templateUrl: './configure-first-member.component.html',
   styleUrl: './configure-first-member.component.less'
 })
@@ -40,8 +39,10 @@ export class ConfigureFirstMemberComponent implements OnInit {
     if (this.form?.valid) {
       if(this.userService.family) {
         const member = await this.familyService.createMemberAndMoveToNextStep(this.userService.family, this.form.value); // TODO: handle error
+        console.log('member:', member)
         this.userService.member = member;
         await this.userService.refreshFamily();
+        await this.userService.refreshMember();
         this.nextStep.emit();
       } else {
         // TODO: handle error

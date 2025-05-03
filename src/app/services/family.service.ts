@@ -4,6 +4,9 @@ import { RoutesService } from './routes.service';
 import { Family } from '../models/Family';
 import { FamilyMemberStatus } from '../models/FamilyMemberStatus';
 import { FamilyMember } from '../models/FamilyMember';
+import { HouseholdType } from '../models/HouseholdType';
+import { Task } from '../models/Task';
+import { Metric } from '../models/Metric';
 
 @Injectable({
   providedIn: 'root'
@@ -41,5 +44,45 @@ export class FamilyService {
 
   updateFamilyMember(member: FamilyMember): Promise<FamilyMember> {
     return this.communicationService.call(this.rs.updateFamilyMember, member, { id: member.id });
+  }
+
+  getHouseholdTypes(): Promise<HouseholdType[]> {
+    return this.communicationService.call(this.rs.getHouseholdTypes);
+  }
+
+  pickHousehold(family: Family): Promise<Family> {
+    return this.communicationService.call(this.rs.pickHousehold, family, { id: family.id });
+  }
+
+  getFamilyTasks(family: Family): Promise<Task[]> {
+    return this.communicationService.call(this.rs.getFamilyTasks, {}, { family_id: family.id });
+  }
+
+  createFamilyTask(family: Family, task: Task): Promise<Task> {
+    return this.communicationService.call(this.rs.createFamilyTask, task, { family_id: family.id });
+  }
+
+  updateFamilyTask(family: Family, task: Task): Promise<Task> {
+    return this.communicationService.call(this.rs.updateFamilyTask, task, { family_id: family.id, task_id: task.id });
+  }
+
+  deleteFamilyTask(family: Family, task: Task): Promise<Task> {
+    return this.communicationService.call(this.rs.deleteFamilyTask, {}, { family_id: family.id, task_id: task.id });
+  }
+
+  getFamilyMetrics(family: Family): Promise<Metric[]> {
+    return this.communicationService.call(this.rs.getFamilyMetrics, {}, { family_id: family.id });
+  }
+
+  createFamilyMetric(family: Family, metric: Metric): Promise<Metric> {
+    return this.communicationService.call(this.rs.createFamilyMetric, metric, { family_id: family.id });
+  }
+
+  updateFamilyMetric(family: Family, metric: Metric): Promise<Metric> {
+    return this.communicationService.call(this.rs.updateFamilyMetric, metric, { family_id: family.id, task_id: metric.id });
+  }
+
+  deleteFamilyMetric(family: Family, metric: Metric): Promise<Metric> {
+    return this.communicationService.call(this.rs.deleteFamilyMetric, {}, { family_id: family.id, task_id: metric.id });
   }
 }

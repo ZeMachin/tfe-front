@@ -22,8 +22,8 @@ export class HeaderComponent {
     private authService: AuthService,
     private userService: UserService
   ) {
-    this.family = this.userService.family;
-    this.member = this.userService.member;
+    this.family = this.userService.family; // TODO: use signal to refresh value automatically
+    this.member = this.userService.member; // TODO: use signal to refresh value automatically
   }
 
   toggleNavBar() {

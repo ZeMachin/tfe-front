@@ -1,1 +1,17 @@
-<p>configure-create-tasks works!</p>
+<div>
+    <p>
+        Task tutorial!
+    </p>
+    <p>
+        Here are some default tasks. You can already edit or delete them or even create new ones! 
+    </p>
+    <p>
+        Don't worry, you will be able to change them in the future from the settings menu.
+    </p>
+
+    <div class="tasks">
+        @for(task of tasks; track $index) {
+            <app-task [task]="task"></app-task>
+        }
+    </div>
+</div>

@@ -16,7 +16,7 @@ import { MessageService } from 'primeng/api';
 })
 export class AppComponent {
   title = 'tfe';
-  headerSettings = { showNavBar: true };
+  headerSettings = { showNavBar: false };
 
   constructor(
     private authService: AuthService

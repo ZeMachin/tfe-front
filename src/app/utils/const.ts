@@ -1,0 +1,1 @@
+export const NUMBER_OF_CONFIGURATION_STEPS = 5;

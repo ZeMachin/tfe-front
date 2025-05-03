@@ -1,4 +1,4 @@
-import { Injectable, OnInit } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Family } from '../models/Family';
 import { FamilyMember } from '../models/FamilyMember';
 import { FamilyService } from './family.service';
@@ -6,7 +6,7 @@ import { FamilyService } from './family.service';
 @Injectable({
   providedIn: 'root'
 })
-export class UserService implements OnInit {
+export class UserService {
   family?: Family;
   member?: FamilyMember;
 
@@ -16,16 +16,13 @@ export class UserService implements OnInit {
     const familyStorage = localStorage.getItem('family');
     if (familyStorage) {
       this.family = JSON.parse(familyStorage);
+      this.refreshFamily();
     }
     const memberStorage = localStorage.getItem('member');
     if (memberStorage) {
       this.member = JSON.parse(memberStorage);
+      this.refreshMember();
     }
-  }
-
-  ngOnInit(): void {
-    if(this.family) this.refreshFamily();
-    if(this.member) this.refreshMember();
   }
 
   async loadFamily(id: string | number): Promise<void> {

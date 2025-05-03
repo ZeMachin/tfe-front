@@ -54,6 +54,56 @@ export class RoutesService implements OnInit {
     url: `${this.baseUrl}/families/member/:id`,
     method: 'PUT'
   };
+
+  getHouseholdTypes: Connection = {
+    url: `${this.baseUrl}/families/household_types`,
+    method: 'GET'
+  };
+
+  pickHousehold: Connection = {
+    url: `${this.baseUrl}/families/pick_household/:id`,
+    method: 'PUT'
+  };
+
+  getFamilyTasks: Connection = {
+    url: `${this.baseUrl}/tasks/family/:family_id`,
+    method: 'GET'
+  };
+
+  createFamilyTask: Connection = {
+    url: `${this.baseUrl}/tasks/family/:family_id`,
+    method: 'POST'
+  };
+
+  updateFamilyTask: Connection = {
+    url: `${this.baseUrl}/tasks/family/:family_id/task/:task_id`,
+    method: 'PUT'
+  };
+
+  deleteFamilyTask: Connection = {
+    url: `${this.baseUrl}/tasks/family/:family_id/task/:task_id`,
+    method: 'DELETE'
+  };
+
+  getFamilyMetrics: Connection = {
+    url: `${this.baseUrl}/metrics/family/:family_id`,
+    method: 'GET'
+  };
+
+  createFamilyMetric: Connection = {
+    url: `${this.baseUrl}/metrics/family/:family_id`,
+    method: 'POST'
+  };
+
+  updateFamilyMetric: Connection = {
+    url: `${this.baseUrl}/metrics/family/:family_id/task/:task_id`,
+    method: 'PUT'
+  };
+
+  deleteFamilyMetric: Connection = {
+    url: `${this.baseUrl}/metrics/family/:family_id/task/:task_id`,
+    method: 'DELETE'
+  };
 }
 
 export interface Connection {
