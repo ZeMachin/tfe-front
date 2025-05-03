@@ -1,9 +1,14 @@
 .task {
     border: solid 1px grey;
+    &.new-task {
+        border-color: orange;
+    }
     border-radius: 1em;
     padding: 1em;
     width: fit-content;
     margin: 1em;
+    display: flex;
+    flex-direction: column;
 
     .task-name {
         display: flex;
@@ -19,13 +24,18 @@
 
         .task-metric {
             display: flex;
-            flex-direction: column;
-            margin: 1em;
+            flex-direction: row;
 
-            > * {
-                margin-bottom: .5em;
+            .task-metric-slider {
+                display: flex;
+                flex-direction: column;
+                margin: 1em;
+    
+                > * {
+                    margin-bottom: .5em;
+                }
+                
             }
-            
         }
     }
 }

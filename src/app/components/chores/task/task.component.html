@@ -1,4 +1,6 @@
-<div class="task">
+<div [class]="this.task.new ? 'task new-task' : 'task'">
+    <p-button icon="pi pi-times" (onClick)="openDeleteConfirmDialog()" />
+
     <div class="task-name">
         @if(editingName) {
         <input type="text" pInputText [(ngModel)]="task.name" />
@@ -11,13 +13,25 @@
 
     <div class="task-metrics">
         @for (metric of task.metrics; track $index) {
-            <div class="task-metric">
+        <div class="task-metric">
+            <div class="task-metric-slider">
                 <label [for]="metric.name">{{ metric.name }}</label>
                 <p-inputnumber [(ngModel)]="metric.weight" [min]="0" [max]="10" />
-                <p-slider [(ngModel)]="metric.weight" [step]="1" [min]="0" [max]="10"/>
+                <p-slider [(ngModel)]="metric.weight" [step]="1" [min]="0" [max]="10" />
             </div>
+            <p-button icon="pi pi-trash" (onClick)="removeMetric(metric)" />
+        </div>
         }
     </div>
 
+    @if(unusedMetrics.length) {
+    <div>
+        <p-select [options]="unusedMetrics" [(ngModel)]="selectedMetric" optionLabel="name"
+            placeholder="Select a metric" />
+        <p-button icon="pi pi-plus" (onClick)="addMetric()" />
+    </div>
+    }
+
     <p-button icon="pi pi-save" (onClick)="save()" />
 </div>
+<p-confirmdialog />
