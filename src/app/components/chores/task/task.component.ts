@@ -12,6 +12,7 @@ import { Metric } from '../../../models/Metric';
 import { SelectModule } from 'primeng/select';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import * as _ from 'lodash';
+import { fakeAsync } from '@angular/core/testing';
 
 @Component({
   selector: 'app-task',
@@ -22,7 +23,7 @@ import * as _ from 'lodash';
 })
 export class TaskComponent implements OnInit {
   @Input('task') task!: Task;
-  @Output('onDelete') onDelete: EventEmitter<string> = new EventEmitter();
+  @Output('onDelete') onDelete: EventEmitter<boolean> = new EventEmitter();
 
   metrics: Metric[] = [];
   unusedMetrics: Metric[] = [];
@@ -30,6 +31,7 @@ export class TaskComponent implements OnInit {
 
   editingName: boolean = false;
   sending: boolean = false;
+  hasChanged: boolean = false;
 
   constructor(
     private familyService: FamilyService,
@@ -45,6 +47,10 @@ export class TaskComponent implements OnInit {
     }
   }
 
+  onNameChange() {
+    this.hasChanged = true;
+  }
+ 
   toggleEditingName() {
     this.editingName = !this.editingName;
   }
@@ -55,10 +61,12 @@ export class TaskComponent implements OnInit {
       this.selectedMetric.weight = 1;
       this.task.metrics.push(this.selectedMetric);
       this.selectedMetric = undefined;
+      this.hasChanged = true;
     }
   }
 
   removeMetric(metric: Metric) {
+    this.hasChanged = true;
     _.remove(this.task.metrics, metric);
     this.refreshUnusedMetrics();
   }
@@ -78,6 +86,7 @@ export class TaskComponent implements OnInit {
           detail: this.task.new ? 'The new task has been created successfully!' : 'The task has been updated successfully!'
         });
         this.task.new = false;
+        this.hasChanged = false;
       } catch (err) {
         this.messageService.add({
           severity: 'error',
@@ -107,6 +116,7 @@ export class TaskComponent implements OnInit {
           summary: 'Deleted',
           detail: 'The task has been deleted successfully!'
         });
+        this.onDelete.emit(false);
       } catch (err) {
         this.messageService.add({
           severity: 'error',
@@ -114,8 +124,12 @@ export class TaskComponent implements OnInit {
           detail: 'Something went wrong, the task has not been deleted. Please try again.'
         });
       } finally {
-        this.onDelete.emit('deleted');
+        // this.onDelete.emit(false);
       }
     }
+  }
+
+  deleteNewTask() {
+    this.onDelete.emit(true);
   }
 }

@@ -1,10 +1,10 @@
-<div [class]="this.task.new ? 'task new-task' : 'task'">
-    <p-button icon="pi pi-times" (onClick)="openDeleteConfirmDialog()" />
+<div [class]="this.task.new ? 'task new-task' : this.hasChanged ? 'task changed-task' :'task'">
+    <p-button icon="pi pi-times" (onClick)="task.new ?  deleteNewTask() : openDeleteConfirmDialog()" />
 
     <div class="task-name">
         @if(editingName) {
-        <input type="text" pInputText [(ngModel)]="task.name" />
-        <p-button icon="pi pi-check" (onClick)="toggleEditingName()" />
+        <input type="text" pInputText [(ngModel)]="task.name" (change)="onNameChange()"/>
+        <p-button icon="pi pi-check" (onClick)="toggleEditingName()"/>
         } @else {
         <h3>{{task.name}}</h3>
         <p-button icon="pi pi-pencil" (onClick)="toggleEditingName()" />
