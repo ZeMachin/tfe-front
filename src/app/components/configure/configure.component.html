@@ -6,15 +6,15 @@
         <app-configure-household-type (nextStep)="checkStep()"></app-configure-household-type>
     }
     @case (2) {
-        <app-configure-create-tasks></app-configure-create-tasks>
+        <app-configure-create-tasks (nextStep)="checkStep()"></app-configure-create-tasks>
     }
     @case (3) {
-        <app-configure-leaderboard></app-configure-leaderboard>
+        <app-configure-leaderboard (nextStep)="checkStep()"></app-configure-leaderboard>
     }
     @case (4) {
-        <app-configure-rewards></app-configure-rewards>
+        <app-configure-rewards (nextStep)="checkStep()"></app-configure-rewards>
     }
     @case (5) {
-        <app-configure-summary></app-configure-summary>
+        <app-configure-summary (nextStep)="checkStep()"></app-configure-summary>
     }
 }

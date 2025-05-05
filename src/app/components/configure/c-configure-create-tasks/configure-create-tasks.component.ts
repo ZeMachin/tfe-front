@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FamilyService } from '../../../services/family.service';
 import { Task } from '../../../models/Task';
 import { UserService } from '../../../services/user.service';
@@ -13,6 +13,7 @@ import _ from 'lodash';
   styleUrl: './configure-create-tasks.component.less'
 })
 export class ConfigureCreateTasksComponent implements OnInit {
+  @Output('nextStep') nextStep: EventEmitter<any> = new EventEmitter();
 
   tasks: Task[] = [];
 
@@ -45,9 +46,18 @@ export class ConfigureCreateTasksComponent implements OnInit {
 
   onDeleteTask($event: boolean, task: Task) {
     // if ($event) {
-      _.remove(this.tasks, task);
+    _.remove(this.tasks, task);
     // } else {
     //   this.refreshTasks();
     // }
+  }
+
+  async onNextStep() {
+    const family = this.userService.family;
+    if (family) {
+      family.configStep++;
+      await this.familyService.updateFamily(family);
+      this.nextStep.emit();
+    }
   }
 }
