@@ -55,7 +55,7 @@ export class ConfigureCreateTasksComponent implements OnInit {
   async onNextStep() {
     const family = this.userService.family;
     if (family) {
-      family.configStep++;
+      family.configStep = 3;
       await this.familyService.updateFamily(family);
       this.nextStep.emit();
     }

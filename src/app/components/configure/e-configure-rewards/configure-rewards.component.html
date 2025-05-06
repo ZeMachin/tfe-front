@@ -1,1 +1,20 @@
-<p>configure-rewards works!</p>
+<div>
+    <p>
+        Rewards tutorial!
+    </p>
+    <p>
+        Here are some default rewards. You can already edit or delete them or even create new ones! 
+    </p>
+    <p>
+        Don't worry, you will be able to change them in the future from the settings menu.
+    </p>
+
+    <div class="rewards">
+        @for(reward of rewards; track $index) {
+            <app-reward [reward]="reward" (onDelete)="onDeleteReward($event, reward)"></app-reward>
+        }
+        <p-button icon="pi pi-plus" (onClick)="addReward()" />
+    </div>
+    
+    <button type="submit" pButton label="Next step" class="p-button-primary" (click)="onNextStep()"></button>
+</div>

@@ -27,6 +27,8 @@ export class UserService {
 
   async loadFamily(id: string | number): Promise<void> {
     this.family = await this.familyService.getFamily(id);
+    // if(!this.family) this.authService.logout(); // TODO: fix circular dependency
+    // else 
     localStorage.setItem('family', JSON.stringify(this.family));
   }
 

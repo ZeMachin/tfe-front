@@ -104,6 +104,26 @@ export class RoutesService implements OnInit {
     url: `${this.baseUrl}/metrics/family/:family_id/task/:task_id`,
     method: 'DELETE'
   };
+
+  getFamilyRewards: Connection = {
+    url: `${this.baseUrl}/rewards/family/:family_id`,
+    method: 'GET'
+  };
+  
+  createFamilyReward: Connection = {
+    url: `${this.baseUrl}/rewards/family/:family_id`,
+    method: 'POST'
+  };
+  
+  updateFamilyReward: Connection = {
+    url: `${this.baseUrl}/rewards/family/:family_id/reward/:reward_id`,
+    method: 'PUT'
+  };
+  
+  deleteFamilyReward: Connection = {
+    url: `${this.baseUrl}/rewards/family/:family_id/reward/:reward_id`,
+    method: 'DELETE'
+  };
 }
 
 export interface Connection {

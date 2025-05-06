@@ -7,6 +7,7 @@ import { FamilyMember } from '../models/FamilyMember';
 import { HouseholdType } from '../models/HouseholdType';
 import { Task } from '../models/Task';
 import { Metric } from '../models/Metric';
+import { Reward } from '../models/Reward';
 
 @Injectable({
   providedIn: 'root'
@@ -18,7 +19,7 @@ export class FamilyService {
       private rs: RoutesService,
     ) { }
 
-  getFamily(id: string | number): Promise<Family> {
+  getFamily(id: string | number): Promise<Family | undefined> {
     return this.communicationService.call(this.rs.getFamily, {}, { id });
   }
 
@@ -84,5 +85,21 @@ export class FamilyService {
 
   deleteFamilyMetric(family: Family, metric: Metric): Promise<Metric> {
     return this.communicationService.call(this.rs.deleteFamilyMetric, {}, { family_id: family.id, task_id: metric.id });
+  }
+
+  getFamilyRewards(family: Family): Promise<Reward[]> {
+    return this.communicationService.call(this.rs.getFamilyRewards, {}, { family_id: family.id });
+  }
+
+  createFamilyReward(family: Family, reward: Reward): Promise<Reward> {
+    return this.communicationService.call(this.rs.createFamilyReward, reward, { family_id: family.id });
+  }
+
+  updateFamilyReward(family: Family, reward: Reward): Promise<Reward> {
+    return this.communicationService.call(this.rs.updateFamilyReward, reward, { family_id: family.id, reward_id: reward.id });
+  }
+
+  deleteFamilyReward(family: Family, reward: Reward): Promise<Reward> {
+    return this.communicationService.call(this.rs.deleteFamilyReward, {}, { family_id: family.id, reward_id: reward.id });
   }
 }

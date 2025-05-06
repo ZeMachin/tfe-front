@@ -1,0 +1,27 @@
+<div [class]="this.reward.new ? 'reward new-reward' : this.hasChanged ? 'reward changed-reward' :'reward'">
+    <p-button icon="pi pi-times" (onClick)="reward.new ?  deleteNewReward() : openDeleteConfirmDialog()" />
+
+    <div class="reward-name">
+        @if(editingName) {
+        <input type="text" pInputText [(ngModel)]="reward.name" (change)="onPropertyChange()" />
+        <p-button icon="pi pi-check" (onClick)="toggleEditingName()" />
+        } @else {
+        <h3>{{reward.name}}</h3>
+        <p-button icon="pi pi-pencil" (onClick)="toggleEditingName()" />
+        }
+    </div>
+
+    <p-inputnumber [(ngModel)]="reward.value" [min]="0" (onInput)="onPropertyChange($event)"/>
+    
+    <div class="reward-stock-limit-switch">
+        <label for="leaderboard">Limit reward quantity?</label>
+        <p-toggleswitch id="leaderboard" [(ngModel)]="isStockLimited" (onChange)="onToggleStock()"/>
+    </div>
+    
+    @if(isStockLimited) {
+        <p-inputnumber [(ngModel)]="reward.currentStock" [min]="0" (onInput)="onPropertyChange($event)"/>
+    }
+
+    <p-button icon="pi pi-save" (onClick)="save()" [disabled]="sending"/>
+</div>
+<p-confirmdialog />

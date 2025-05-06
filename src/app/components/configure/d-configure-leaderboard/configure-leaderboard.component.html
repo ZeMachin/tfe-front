@@ -1,1 +1,26 @@
-<p>configure-leaderboard works!</p>
+<div class="leaderboard-content">
+    <p>
+        Leaderboard tutorial!
+    </p>
+    <p>
+        The leaderboard will allow you to see how you rank compared to other members of your household in doing your
+        chores!
+        <br>
+        Seasonal leaderboards will be implemented soon!
+    </p>
+    <p>
+        If you don't think chores should be a competition, it's totally fair.
+    </p>
+    <p>
+        Don't worry, you can enable or disable this feature from the settings menu if you change your mind later on.
+    </p>
+
+    <div class="leaderboard-switch">
+        <label for="leaderboard">Activate leaderboards?</label>
+        <p-toggleswitch id="leaderboard" [(ngModel)]="family.settings.leaderboard" />
+    </div>
+
+    <div>
+        <button type="submit" pButton label="Next step" class="p-button-primary" (click)="onNextStep()"></button>
+    </div>
+</div>
