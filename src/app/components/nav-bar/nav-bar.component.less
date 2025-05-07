@@ -1,67 +1,100 @@
+@expandedWidth: 300px;
+
 .nav-bar {
-    padding: 1rem;
-    height: 100vw;
-    background-color: rgba(18, 18, 18, .7);
+    height: 100vh;
+    background-color: rgba(60, 60, 60, .9);
     width: 100%;
     transition: width 246ms .5s ease;
-
-    * {
-        opacity: 1;
-    }
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 
     &.expand {
-        width: 275px;
+        width: @expandedWidth;
     }
 
-    .icon {
-        @hover-background-color: rgba(151, 151, 151, 0.377);
-        height: 40px;
-        width: 40px;
-        align-items: center;
-        justify-content: center;
-        display: flex;
+    .bar {
+        .icon {
+            @totalPadding: 16px;
+            @percentPaddingBackground: .5;
+            padding: (@totalPadding * @percentPaddingBackground);
+            @hover-background-color: rgba(32, 32, 32);
+            height: 72px;
+            width: 72px;
+            align-items: center;
+            justify-content: center;
+            display: flex;
 
-        &:hover {
-            background-color: @hover-background-color;
-            border-radius: 20px;
+            .icon-background {
+                height: 40px;
+                width: 40px;
+                padding: (@totalPadding * (1 - @percentPaddingBackground));
+
+                &:hover {
+                    background-color: @hover-background-color;
+                    border-radius: 50px;
+                }
+
+                i {
+                    font-weight: bold;
+                    font-size: 1.5em;
+                    cursor: pointer;
+                    transition: cubic-bezier(0.075, 0.82, 0.165, 1) .5s;
+                    height: 1em;
+                    width: 1em;
+
+                    &.rotate {
+                        transform: rotate(90deg);
+                    }
+                }
+            }
         }
-    
-        i {
-            font-weight: bold;
-            font-size: 1.5em;
-            cursor: pointer;
-            transition: cubic-bezier(0.075, 0.82, 0.165, 1) .5s;
-            height: 1em;
-            width: 1em;
-        
-            &.rotate {
-                transform: rotate(90deg);
+
+        .primnav {
+            height: 58px;
+            width: 100vw;
+            transition: height 246ms .5s ease;
+
+            position: fixed;
+            font-size: .8em;
+            text-transform: uppercase;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+            overflow-y: hidden;
+            box-sizing: border-box;
+            z-index: 1;
+
+            @media (min-width: 650px) {
+                height: 100vh;
+                width: 70px;
+                transition: width 246ms .5s ease;
+            }
+  
+            > ul {
+              height: 100%;
+              overflow-y: auto;
+              overflow-x: hidden;
+              padding-inline-start: 0;
+            }
+
+            &.expand {
+                height: 100vh;
+
+                @media (min-width: 650px) {
+                    width: @expandedWidth;
+                }
+            }
+
+            .nav-bar-item {
+                transition: cubic-bezier(0.075, 0.82, 0.165, 1) .5s;
+                width: 100%;
+                display: flex;
             }
         }
     }
 
-    .nav-bar-item {
-        transition: cubic-bezier(0.075, 0.82, 0.165, 1) .5s;
-        height: 5em;
-        width: 100%;
-        display: flex;
-    }
-
-    &.left-hidden {
-        // border: none;
+    .footer {
+        padding: 1rem;
     }
 }
-
-//     & ~ nav.primnav {
-//       height: 100vh;
-//       @include media-sm {
-//         width: 275px;
-//       }
-      
-//       .secnav > li {
-//         @include media-sm {
-//           @include transition-max-height;
-//           max-height: 100px;
-//         }
-//       }
-//     }

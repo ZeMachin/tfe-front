@@ -1,10 +1,20 @@
 <div [class]="'nav-bar ' + (expand  ? 'expand' : '')">
-    <div class="icon">
-        <i [class]="'pi pi-bars ' + (expand ? 'rotate' : '')" (click)="toggleNavBar()"></i>
+    <div class="bar">
+        <div class="icon">
+            <div class="icon-background">
+                <i [class]="'pi pi-bars ' + (expand ? 'rotate' : '')" (click)="toggleNavBar()"></i>
+            </div>
+            
+        </div>
+        <nav [class]="'primnav ' + (expand ? 'expand' : '')">
+            <ul>
+                @for(item of navBarItems; track $index) {
+                    <li nav-bar-item [item]="item" [iconOnly]="!expand" class="nav-bar-item"></li>
+                }
+            </ul>
+        </nav>
     </div>
-    
-    @for(item of navBarItems; track $index) {
-        <app-nav-bar-item [label]="item.label" [icon]="item.icon" [link]="item.link" [iconOnly]="!expand" class="nav-bar-item"></app-nav-bar-item>
-    }
+    <div class="footer">v1.0.0</div>
 </div>
+
 

@@ -1,48 +1,88 @@
-.transition-max-height(@i) when (@i < 10) {
+.transition-max-height(@i) when (@i > 0) {
     &:nth-child(@{i}) {
         transition: max-height .5s (.65 + @i * .02)s ease-in;
     }
-    .transition-max-height((@i + 1));
+
+    .transition-max-height((@i - 1));
+}
+
+@background-color-hover: rgb(32, 32, 32);
+
+.sidebar-hover {
+    background-color: @background-color-hover;
 }
 
 .nav-bar-item-content {
-    padding-left: 8px;
-    padding-top: .5em;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
+    padding: 2em 24px;
+    display: list-item;
     width: 100%;
     cursor: pointer;
     transition: cubic-bezier(0.075, 0.82, 0.165, 1) .5s;
     overflow-x: hidden;
+    overflow-y: hidden;
+
+    a {
+        display: flex;
+        position: relative;
+        white-space: nowrap;
+        text-decoration: none;
+        text-transform: initial;
+        color: inherit;
+    }
+
+    &:hover {
+        .sidebar-hover();
+    }
 
     .icon {
         font-weight: bold;
-        font-size: 1.25em;
+        font-size: 1.5em;
     }
 
     .label {
-        margin-left: 1rem;
+        margin-left: 1.7rem;
         font-weight: bold;
-        font-size: 1.15em;
-        // max-height: 0;
-
-        &.expand {
-            // max-height: 100px;
-        }
+        font-size: 1.5em;
+        margin-bottom: .5em;
     }
 
-    //     & ~ nav.primnav {
-    //       height: 100vh;
-    //       @include media-sm {
-    //         width: 275px;
-    //       }
+    .subitems {
+        list-style: none;
+        margin-left: 46px;
+        border-left: 1px solid black;
+        overflow: hidden;
+        padding: 0;
 
-    //       .secnav > li {
-    //         @include media-sm {
-    //           @include transition-max-height;
-    //           max-height: 100px;
-    //         }
-    //       }
-    //     }
+        .subitem {
+            font-weight: 400;
+            position: relative;
+            max-height: 100px;
+            transition: max-height .1s;
+
+            @media (min-width: 650px) {
+                max-height: 0px;
+                transition: max-height .5s .5s;
+            }
+
+            &.expand {
+                @media (min-width: 650px) {
+                    .transition-max-height(10);
+                    max-height: 100px;
+                }
+            }
+
+            &:hover {
+                .sidebar-hover();
+            }
+
+            a {
+                display: block;
+                padding: .75em 10px;
+
+                &:hover {
+                    background-color: darken(@background-color-hover, 5%);
+                }
+            }
+        }
+    }
 }

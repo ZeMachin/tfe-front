@@ -1,16 +1,15 @@
 import { Component, Input } from '@angular/core';
 import { Router } from '@angular/router';
+import { NavBarItem } from '../nav-bar.component';
 
 @Component({
-  selector: 'app-nav-bar-item',
+  selector: 'app-nav-bar-item, [nav-bar-item]',
   imports: [],
   templateUrl: './nav-bar-item.component.html',
   styleUrl: './nav-bar-item.component.less'
 })
 export class NavBarItemComponent {
-  @Input('label') label: string = '';
-  @Input('icon') icon: string = '';
-  @Input('link') link: string = '';
+  @Input('item') item!: NavBarItem;
   @Input('iconOnly') iconOnly: boolean = true;
 
   constructor(
@@ -18,6 +17,6 @@ export class NavBarItemComponent {
   ) {}
 
   navigate() {
-    this.router.navigateByUrl(this.link);
+    this.router.navigateByUrl(this.item.link);
   }
 }

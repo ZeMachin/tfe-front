@@ -1,4 +1,13 @@
-<div class="nav-bar-item-content" (click)="navigate()">
-    <i [class]="`pi pi-${icon} icon`"></i>
-   <div [class]="'label ' + (iconOnly ? '' : 'expand')">{{label}}</div>
-</div>
+<li class="nav-bar-item-content">
+    <a [href]="item.link"> 
+        <i [class]="`pi pi-${item.icon} icon`"></i>
+        <div [class]="'label ' + (iconOnly ? '' : 'expand')">{{item.label}}</div>
+    </a>
+    <ul class="subitems">
+        @for(i of item.items; track $index) {
+        <li [class]="'subitem ' + (iconOnly ? '' : 'expand')">
+            <a [href]="`/${item.link}/${i.link}`">{{i.name}}</a>
+        </li>
+        }
+    </ul>
+</li>
