@@ -1,29 +1,22 @@
 .body {
     display: flex;
     flex-direction: row;
+    width: 100vw;
+
+    @sidebar-width: 70px;
 
     .sidebar {
-        height: 100%;
-
-        &.sidebar-opened {
-            // height: 100%;
-        }
-
-        &.sidebar-closed {
-            // height: 0%;
-        }
+        position: fixed;
+        width: @sidebar-width;
     }
 
     .main-content {
         transition-duration: 200ms;
+        padding-left: @sidebar-width;
+        width: 100%;
 
-        &.sidebar-opened {
-            // margin-left: 5em;
+        .middle {
+            min-height: calc(100vh - 60px);
         }
-
-        &.sidebar-closed {
-            // margin-left: 0;
-        }
-        min-height: calc(100vh - 60px);
     }
 }

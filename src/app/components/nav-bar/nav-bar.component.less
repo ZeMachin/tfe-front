@@ -1,36 +1,67 @@
-// .nav-bar {
+.nav-bar {
+    padding: 1rem;
+    height: 100vw;
+    background-color: rgba(18, 18, 18, .7);
+    width: 100%;
+    transition: width 246ms .5s ease;
 
-//     .nav-bar-item {
-//         background-color: hsla(0, 0%, 97%, 0.2);
-//         height: 5em;
-//         width: 100%;
-//         display: flex;
-//         border: rgba(85, 85, 85, 0.603) 2px solid;
-    
-//         &:first-child {
-//             border-top-right-radius: 1em;
-//         }
-    
-//         &:last-child {
-//             border-bottom-right-radius: 1em;
-//         }
-//     }
+    * {
+        opacity: 1;
+    }
 
-//     &.left-hidden {
-//         // border: none;
-//     }
-// }
-// 
-    
-i {
-    font-weight: bold;
-    font-size: 1.5em;
-    cursor: pointer;
-    transition: cubic-bezier(0.075, 0.82, 0.165, 1) .5s;
-    height: 1em;
-    width: 1em;
+    &.expand {
+        width: 275px;
+    }
 
-    &.rotate {
-        transform: rotate(90deg);
+    .icon {
+        @hover-background-color: rgba(151, 151, 151, 0.377);
+        height: 40px;
+        width: 40px;
+        align-items: center;
+        justify-content: center;
+        display: flex;
+
+        &:hover {
+            background-color: @hover-background-color;
+            border-radius: 20px;
+        }
+    
+        i {
+            font-weight: bold;
+            font-size: 1.5em;
+            cursor: pointer;
+            transition: cubic-bezier(0.075, 0.82, 0.165, 1) .5s;
+            height: 1em;
+            width: 1em;
+        
+            &.rotate {
+                transform: rotate(90deg);
+            }
+        }
+    }
+
+    .nav-bar-item {
+        transition: cubic-bezier(0.075, 0.82, 0.165, 1) .5s;
+        height: 5em;
+        width: 100%;
+        display: flex;
+    }
+
+    &.left-hidden {
+        // border: none;
     }
 }
+
+//     & ~ nav.primnav {
+//       height: 100vh;
+//       @include media-sm {
+//         width: 275px;
+//       }
+      
+//       .secnav > li {
+//         @include media-sm {
+//           @include transition-max-height;
+//           max-height: 100px;
+//         }
+//       }
+//     }

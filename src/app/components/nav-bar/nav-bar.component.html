@@ -1,7 +1,10 @@
-<i [class]="'pi pi-bars ' + (headerSettings.showNavBar ? 'rotate' : '')" (click)="toggleNavBar()"></i>
-<div [class]="'nav-bar' + (headerSettings.showNavBar  ? '' : 'left-hidden')">
+<div [class]="'nav-bar ' + (expand  ? 'expand' : '')">
+    <div class="icon">
+        <i [class]="'pi pi-bars ' + (expand ? 'rotate' : '')" (click)="toggleNavBar()"></i>
+    </div>
+    
     @for(item of navBarItems; track $index) {
-        <app-nav-bar-item [label]="item.label" [icon]="item.icon" [link]="item.link" class="nav-bar-item"></app-nav-bar-item>
+        <app-nav-bar-item [label]="item.label" [icon]="item.icon" [link]="item.link" [iconOnly]="!expand" class="nav-bar-item"></app-nav-bar-item>
     }
 </div>
 

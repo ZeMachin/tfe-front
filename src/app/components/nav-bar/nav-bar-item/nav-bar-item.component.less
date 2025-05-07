@@ -1,18 +1,48 @@
+.transition-max-height(@i) when (@i < 10) {
+    &:nth-child(@{i}) {
+        transition: max-height .5s (.65 + @i * .02)s ease-in;
+    }
+    .transition-max-height((@i + 1));
+}
+
 .nav-bar-item-content {
+    padding-left: 8px;
     padding-top: .5em;
     display: flex;
     flex-direction: row;
-    justify-content: space-around;
     align-items: center;
     width: 100%;
     cursor: pointer;
+    transition: cubic-bezier(0.075, 0.82, 0.165, 1) .5s;
+    overflow-x: hidden;
 
     .icon {
         font-weight: bold;
+        font-size: 1.25em;
     }
 
     .label {
+        margin-left: 1rem;
         font-weight: bold;
         font-size: 1.15em;
+        // max-height: 0;
+
+        &.expand {
+            // max-height: 100px;
+        }
     }
+
+    //     & ~ nav.primnav {
+    //       height: 100vh;
+    //       @include media-sm {
+    //         width: 275px;
+    //       }
+
+    //       .secnav > li {
+    //         @include media-sm {
+    //           @include transition-max-height;
+    //           max-height: 100px;
+    //         }
+    //       }
+    //     }
 }

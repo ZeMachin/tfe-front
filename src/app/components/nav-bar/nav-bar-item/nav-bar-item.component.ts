@@ -11,6 +11,7 @@ export class NavBarItemComponent {
   @Input('label') label: string = '';
   @Input('icon') icon: string = '';
   @Input('link') link: string = '';
+  @Input('iconOnly') iconOnly: boolean = true;
 
   constructor(
     private router: Router

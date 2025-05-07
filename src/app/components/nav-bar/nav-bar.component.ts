@@ -9,6 +9,7 @@ import { NavBarItemComponent } from './nav-bar-item/nav-bar-item.component';
 })
 export class NavBarComponent {
   @Input('headerSettings') headerSettings: { showNavBar: boolean } = { showNavBar: true };
+  expand: boolean = false;
   
   navBarItems: NavBarItem[] = [
     {
@@ -29,7 +30,8 @@ export class NavBarComponent {
   ];
 
   toggleNavBar() {
-    this.headerSettings.showNavBar = !this.headerSettings.showNavBar;
+    // this.headerSettings.showNavBar = !this.headerSettings.showNavBar;
+    this.expand = !this.expand;
   }
 
 }
