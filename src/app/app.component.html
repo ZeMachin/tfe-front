@@ -1,9 +1,8 @@
-<div class="main-content">
-  <p-toast></p-toast>
- @if(isLoggedIn()) {<app-header [headerSettings]="headerSettings"></app-header>}
-  <div>
-    @if(isLoggedIn()) {<app-nav-bar [class]="headerSettings.showNavBar ? '' : 'left-hidden'"></app-nav-bar>}
-    <router-outlet />
+<div class="body">
+  @if(isLoggedIn()) {<app-nav-bar [class]="'sidebar ' + (headerSettings.showNavBar ? 'sidebar-opened' : 'sidebar-closed')" [headerSettings]="headerSettings"></app-nav-bar>}
+  <div [class]="'main-content ' + (headerSettings.showNavBar ? 'sidebar-opened' : 'sidebar-closed')">
+    @if(isLoggedIn()) {<app-header [headerSettings]="headerSettings"></app-header>}
+    <router-outlet/>
+    <app-footer></app-footer>
   </div>
 </div>
-<app-footer></app-footer>

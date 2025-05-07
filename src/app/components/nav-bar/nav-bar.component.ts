@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { NavBarItemComponent } from './nav-bar-item/nav-bar-item.component';
 
 @Component({
@@ -8,6 +8,8 @@ import { NavBarItemComponent } from './nav-bar-item/nav-bar-item.component';
   styleUrl: './nav-bar.component.less'
 })
 export class NavBarComponent {
+  @Input('headerSettings') headerSettings: { showNavBar: boolean } = { showNavBar: true };
+  
   navBarItems: NavBarItem[] = [
     {
       label: 'Chores',
@@ -25,6 +27,11 @@ export class NavBarComponent {
       link: 'settings'
     }
   ];
+
+  toggleNavBar() {
+    this.headerSettings.showNavBar = !this.headerSettings.showNavBar;
+  }
+
 }
 
 interface NavBarItem {

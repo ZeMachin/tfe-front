@@ -124,6 +124,11 @@ export class RoutesService implements OnInit {
     url: `${this.baseUrl}/rewards/family/:family_id/reward/:reward_id`,
     method: 'DELETE'
   };
+
+  getUserTasks: Connection = {
+    url: `${this.baseUrl}/tasks/member/:member_id`,
+    method: 'GET'
+  }
 }
 
 export interface Connection {

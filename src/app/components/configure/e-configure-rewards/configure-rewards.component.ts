@@ -4,7 +4,7 @@ import { Reward } from '../../../models/Reward';
 import { FamilyService } from '../../../services/family.service';
 import { UserService } from '../../../services/user.service';
 import { ButtonModule } from 'primeng/button';
-import { RewardComponent } from '../../chores/reward/reward.component';
+import { RewardComponent } from '../../chores/rewards/reward/reward.component';
 
 @Component({
   selector: 'app-configure-rewards',

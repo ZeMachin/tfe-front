@@ -2,6 +2,9 @@ import { Injectable } from '@angular/core';
 import { Family } from '../models/Family';
 import { FamilyMember } from '../models/FamilyMember';
 import { FamilyService } from './family.service';
+import { TaskList } from '../models/TaskList';
+import { CommunicationService } from './communication.service';
+import { RoutesService } from './routes.service';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +14,9 @@ export class UserService {
   member?: FamilyMember;
 
   constructor(
-    private familyService: FamilyService
+    private familyService: FamilyService,
+    private communicationService: CommunicationService,
+    private rs: RoutesService
   ) {
     const familyStorage = localStorage.getItem('family');
     if (familyStorage) {
@@ -45,12 +50,24 @@ export class UserService {
     localStorage.setItem('member', JSON.stringify(this.member));
   }
 
+  selectUser(member: FamilyMember) {
+    this.member = member;
+    localStorage.setItem('member', JSON.stringify(this.member));
+  } 
+
   async updateMember() {
     if (this.member) localStorage.setItem('member', JSON.stringify(await this.familyService.updateFamilyMember(this.member)));
   }
 
   async refreshMember() {
     if (this.member) await this.loadMember(this.member.id);
+  }
+
+  getAssignedTasks(): Promise<TaskList[]> {
+    if(this.member)
+      return this.communicationService.call(this.rs.getUserTasks, {}, { member_id: this.member.id });
+    else 
+      throw Error('No user logged on.');
   }
 }
 

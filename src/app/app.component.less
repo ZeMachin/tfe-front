@@ -1,15 +1,29 @@
-.main-content {
+.body {
     display: flex;
-    flex-direction: column;
-    min-height: calc(100vh - 60px);
+    flex-direction: row;
 
-    app-nav-bar {
-        transition: cubic-bezier(0.075, 0.82, 0.165, 1) .5s;
-        position: fixed;
-        margin-top: calc(50vh - 240px); // TODO: find a way to adapt to the nav-bar height
+    .sidebar {
+        height: 100%;
+
+        &.sidebar-opened {
+            // height: 100%;
+        }
+
+        &.sidebar-closed {
+            // height: 0%;
+        }
     }
 
-    .left-hidden {
-        transform: translate(-80px)
+    .main-content {
+        transition-duration: 200ms;
+
+        &.sidebar-opened {
+            // margin-left: 5em;
+        }
+
+        &.sidebar-closed {
+            // margin-left: 0;
+        }
+        min-height: calc(100vh - 60px);
     }
 }

@@ -1,0 +1,3 @@
+@for(member of family.members; track $index) {
+    <app-user-selection-vignette [member]="member" (click)="userSelect(member)"></app-user-selection-vignette>
+}

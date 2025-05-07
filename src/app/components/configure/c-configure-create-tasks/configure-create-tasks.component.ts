@@ -2,7 +2,7 @@ import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FamilyService } from '../../../services/family.service';
 import { Task } from '../../../models/Task';
 import { UserService } from '../../../services/user.service';
-import { TaskComponent } from "../../chores/task/task.component";
+import { TaskComponent } from "../../chores/tasks/task/task.component";
 import { ButtonModule } from 'primeng/button';
 import _ from 'lodash';
 

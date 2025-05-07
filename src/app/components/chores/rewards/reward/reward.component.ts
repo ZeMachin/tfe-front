@@ -1,14 +1,13 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { Reward } from '../../../models/Reward';
+import { Reward } from '../../../../models/Reward';
 import { ButtonModule } from 'primeng/button';
 import { SliderModule } from 'primeng/slider';
 import { InputTextModule } from 'primeng/inputtext';
 import { FormsModule } from '@angular/forms';
 import { InputNumberModule } from 'primeng/inputnumber';
-import { FamilyService } from '../../../services/family.service';
-import { UserService } from '../../../services/user.service';
+import { FamilyService } from '../../../../services/family.service';
+import { UserService } from '../../../../services/user.service';
 import { ConfirmationService, MessageService } from 'primeng/api';
-import { Metric } from '../../../models/Metric';
 import { SelectModule } from 'primeng/select';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ToggleSwitchModule } from 'primeng/toggleswitch';
