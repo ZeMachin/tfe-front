@@ -3,7 +3,7 @@
 
     <div class="task-name">
         @if(editingName) {
-        <input type="text" pInputText [(ngModel)]="task.name" (change)="onNameChange()"/>
+        <input type="text" pInputText [(ngModel)]="task.name" (change)="onChange()"/>
         <p-button icon="pi pi-check" (onClick)="toggleEditingName()"/>
         } @else {
         <h3>{{task.name}}</h3>
@@ -16,16 +16,16 @@
         <div class="task-metric">
             <div class="task-metric-slider">
                 <label [for]="metric.name">{{ metric.name }}</label>
-                <p-inputnumber [(ngModel)]="metric.weight" [min]="0" [max]="10" />
-                <p-slider [(ngModel)]="metric.weight" [step]="1" [min]="0" [max]="10" />
+                <p-inputnumber [(ngModel)]="metric.weight" [min]="0" [max]="10" (onInput)="onChange()"/>
+                <p-slider [(ngModel)]="metric.weight" [step]="1" [min]="0" [max]="10" (onChange)="onChange()"/>
             </div>
-            <p-button icon="pi pi-trash" (onClick)="removeMetric(metric)" />
+            <p-button icon="pi pi-trash" (onClick)="removeMetric(metric)"/>
         </div>
         }
     </div>
 
     @if(unusedMetrics.length) {
-    <div>
+    <div class="select-metric">
         <p-select [options]="unusedMetrics" [(ngModel)]="selectedMetric" optionLabel="name"
             placeholder="Select a metric" />
         <p-button icon="pi pi-plus" (onClick)="addMetric()" />

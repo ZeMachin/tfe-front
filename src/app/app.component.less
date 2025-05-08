@@ -6,17 +6,20 @@
     @sidebar-width: 70px;
 
     .sidebar {
+        z-index: 1;
         position: fixed;
         width: @sidebar-width;
     }
 
-    .main-content {
+    .content {
+        z-index: 0;
         transition-duration: 200ms;
+        width: 100vw;
+        height: 100vh;
         padding-left: @sidebar-width;
-        width: 100%;
 
-        .middle {
-            min-height: calc(100vh - 60px);
+        .main-content {
+            padding: 2rem;
         }
     }
 }

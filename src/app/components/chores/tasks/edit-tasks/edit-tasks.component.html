@@ -1,1 +1,6 @@
-<p>edit-tasks works!</p>
+<div class="tasks">
+    @for(task of tasks; track $index) {
+        <app-task [task]="task" (onDelete)="onDeleteTask($event, task)" class="task"></app-task>
+    }
+    <p-button icon="pi pi-plus" (onClick)="addTask()" />
+</div>

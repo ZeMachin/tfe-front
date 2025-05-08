@@ -12,7 +12,6 @@ import { Metric } from '../../../../models/Metric';
 import { SelectModule } from 'primeng/select';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import * as _ from 'lodash';
-import { fakeAsync } from '@angular/core/testing';
 
 @Component({
   selector: 'app-task',
@@ -47,7 +46,7 @@ export class TaskComponent implements OnInit {
     }
   }
 
-  onNameChange() {
+  onChange() {
     this.hasChanged = true;
   }
  

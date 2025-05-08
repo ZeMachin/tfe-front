@@ -8,13 +8,8 @@
     <p>
         Don't worry, you will be able to change them in the future from the settings menu.
     </p>
-
-    <div class="tasks">
-        @for(task of tasks; track $index) {
-            <app-task [task]="task" (onDelete)="onDeleteTask($event, task)"></app-task>
-        }
-        <p-button icon="pi pi-plus" (onClick)="addTask()" />
-    </div>
     
+    <app-edit-tasks></app-edit-tasks>
+
     <button type="submit" pButton label="Next step" class="p-button-primary" (click)="onNextStep()"></button>
 </div>
