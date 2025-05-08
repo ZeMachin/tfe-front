@@ -39,6 +39,10 @@ export class FamilyService {
     return this.communicationService.call(this.rs.createMemberAndMoveToNextStep, member, { id: family.id });
   }
 
+  getFamilyMembers(id: string | number): Promise<FamilyMember[]> {
+    return this.communicationService.call(this.rs.getFamilyMembers, {}, { id });
+  }
+
   getFamilyMember(id: string | number): Promise<FamilyMember> {
     return this.communicationService.call(this.rs.getFamilyMember, {}, { id });
   }

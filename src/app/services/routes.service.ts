@@ -45,6 +45,11 @@ export class RoutesService implements OnInit {
     method: 'POST'
   };
 
+  getFamilyMembers: Connection = {
+    url: `${this.baseUrl}/families/:id/members`,
+    method: 'GET'
+  };
+
   getFamilyMember: Connection = {
     url: `${this.baseUrl}/families/member/:id`,
     method: 'GET'
