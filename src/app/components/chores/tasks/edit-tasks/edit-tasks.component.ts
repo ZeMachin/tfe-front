@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import _ from 'lodash';
 import { Task } from '../../../../models/Task';
 import { FamilyService } from '../../../../services/family.service';
@@ -12,8 +12,7 @@ import { TaskComponent } from '../task/task.component';
   templateUrl: './edit-tasks.component.html',
   styleUrl: './edit-tasks.component.less'
 })
-export class EditTasksComponent {
-
+export class EditTasksComponent implements OnInit {
   tasks: Task[] = [];
 
   constructor(

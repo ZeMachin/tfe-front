@@ -1,1 +1,6 @@
-<p>edit-rewards works!</p>
+<div class="rewards">
+    @for(reward of rewards; track $index) {
+        <app-reward [reward]="reward" (onDelete)="onDeleteReward($event, reward)"></app-reward>
+    }
+    <p-button icon="pi pi-plus" (onClick)="addReward()" />
+</div>
