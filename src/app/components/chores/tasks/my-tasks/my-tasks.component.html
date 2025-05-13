@@ -1,1 +1,11 @@
-<p>my-tasks works!</p>
+<div>
+    You have {{ assignedTasks.length }} task{{assignedTasks.length > 1 ? 's' : '' }} assigned to you.
+    @if(!assignedTasks.length) { Congratulations, you're all done for now! }
+</div>
+@if(assignedTasks.length) {
+<div>
+    @for(task of assignedTasks; track $index) {
+        <app-assigned-task [task]="task"></app-assigned-task>
+    }
+</div>
+}
