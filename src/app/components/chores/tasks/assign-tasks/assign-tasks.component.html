@@ -10,6 +10,7 @@
             <th style="width: 5rem"></th>
             <th pSortableColumn="name">Name <p-sortIcon field="name" /></th>
             <th># of tasks</th>
+            <th style="width: 5rem"></th>
         </tr>
     </ng-template>
     <ng-template #body let-member let-expanded="expanded">
@@ -19,6 +20,7 @@
             </td>
             <td>{{ member.name }}</td>
             <td>{{ member.taskLists.length }}</td>
+            <td><p-button label="Assign task" (onClick)="openTaskAssignmentModal(member)"></p-button></td>
         </tr>
     </ng-template>
     <ng-template #expandedrow let-member>
@@ -36,7 +38,8 @@
                         <ng-template #body let-taskList>
                             <tr>
                                 <td>{{ taskList.task.name }}</td>
-                                <td><p-button type="button" icon="pi pi-search" /></td>
+                                <td><p-button type="button" icon="pi pi-pencil" /></td>
+                                <!-- TODO: allow editing of tasklist -->
                             </tr>
                         </ng-template>
                         <ng-template #emptymessage>

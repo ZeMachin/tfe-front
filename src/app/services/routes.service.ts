@@ -134,6 +134,11 @@ export class RoutesService implements OnInit {
     url: `${this.baseUrl}/tasks/member/:member_id`,
     method: 'GET'
   }
+
+  assignTask: Connection = {
+    url:  `${this.baseUrl}/tasks/member/:member_id/assign_task`,
+    method: 'POST'
+  }
 }
 
 export interface Connection {

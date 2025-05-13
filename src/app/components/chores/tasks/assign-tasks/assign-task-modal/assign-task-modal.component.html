@@ -1,0 +1,47 @@
+@if(form) {<form [formGroup]="form" (ngSubmit)="onSubmit()" class="p-fluid">
+
+   <!-- TASK -->
+   <div class="p-field">
+      <label for="task">Task</label>
+      <p-select id="task" formControlName="task" [options]="tasks" optionLabel="name" appendTo="body"></p-select>
+      @if (form.get('task')?.invalid && form.get('task')?.touched) {
+      @if(form.get('task')?.errors?.['required']) {<small class="p-error">You must select a task.</small>
+      }
+      }
+   </div>
+
+   <!-- START -->
+   <div class="p-field">
+      <label for="start">Start</label>
+      <p-datePicker id="start" formControlName="taskStart" appendTo="body" styleClass="w-12" [showTime]="true"
+         [hourFormat]="'24'" dateFormat="dd/mm/yy" [minDate]="now"></p-datePicker>
+      @if (form.get('start')?.invalid && form.get('start')?.touched) {
+      @if(form.get('start')?.errors?.['required']) {<small class="p-error">A starting date/time is required.</small>
+      }
+      }
+   </div>
+
+   <!-- END -->
+   <div class="p-field">
+      <label for="end">End</label>
+      <p-datePicker id="end" formControlName="taskEnd" appendTo="body" styleClass="w-12" [showTime]="true"
+         [hourFormat]="'24'" dateFormat="dd/mm/yy" [minDate]="now"></p-datePicker>
+   </div>
+
+   <!-- POINTS -->
+   @if(family?.settings?.rewards || family?.settings?.leaderboard){
+   <div class="p-field">
+      <label for="points">Points</label>
+      <p-inputnumber id="points" formControlName="points" [min]="0" />
+      @if (form.get('points')?.invalid && form.get('points')?.touched) {
+      @if(form.get('points')?.errors?.['required']) {<small class="p-error">Points are required.</small>
+      }
+      @if(form.get('points')?.errors?.['min']) {<small class="p-error">Points must be 0 or more.</small>
+      }
+      }
+   </div>
+   }
+
+   <!-- TODO: add recurrence -->
+   <button type="submit" pButton label="Submit" class="p-button-primary" [disabled]="form.invalid || sending"></button>
+</form>}

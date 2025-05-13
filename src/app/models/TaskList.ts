@@ -10,11 +10,11 @@ export class TaskList {
         this.task = taskList.task;
     }
 
-    id: number;
-    createdAt: Date;
+    id?: number;
+    createdAt?: Date;
     completedAt?: Date;
     taskStart: Date;
-    taskEnd: Date;
+    taskEnd?: Date;
     points?: number;
     task: Task;
 }

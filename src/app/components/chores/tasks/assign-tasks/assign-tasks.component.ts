@@ -1,18 +1,23 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FamilyService } from '../../../../services/family.service';
 import { UserService } from '../../../../services/user.service';
 import { FamilyMember } from '../../../../models/FamilyMember';
 import { Task } from '../../../../models/Task';
 import { TableModule, TableRowCollapseEvent, TableRowExpandEvent } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
+import { DialogService, DynamicDialogModule, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { AssignTaskModalComponent } from './assign-task-modal/assign-task-modal.component';
 
 @Component({
   selector: 'app-assign-tasks',
-  imports: [TableModule, ButtonModule],
+  imports: [TableModule, ButtonModule, DynamicDialogModule],
+  providers: [DialogService],
   templateUrl: './assign-tasks.component.html',
   styleUrl: './assign-tasks.component.less'
 })
-export class AssignTasksComponent implements OnInit {
+export class AssignTasksComponent implements OnInit, OnDestroy {
+  ref: DynamicDialogRef | undefined;
+
   members: FamilyMember[] = [];
   tasks: Task[] = [];
 
@@ -20,7 +25,8 @@ export class AssignTasksComponent implements OnInit {
 
   constructor(
     private familyService: FamilyService,
-    private userService: UserService
+    private userService: UserService,
+    private dialogService: DialogService
   ) { }
 
   async ngOnInit(): Promise<void> {
@@ -53,5 +59,29 @@ export class AssignTasksComponent implements OnInit {
 
   onRowCollapse(event: TableRowCollapseEvent) {
     // this.messageService.add({ severity: 'success', summary: 'Product Collapsed', detail: event.data.name, life: 3000 });
+  }
+
+  openTaskAssignmentModal(member: FamilyMember) {
+    this.ref = this.dialogService.open(
+      AssignTaskModalComponent,
+      {
+        header: `Assign task to ${member.name}`,
+        modal: true,
+        closable: true,
+        data: {
+          member
+        }
+      })
+
+      this.ref.onClose.subscribe((x) => {
+        this.loadTasks();
+        this.loadMembers();
+      })
+  }
+
+  ngOnDestroy(): void {
+    if (this.ref) {
+      this.ref.close();
+    }
   }
 }

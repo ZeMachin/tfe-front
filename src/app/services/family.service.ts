@@ -8,6 +8,7 @@ import { HouseholdType } from '../models/HouseholdType';
 import { Task } from '../models/Task';
 import { Metric } from '../models/Metric';
 import { Reward } from '../models/Reward';
+import { TaskList } from '../models/TaskList';
 
 @Injectable({
   providedIn: 'root'
@@ -105,5 +106,9 @@ export class FamilyService {
 
   deleteFamilyReward(family: Family, reward: Reward): Promise<Reward> {
     return this.communicationService.call(this.rs.deleteFamilyReward, {}, { family_id: family.id, reward_id: reward.id });
+  }
+
+  assignTask(taskList: TaskList, member: FamilyMember) : Promise<TaskList> {
+    return this.communicationService.call(this.rs.assignTask, taskList, { member_id: member.id });
   }
 }
