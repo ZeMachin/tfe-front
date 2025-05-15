@@ -1,0 +1,16 @@
+<div [class]="this.metric.new ? 'metric new-metric' : this.hasChanged ? 'metric changed-metric' :'metric'">
+    <p-button icon="pi pi-times" (onClick)="metric.new ?  deleteNewMetric() : openDeleteConfirmDialog()" />
+
+    <div class="metric-name">
+        @if(editingName) {
+        <input type="text" pInputText [(ngModel)]="metric.name" (change)="onChange()"/>
+        <p-button icon="pi pi-check" (onClick)="toggleEditingName()"/>
+        } @else {
+        <h3>{{metric.name}}</h3>
+        <p-button icon="pi pi-pencil" (onClick)="toggleEditingName()" />
+        }
+    </div>
+    
+    <p-button icon="pi pi-save" (onClick)="save()" [disabled]="sending"/>
+</div>
+<p-confirmdialog />

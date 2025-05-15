@@ -1,1 +1,7 @@
-<p>rewards-shop works!</p>
+Points: {{member?.points}}
+
+<div class="rewards">
+    @for(reward of rewards; track $index) {
+        <app-reward-buy [reward]="reward" [availablePoints]="member?.points || 0" (onBuy)="onBuyReward($event, reward)"></app-reward-buy>
+    }
+</div>

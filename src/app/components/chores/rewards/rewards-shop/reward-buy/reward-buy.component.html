@@ -1,0 +1,7 @@
+<div class="reward">
+    <h3>{{reward.name}}</h3>
+    Price: {{reward.value}}
+    Quantity: {{ reward.currentStock === null ? 'unlimited' : reward.currentStock }}
+
+    <p-button icon="pi pi-shopping-cart" (onClick)="buy()" [disabled]="sending || !canAfford"/>
+</div>

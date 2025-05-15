@@ -15,6 +15,7 @@ export class FamilyMember {
         this.favoriteTasks = member.favoriteTasks;
         this.favoriteTasks = member.favoriteTasks;
         this.leastFavoriteTasks = member.leastFavoriteTasks;
+        this.points = member.points;
     }
     id: number;
     name: string;
@@ -25,4 +26,5 @@ export class FamilyMember {
     metricPreferences?: FamilyMemberTaskMetricPreference[];
     favoriteTasks?: Task[];
     leastFavoriteTasks?: Task[];
+    points: number;
 }

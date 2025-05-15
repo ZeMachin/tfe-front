@@ -1,5 +1,5 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { Reward } from '../../../../models/Reward';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Metric } from '../../../../models/Metric';
 import { ButtonModule } from 'primeng/button';
 import { SliderModule } from 'primeng/slider';
 import { InputTextModule } from 'primeng/inputtext';
@@ -10,21 +10,19 @@ import { UserService } from '../../../../services/user.service';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { SelectModule } from 'primeng/select';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
-import { ToggleSwitchModule } from 'primeng/toggleswitch';
 import * as _ from 'lodash';
 
 @Component({
-  selector: 'app-reward',
-  imports: [ButtonModule, SliderModule, InputTextModule, FormsModule, InputNumberModule, SelectModule, ConfirmDialogModule, ToggleSwitchModule],
+  selector: 'app-metric',
+  imports: [ButtonModule, SliderModule, InputTextModule, FormsModule, InputNumberModule, SelectModule, ConfirmDialogModule],
   providers: [ConfirmationService],
-  templateUrl: './reward.component.html',
-  styleUrl: './reward.component.less'
+  templateUrl: './metric.component.html',
+  styleUrl: './metric.component.less'
 })
-export class RewardComponent implements OnInit {
-  @Input('reward') reward!: Reward;
+export class MetricComponent {
+  @Input('metric') metric!: Metric;
   @Output('onDelete') onDelete: EventEmitter<boolean> = new EventEmitter();
 
-  isStockLimited: boolean = false;
   editingName: boolean = false;
   sending: boolean = false;
   hasChanged: boolean = false;
@@ -36,41 +34,31 @@ export class RewardComponent implements OnInit {
     private confirmationService: ConfirmationService
   ) { }
 
-  ngOnInit(): void {
-    this.isStockLimited = !!this.reward.currentStock;
-  }
-
-  onPropertyChange($event?: any) {
-    console.log('property changed!')
+  onChange() {
     this.hasChanged = true;
   }
-
+ 
   toggleEditingName() {
     this.editingName = !this.editingName;
   }
-
-  onToggleStock() {
-    this.reward.currentStock = this.isStockLimited ? 0 : undefined;
-    this.hasChanged = true;
-  }
-
+  
   async save() {
     this.sending = true;
     if (this.userService.family) {
       try {
-        this.reward = this.reward.new ? await this.familyService.createFamilyReward(this.userService.family, this.reward) : await this.familyService.updateFamilyReward(this.userService.family, this.reward);
+        this.metric = this.metric.new ? await this.familyService.createFamilyMetric(this.userService.family, this.metric) : await this.familyService.updateFamilyMetric(this.userService.family, this.metric);
         this.messageService.add({
           severity: 'success',
-          summary: this.reward.new ? 'Created' : 'Updated',
-          detail: this.reward.new ? 'The new reward has been created successfully!' : 'The reward has been updated successfully!'
+          summary: this.metric.new ? 'Created' : 'Updated',
+          detail: this.metric.new ? 'The new metric has been created successfully!' : 'The metric has been updated successfully!'
         });
-        this.reward.new = false;
+        this.metric.new = false;
         this.hasChanged = false;
       } catch (err) {
         this.messageService.add({
           severity: 'error',
           summary: 'Failure',
-          detail: 'Something went wrong, the reward has not been created. Please try again.'
+          detail: 'Something went wrong, the metric has not been created. Please try again.'
         });
       } finally {
         this.sending = false;
@@ -81,7 +69,7 @@ export class RewardComponent implements OnInit {
   async openDeleteConfirmDialog() {
     this.confirmationService.confirm({
       header: 'Confirm deletion',
-      message: `Are you sure you want to delete '${this.reward.name}'?`,
+      message: `Are you sure you want to delete '${this.metric.name}'?`,
       accept: async () => this.delete()
     });
   }
@@ -89,18 +77,18 @@ export class RewardComponent implements OnInit {
   async delete() {
     if (this.userService.family) {
       try {
-        await this.familyService.deleteFamilyReward(this.userService.family, this.reward);
+        await this.familyService.deleteFamilyMetric(this.userService.family, this.metric);
         this.messageService.add({
           severity: 'success',
           summary: 'Deleted',
-          detail: 'The reward has been deleted successfully!'
+          detail: 'The metric has been deleted successfully!'
         });
         this.onDelete.emit(false);
       } catch (err) {
         this.messageService.add({
           severity: 'error',
           summary: 'Failure',
-          detail: 'Something went wrong, the reward has not been deleted. Please try again.'
+          detail: 'Something went wrong, the metric has not been deleted. Please try again.'
         });
       } finally {
         // this.onDelete.emit(false);
@@ -108,7 +96,7 @@ export class RewardComponent implements OnInit {
     }
   }
 
-  deleteNewReward() {
+  deleteNewMetric() {
     this.onDelete.emit(true);
   }
 }

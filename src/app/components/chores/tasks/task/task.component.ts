@@ -78,7 +78,7 @@ export class TaskComponent implements OnInit {
     this.sending = true;
     if (this.userService.family) {
       try {
-        const task = this.task.new ? await this.familyService.createFamilyTask(this.userService.family, this.task) : await this.familyService.updateFamilyTask(this.userService.family, this.task);
+        this.task = this.task.new ? await this.familyService.createFamilyTask(this.userService.family, this.task) : await this.familyService.updateFamilyTask(this.userService.family, this.task);
         this.messageService.add({
           severity: 'success',
           summary: this.task.new ? 'Created' : 'Updated',

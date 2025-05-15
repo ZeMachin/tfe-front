@@ -101,12 +101,12 @@ export class RoutesService implements OnInit {
   };
 
   updateFamilyMetric: Connection = {
-    url: `${this.baseUrl}/metrics/family/:family_id/task/:task_id`,
+    url: `${this.baseUrl}/metrics/family/:family_id/metric/:metric_id`,
     method: 'PUT'
   };
 
   deleteFamilyMetric: Connection = {
-    url: `${this.baseUrl}/metrics/family/:family_id/task/:task_id`,
+    url: `${this.baseUrl}/metrics/family/:family_id/metric/:metric_id`,
     method: 'DELETE'
   };
 
@@ -142,6 +142,11 @@ export class RoutesService implements OnInit {
 
   completeTask: Connection = {
     url:  `${this.baseUrl}/tasks/member/:member_id/complete_task`,
+    method: 'PUT'
+  }
+
+  buyReward: Connection = {
+    url:  `${this.baseUrl}/rewards/member/:member_id/reward/:reward_id/buy_reward`,
     method: 'PUT'
   }
 }

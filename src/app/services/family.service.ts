@@ -16,9 +16,9 @@ import { TaskList } from '../models/TaskList';
 export class FamilyService {
 
   constructor(
-      private communicationService: CommunicationService,
-      private rs: RoutesService,
-    ) { }
+    private communicationService: CommunicationService,
+    private rs: RoutesService,
+  ) { }
 
   getFamily(id: string | number): Promise<Family | undefined> {
     return this.communicationService.call(this.rs.getFamily, {}, { id });
@@ -108,11 +108,15 @@ export class FamilyService {
     return this.communicationService.call(this.rs.deleteFamilyReward, {}, { family_id: family.id, reward_id: reward.id });
   }
 
-  assignTask(taskList: TaskList, member: FamilyMember) : Promise<TaskList> {
+  assignTask(taskList: TaskList, member: FamilyMember): Promise<TaskList> {
     return this.communicationService.call(this.rs.assignTask, taskList, { member_id: member.id });
   }
 
   async completeTask(taskList: TaskList, member: FamilyMember): Promise<TaskList> {
     return TaskList.taskListDtoToTaskList(await this.communicationService.call(this.rs.completeTask, taskList, { member_id: member.id }));
+  }
+
+  buyReward(member: FamilyMember, reward: Reward): Promise<void> {
+    return this.communicationService.call(this.rs.buyReward, {}, { member_id: member.id, reward_id: reward.id });
   }
 }
