@@ -34,11 +34,23 @@ export class NavBarComponent implements OnInit {
         ]
       };
 
-      const budget: NavBarItem = {
-        label: 'Budget',
-        icon: 'euro',
-        link: 'budget'
-      };
+      // const budget: NavBarItem = {
+      //   label: 'Budget',
+      //   icon: 'euro',
+      //   link: 'budget'
+      // };
+
+      const users: NavBarItem = {
+        label: 'Users',
+        icon: 'users',
+        link: 'users',
+        items: [
+          {
+            name: 'Manage users',
+            link: 'manage_users'
+          }
+        ]
+      }
 
       if (user.status.name === 'Adult') {
         chores.items?.push({ name: 'Assign tasks', link: 'task_assignment' });
@@ -58,7 +70,11 @@ export class NavBarComponent implements OnInit {
         chores.items?.push({ name: 'Leaderboard', link: 'leaderboard' });
       }
 
-        this.navBarItems = [chores, budget];
+        this.navBarItems = [
+          chores, 
+          // budget,
+          users
+        ];
     }
   }
 

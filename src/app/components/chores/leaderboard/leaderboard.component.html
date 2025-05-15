@@ -1,1 +1,14 @@
-<p>leaderboard works!</p>
+<p-table [value]="members" dataKey="id">
+    <ng-template #header>
+        <tr>
+            <th pSortableColumn="name">Name <p-sortIcon field="name" /></th>
+            <th>Total points</th>
+        </tr>
+    </ng-template>
+    <ng-template #body let-member let-expanded="expanded">
+        <tr>
+            <td>{{ member.name }}</td>
+            <td>{{ getMemberPoints(member) }}</td>
+        </tr>
+    </ng-template>
+</p-table>
