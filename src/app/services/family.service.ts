@@ -111,4 +111,8 @@ export class FamilyService {
   assignTask(taskList: TaskList, member: FamilyMember) : Promise<TaskList> {
     return this.communicationService.call(this.rs.assignTask, taskList, { member_id: member.id });
   }
+
+  async completeTask(taskList: TaskList, member: FamilyMember): Promise<TaskList> {
+    return TaskList.taskListDtoToTaskList(await this.communicationService.call(this.rs.completeTask, taskList, { member_id: member.id }));
+  }
 }

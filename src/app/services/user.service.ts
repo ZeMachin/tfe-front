@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Family } from '../models/Family';
 import { FamilyMember } from '../models/FamilyMember';
 import { FamilyService } from './family.service';
-import { TaskList } from '../models/TaskList';
+import { TaskList, TaskListDTO } from '../models/TaskList';
 import { CommunicationService } from './communication.service';
 import { RoutesService } from './routes.service';
 
@@ -63,9 +63,9 @@ export class UserService {
     if (this.member) await this.loadMember(this.member.id);
   }
 
-  getAssignedTasks(): Promise<TaskList[]> {
+  async getAssignedTasks(): Promise<TaskList[]> {
     if(this.member)
-      return this.communicationService.call(this.rs.getUserTasks, {}, { member_id: this.member.id });
+      return (await this.communicationService.call<TaskListDTO[]>(this.rs.getUserTasks, {}, { member_id: this.member.id })).map((t) => TaskList.taskListDtoToTaskList(t));
     else 
       throw Error('No user logged on.');
   }

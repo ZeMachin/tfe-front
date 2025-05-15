@@ -1,7 +1,7 @@
-<div class="flex-column">
+<div class="task" [ngClass]="currentClasses">
   <h3>{{ taskList.task.name }}</h3>
   <div>Start: {{ taskList.taskStart }}</div>
   @if(taskList.taskEnd){<div>End: {{ taskList.taskEnd }}</div>}
   @if(taskList.points){<div>Points: {{ taskList.points }}</div>}
-  <p-button icon="pi pi-check" label="Completed task" (onClick)="submit()" />
+  @if(!taskList.completedAt) {<p-button icon="pi pi-check" label="Completed task" (onClick)="submit()" [disabled]="sending" />}
 </div>

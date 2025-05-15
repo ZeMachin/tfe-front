@@ -17,4 +17,23 @@ export class TaskList {
     taskEnd?: Date;
     points?: number;
     task: Task;
+
+    static taskListDtoToTaskList(dto: TaskListDTO): TaskList {
+        return {
+            ...dto,
+            createdAt: dto.createdAt ? new Date(dto.createdAt) : undefined,
+            completedAt: dto.completedAt ? new Date(dto.completedAt) : undefined,
+            taskStart: new Date(dto.taskStart),
+            taskEnd: dto.taskEnd ? new Date(dto.taskEnd) : undefined,
+        };
+    }   
+}
+export interface TaskListDTO {
+    id?: number;
+    createdAt?: string;
+    completedAt?: string;
+    taskStart: string;
+    taskEnd?: string;
+    points?: number;
+    task: Task;
 }
