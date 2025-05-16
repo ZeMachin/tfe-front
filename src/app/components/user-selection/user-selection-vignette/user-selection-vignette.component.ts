@@ -9,4 +9,5 @@ import { FamilyMember } from '../../../models/FamilyMember';
 })
 export class UserSelectionVignetteComponent {
   @Input('member') member!: FamilyMember;
+  @Input('edit') edit: boolean = false;
 }

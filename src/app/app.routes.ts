@@ -15,15 +15,22 @@ import { EditTasksComponent } from './components/chores/tasks/edit-tasks/edit-ta
 import { EditMetricsComponent } from './components/chores/tasks/edit-metrics/edit-metrics.component';
 import { EditRewardsComponent } from './components/chores/rewards/edit-rewards/edit-rewards.component';
 import { RewardsShopComponent } from './components/chores/rewards/rewards-shop/rewards-shop.component';
+import { TasksComponent } from './components/chores/tasks/tasks.component';
+import { UsersComponent } from './components/users/users.component';
+import { ManageUsersComponent } from './components/users/manage-users/manage-users.component';
+import { UserProfileComponent } from './components/users/user-profile/user-profile.component';
 
 export const routes: Routes = [
     { path: 'login', component: LoginComponent },
     { path: 'register', component: RegisterComponent },
     { path: 'configure', component: ConfigureComponent, canActivate: [AuthGuard] },
+    { path: 'users', component: UsersComponent, canActivate: [AuthGuard] },
+    { path: 'users/manage_users', component: ManageUsersComponent, canActivate: [AuthGuard] },
+    { path: 'users/user_profile', component: UserProfileComponent, canActivate: [AuthGuard] }, // TODO: add a guard for access and a guard if no infos about user are passed through route state
     { path: 'budget', component: BudgetComponent, canActivate: [AuthGuard, ConfigureGuard] },
     { path: 'chores', component: ChoresComponent, canActivate: [AuthGuard, ConfigureGuard] },
     { path: 'chores/leaderboard', component: LeaderboardComponent, canActivate: [AuthGuard, ConfigureGuard] },
-    // { path: 'chores/tasks', component: ChoresComponent, canActivate: [AuthGuard, ConfigureGuard] },
+    { path: 'chores/tasks', component: TasksComponent, canActivate: [AuthGuard, ConfigureGuard] },
     { path: 'chores/my_tasks', component: MyTasksComponent, canActivate: [AuthGuard, ConfigureGuard] },
     { path: 'chores/task_assignment', component: AssignTasksComponent, canActivate: [AuthGuard, ConfigureGuard] },
     { path: 'chores/edit_tasks', component: EditTasksComponent, canActivate: [AuthGuard, ConfigureGuard] },

@@ -1,14 +1,44 @@
+@vignetteSize: 7rem;
+
 .vignette {
+  display: flex;
+  color: white;
+  width: @vignetteSize;
+  height: @vignetteSize;
+  border-radius: @vignetteSize;
+  align-items: center;
+  justify-content: center;
+  font-weight: bolder;
+  font-size: x-large;
+  border: 2px solid white; // TODO: check netflix for border
+  // box-shadow: 0 0 4px 4px #4c4c4c;
+
+  &:hover {
+    cursor: pointer;
+  }
+
+  .edit {
+    width: @vignetteSize;
+    height: @vignetteSize;
+    border-radius: @vignetteSize;
+    position: fixed;
+    background-color: #878686b5;
     display: flex;
-    color: black;
-    width: 4rem;
-    height: 4rem;
-    border-radius: 4rem;
-    justify-content: space-around;
     align-items: center;
-    font-weight: bolder;
-    font-size: large;
+    justify-content: center;
+
     &:hover {
-        cursor: pointer;
+      background-color: #878686d6;
+
+      .pencil-icon {
+        opacity: 1;
+      }
     }
+
+    .pencil-icon {
+      opacity: 0.75;
+      font-weight: bolder;
+      font-size: x-large;
+    }
+  }
 }
