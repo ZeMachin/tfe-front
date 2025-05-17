@@ -66,7 +66,7 @@ export class FamilyService {
 
   createMember(member: FamilyMember): Promise<FamilyMember> {
     if (this.userService.family) {
-      return this.communicationService.call(this.rs.createFamilyMember, this.userService.member, { id: this.userService.family.id });
+      return this.communicationService.call(this.rs.createFamilyMember, member, { id: this.userService.family.id });
     } else {
       throw this.showNoFamilyErrorMessage();
     }

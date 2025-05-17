@@ -1,4 +1,5 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { Location } from '@angular/common';
 import { FamilyMember } from '../../../models/FamilyMember';
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
@@ -23,12 +24,14 @@ export class UserProfileComponent implements OnInit {
   form?: FormGroup;
   statuses: FamilyMemberStatus[] = [];
   hasPin: boolean = false;
+  sending: boolean = false;
 
   constructor(
     private fb: FormBuilder,
     private userService: UserService,
     private familyService: FamilyService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private location: Location
   ) {
     this.form = new FormGroup({
       name: new FormControl(),
@@ -38,7 +41,7 @@ export class UserProfileComponent implements OnInit {
 
   async ngOnInit(): Promise<void> {
     this.statuses = await this.familyService.getStatuses();
-    if(history.state.member) this.createForm(await this.familyService.getFamilyMember(history.state.member));
+    if (history.state.member) this.createForm(await this.familyService.getFamilyMember(history.state.member));
     else this.createForm();
   }
 
@@ -66,6 +69,7 @@ export class UserProfileComponent implements OnInit {
 
   async submit(): Promise<void> {
     if (this.form?.valid) {
+      this.sending = true;
       try {
         history.state.member ? await this.familyService.updateFamilyMember(this.form.value) : await this.familyService.createMember(this.form.value);
         await this.userService.refreshFamily();
@@ -75,12 +79,15 @@ export class UserProfileComponent implements OnInit {
           summary: history.state.member ? 'Updated' : 'Created',
           detail: history.state.member ? 'The family member has been updated successfully!' : 'The new family member has been created successfully!'
         });
+        this.location.back();
       } catch (err) {
         this.messageService.add({
           severity: 'error',
           summary: 'Failure',
           detail: `Something went wrong, the family member has not been ${history.state.member ? 'updated' : 'created'}. Please try again.`
         });
+      } finally {
+        this.sending = false;
       }
     } else {
       console.error('Form invalid');

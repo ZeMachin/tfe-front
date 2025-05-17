@@ -42,7 +42,7 @@
         </div>}
 
         <button type="submit" pButton [label]="submitButtonLabel" class="p-button-primary"
-            [disabled]="form.invalid"></button>
+            [disabled]="form.invalid || sending"></button>
     </form>
     }
 </div>

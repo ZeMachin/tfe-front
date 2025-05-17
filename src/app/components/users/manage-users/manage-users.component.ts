@@ -14,16 +14,13 @@ import { Router } from '@angular/router';
   styleUrl: './manage-users.component.less',
 })
 export class ManageUsersComponent implements OnInit {
-  family: Family;
-
+  
   constructor(
-    private userService: UserService,
+    public userService: UserService,
     private authService: AuthService,
     private messageService: MessageService,
     private router: Router
-  ) {
-    this.family = this.userService.family!;
-  }
+  ) { }
 
   ngOnInit(): void {
     if (!this.userService.family) {
