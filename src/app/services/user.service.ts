@@ -57,9 +57,10 @@ export class UserService implements OnInit {
     localStorage.setItem('member', JSON.stringify(this.member));
   }
 
-  selectUser(member: FamilyMember) {
+  async selectUser(member: FamilyMember) {
     this.member = member;
     localStorage.setItem('member', JSON.stringify(this.member));
+    await this.refreshMember();
   }
 
   async updateMember() {

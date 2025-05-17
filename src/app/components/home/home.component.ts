@@ -3,7 +3,6 @@ import { UserService } from '../../services/user.service';
 import { AuthService } from '../../services/auth.service';
 import { MessageService } from 'primeng/api';
 import { TaskList } from '../../models/TaskList';
-import { FamilyMember } from '../../models/FamilyMember';
 import { UserSelectionComponent } from "../user-selection/user-selection.component";
 import { AssignedTaskComponent } from "../chores/tasks/assigned-task/assigned-task.component";
 
@@ -15,15 +14,12 @@ import { AssignedTaskComponent } from "../chores/tasks/assigned-task/assigned-ta
 })
 export class HomeComponent implements OnInit {
   assignedTasks: TaskList[] = [];
-  user?: FamilyMember;
 
   constructor(
-    private userService: UserService,
+    public userService: UserService,
     private authService: AuthService,
     private messageService: MessageService
-  ) {
-    this.user = this.userService.member;
-  }
+  ) {}
 
   async ngOnInit(): Promise<void> {
     if (!this.userService.family) {
@@ -34,10 +30,15 @@ export class HomeComponent implements OnInit {
       });
       this.authService.logout();
     }
-    this.assignedTasks = await this.userService.getAssignedTasks();
+    await this.getAssignedTasks();
   }
 
-  onUserSelected() {
-    this.user = this.userService.member;
+  async getAssignedTasks() {
+    if (this.userService.member) this.assignedTasks = await this.userService.getAssignedTasks();
+  }
+
+  async userSelected($event: any) {
+    await this.userService.selectUser($event);
+    await this.getAssignedTasks();
   }
 }

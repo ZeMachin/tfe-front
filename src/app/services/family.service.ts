@@ -49,25 +49,24 @@ export class FamilyService {
       throw this.showNoFamilyErrorMessage();
   }
 
+  updateFamilyMember(member: FamilyMember): Promise<Family> {
+    if (this.userService.family)
+      return this.communicationService.call(this.rs.updateFamilyMember, member, { id: member.id });
+    else
+      throw this.showNoFamilyErrorMessage();
+  }
+
   getStatuses(): Promise<FamilyMemberStatus[]> {
     return this.communicationService.call(this.rs.getFamilyMemberStatuses);
   }
 
-  createMember(): Promise<FamilyMember> {
-    if (this.userService.family) {
-      if (this.userService.member) {
-        return this.communicationService.call(this.rs.createFamilyMember, this.userService.member, { id: this.userService.family.id });
-      } else {
-        throw this.showNoUserErrorMessage();
-      }
-    } else {
-      throw this.showNoFamilyErrorMessage();
-    }
+  getFamilyMember(member: FamilyMember): Promise<FamilyMember> {
+    return this.communicationService.call(this.rs.getFamilyMember, {}, { id: member.id }); 
   }
 
-  createMemberAndMoveToNextStep(member: FamilyMember): Promise<FamilyMember> {
+  createMember(member: FamilyMember): Promise<FamilyMember> {
     if (this.userService.family) {
-      return this.communicationService.call(this.rs.createMemberAndMoveToNextStep, member, { id: this.userService.family.id });
+      return this.communicationService.call(this.rs.createFamilyMember, this.userService.member, { id: this.userService.family.id });
     } else {
       throw this.showNoFamilyErrorMessage();
     }

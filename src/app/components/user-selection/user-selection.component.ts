@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { MessageService } from 'primeng/api';
 import { Family } from '../../models/Family';
 import { AuthService } from '../../services/auth.service';
@@ -13,6 +13,7 @@ import { FamilyMember } from '../../models/FamilyMember';
   styleUrl: './user-selection.component.less'
 })
 export class UserSelectionComponent {
+  @Output('onUserSelection') userSelection: EventEmitter<any> = new EventEmitter();
   family: Family;
 
   constructor(
@@ -34,7 +35,7 @@ export class UserSelectionComponent {
     }
   }
 
-  userSelect(member: FamilyMember) {
-    this.userService.selectUser(member);
+  async userSelect(member: FamilyMember) {
+    this.userSelection.emit(member);
   }
 }

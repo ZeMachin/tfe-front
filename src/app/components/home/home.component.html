@@ -1,10 +1,10 @@
-@if(!user) {
-    <app-user-selection (onUserSelected)="onUserSelected()"></app-user-selection>
+@if(!userService.member) {
+    <app-user-selection (onUserSelection)="userSelected($event)"></app-user-selection>
 }
 @else {
 <div>
     <div>
-        <h2>Welcome {{user.name}}!</h2>
+        <h2>Welcome {{userService.member.name}}!</h2>
     </div>
     <div>
         You have {{ assignedTasks.length }} task{{assignedTasks.length > 1 ? 's' : '' }} assigned to you.

@@ -8,6 +8,6 @@ import { FamilyMember } from '../../../models/FamilyMember';
   styleUrl: './user-selection-vignette.component.less'
 })
 export class UserSelectionVignetteComponent {
-  @Input('member') member!: FamilyMember;
+  @Input('member') member?: FamilyMember;
   @Input('edit') edit: boolean = false;
 }

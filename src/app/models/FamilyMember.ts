@@ -16,6 +16,7 @@ export class FamilyMember {
         this.favoriteTasks = member.favoriteTasks;
         this.leastFavoriteTasks = member.leastFavoriteTasks;
         this.points = member.points;
+        this.pin = member.pin;
     }
     id: number;
     name: string;
@@ -27,4 +28,5 @@ export class FamilyMember {
     favoriteTasks?: Task[];
     leastFavoriteTasks?: Task[];
     points: number;
+    pin?: string;
 }

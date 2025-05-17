@@ -1,7 +1,7 @@
 <div class="form-wrapper">
     @if(form) {
     <form [formGroup]="form" (ngSubmit)="submit()" class="p-fluid">
-        <div class="p-field">
+        @if(form.get('name')){<div class="p-field">
             <label for="name">Name</label>
             <input id="name" type="name" pInputText formControlName="name"
                 [class.p-invalid]="form.get('name')?.invalid && form.get('name')?.touched" />
@@ -9,24 +9,9 @@
             @if (form.get('name')?.errors?.['required']) {<small class="p-error">Name is required.</small>
             }
             }
-        </div>
+        </div>}
 
-        <div class="p-field">
-            <label for="color">Color</label>
-            <p-colorpicker formControlName="color" />
-            @if (form.get('color')?.invalid && form.get('name')?.touched) {
-            @if (form.get('color')?.errors?.['required']) {<small class="p-error">Color is required.</small>
-            }
-            }
-        </div>
-
-        <!-- TODO: make pin optional -->
-        <div class="p-field">
-            <label for="pin">Pin</label>
-            <p-inputotp [integerOnly]="true" formControlName="pin" />
-        </div>
-
-        <div class="p-field">
+        @if(form.get('status')){<div class="p-field">
             <label for="status">Status</label>
             <p-select formControlName="status" [options]="statuses" optionLabel="name" placeholder="Select a status"
                 class="w-full md:w-56" />
@@ -34,9 +19,30 @@
             @if (form.get('status')?.errors?.['required']) {<small class="p-error">Name is required.</small>
             }
             }
+        </div>}
+
+        @if(form.get('color')){<div class="p-field">
+            <label for="color">Color</label>
+            <p-colorpicker formControlName="color" [inline]="true" />
+            @if (form.get('color')?.invalid && form.get('name')?.touched) {
+            @if (form.get('color')?.errors?.['required']) {<small class="p-error">Color is required.</small>
+            }
+            }
+        </div>}
+
+        <div class="p-field">
+            <label for="use-pin">Use PIN?</label>
+            <p-toggleswitch id="use-pin" (onChange)="togglePin()" [(ngModel)]="hasPin"
+                [ngModelOptions]="{standalone: true}" />
         </div>
 
-        <button type="submit" pButton label="Next step" class="p-button-primary" [disabled]="form.invalid"></button>
+        @if(hasPin && form.get('pin')) {<div class="p-field">
+            <label for="pin">Pin</label>
+            <p-inputotp [integerOnly]="true" [mask]="true" formControlName="pin" />
+        </div>}
+
+        <button type="submit" pButton [label]="submitButtonLabel" class="p-button-primary"
+            [disabled]="form.invalid"></button>
     </form>
     }
 </div>
