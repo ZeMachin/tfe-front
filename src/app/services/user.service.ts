@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnInit } from '@angular/core';
 import { Family } from '../models/Family';
 import { FamilyMember } from '../models/FamilyMember';
 import { FamilyService } from './family.service';
@@ -9,7 +9,7 @@ import { RoutesService } from './routes.service';
 @Injectable({
   providedIn: 'root'
 })
-export class UserService {
+export class UserService implements OnInit {
   family?: Family;
   member?: FamilyMember;
 
@@ -28,6 +28,12 @@ export class UserService {
       this.member = JSON.parse(memberStorage);
       this.refreshMember();
     }
+
+  }
+
+  async ngOnInit(): Promise<void> {
+    await this.refreshFamily();
+    await this.refreshMember();
   }
 
   async loadFamily(id: string | number): Promise<void> {
@@ -38,7 +44,10 @@ export class UserService {
   }
 
   async updateFamily() {
-    if (this.family) localStorage.setItem('family', JSON.stringify(await this.familyService.updateFamily(this.family)));
+    if (this.family) {
+      localStorage.setItem('family', JSON.stringify(await this.familyService.updateFamily()));
+      await this.refreshFamily();
+    }
   }
 
   async refreshFamily() {
@@ -53,10 +62,13 @@ export class UserService {
   selectUser(member: FamilyMember) {
     this.member = member;
     localStorage.setItem('member', JSON.stringify(this.member));
-  } 
+  }
 
   async updateMember() {
-    if (this.member) localStorage.setItem('member', JSON.stringify(await this.familyService.updateFamilyMember(this.member)));
+    if (this.member) {
+      localStorage.setItem('member', JSON.stringify(await this.familyService.updateFamilyMember(this.member)));
+      await this.refreshMember();
+    }
   }
 
   async refreshMember() {
@@ -64,9 +76,9 @@ export class UserService {
   }
 
   async getAssignedTasks(): Promise<TaskList[]> {
-    if(this.member)
+    if (this.member)
       return (await this.communicationService.call<TaskListDTO[]>(this.rs.getUserTasks, {}, { member_id: this.member.id })).map((t) => TaskList.taskListDtoToTaskList(t));
-    else 
+    else
       throw Error('No user logged on.');
   }
 }

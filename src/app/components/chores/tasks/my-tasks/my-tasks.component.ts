@@ -25,6 +25,7 @@ export class MyTasksComponent implements OnInit  {
   }
 
   async ngOnInit(): Promise<void> {
+    // TODO: handle that with guard
     if(!this.userService.family) {
       this.messageService.add({
         severity: 'error',

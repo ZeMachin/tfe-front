@@ -26,8 +26,7 @@ export class EditTasksComponent implements OnInit {
   }
 
   async refreshTasks() {
-    if (this.userService.family)
-      this.tasks = await this.familyService.getFamilyTasks(this.userService.family);
+    this.tasks = await this.familyService.getFamilyTasks();
   }
 
   addTask() {

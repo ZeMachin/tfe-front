@@ -26,8 +26,7 @@ export class EditMetricsComponent implements OnInit {
   }
 
   async refreshMetrics() {
-    if (this.userService.family)
-      this.metrics = await this.familyService.getFamilyMetrics(this.userService.family);
+    this.metrics = await this.familyService.getFamilyMetrics();
   }
 
   addMetric() {

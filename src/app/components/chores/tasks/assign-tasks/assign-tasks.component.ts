@@ -1,6 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FamilyService } from '../../../../services/family.service';
-import { UserService } from '../../../../services/user.service';
 import { FamilyMember } from '../../../../models/FamilyMember';
 import { Task } from '../../../../models/Task';
 import { TableModule, TableRowCollapseEvent, TableRowExpandEvent } from 'primeng/table';
@@ -25,7 +24,6 @@ export class AssignTasksComponent implements OnInit, OnDestroy {
 
   constructor(
     private familyService: FamilyService,
-    private userService: UserService,
     private dialogService: DialogService
   ) { }
 
@@ -35,13 +33,11 @@ export class AssignTasksComponent implements OnInit, OnDestroy {
   }
 
   async loadTasks() {
-    if (this.userService.family)
-      this.tasks = await this.familyService.getFamilyTasks(this.userService.family);
+      this.tasks = await this.familyService.getFamilyTasks();
   }
 
   async loadMembers() {
-    if (this.userService.family)
-      this.members = await this.familyService.getFamilyMembers(this.userService.family.id);
+      this.members = await this.familyService.getFamilyMembers();
   }
 
   expandAll() {

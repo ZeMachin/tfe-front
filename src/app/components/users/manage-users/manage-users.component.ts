@@ -39,6 +39,6 @@ export class ManageUsersComponent implements OnInit {
   }
 
   userSelect(member: FamilyMember) {
-    this.router.navigateByUrl('users/user_profile', { data: { member } });
+    this.router.navigateByUrl('users/user_profile', { state: { member } });
   }
 }

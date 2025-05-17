@@ -1,10 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { Family } from '../../../models/Family';
 import { FamilyService } from '../../../services/family.service';
 import { UserService } from '../../../services/user.service';
 import { Reward } from '../../../models/Reward';
 import { Task } from '../../../models/Task';
-import { Router } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 
 @Component({
@@ -14,29 +13,24 @@ import { ButtonModule } from 'primeng/button';
   styleUrl: './configure-summary.component.less'
 })
 export class ConfigureSummaryComponent implements OnInit {
-  family: Family;
+  @Output('nextStep') nextStep: EventEmitter<any> = new EventEmitter();
+  family?: Family;
   tasks: Task[] = [];
   rewards: Reward[] = [];
-  
+
   constructor(
     private userService: UserService,
     private familyService: FamilyService,
-    private router: Router
   ) {
-    this.family = this.userService.family!;
+    this.family = this.userService.family;
   }
 
   async ngOnInit(): Promise<void> {
-    this.tasks = await this.familyService.getFamilyTasks(this.family);
-    if(this.family.settings.rewards) this.rewards = await this.familyService.getFamilyRewards(this.family);
+    this.tasks = await this.familyService.getFamilyTasks();
+    if (this.family?.settings.rewards) this.rewards = await this.familyService.getFamilyRewards();
   }
 
   async finalizeConfiguration() {
-    const family = this.userService.family;
-    if (family) {
-      family.configStep = 6;
-      await this.familyService.updateFamily(family);
-      this.router.navigateByUrl('home');
-    }
+    this.nextStep.emit();
   }
 }

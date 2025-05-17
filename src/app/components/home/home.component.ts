@@ -6,7 +6,6 @@ import { TaskList } from '../../models/TaskList';
 import { FamilyMember } from '../../models/FamilyMember';
 import { UserSelectionComponent } from "../user-selection/user-selection.component";
 import { AssignedTaskComponent } from "../chores/tasks/assigned-task/assigned-task.component";
-import { FamilyService } from '../../services/family.service';
 
 @Component({
   selector: 'app-home',
@@ -22,22 +21,20 @@ export class HomeComponent implements OnInit {
     private userService: UserService,
     private authService: AuthService,
     private messageService: MessageService
-  ) { 
+  ) {
     this.user = this.userService.member;
   }
 
   async ngOnInit(): Promise<void> {
-    if(!this.userService.family) {
+    if (!this.userService.family) {
       this.messageService.add({
         severity: 'error',
         summary: 'Oops',
         detail: "Something went wrong with the authentication: your family wasn't retrieved properly. \nPlease try again."
       });
       this.authService.logout();
-    }       
-    if(this.user) {
-      this.assignedTasks = await this.userService.getAssignedTasks();
     }
+    this.assignedTasks = await this.userService.getAssignedTasks();
   }
 
   onUserSelected() {

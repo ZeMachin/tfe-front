@@ -26,7 +26,6 @@ export class AssignTaskModalComponent implements OnInit {
   form?: FormGroup;
   member?: FamilyMember;
   tasks: Task[] = [];
-  family?: Family;
   sending: boolean = false;
   now: Date = new Date();
 
@@ -35,29 +34,26 @@ export class AssignTaskModalComponent implements OnInit {
     private config: DynamicDialogConfig,
     private fb: FormBuilder,
     private familyService: FamilyService,
-    private userService: UserService,
+    public userService: UserService,
     private messageService: MessageService
   ) { }
 
   async ngOnInit(): Promise<void> {
     this.member = this.config.data.member;
-    if (this.userService.family) {
-      this.family = this.userService.family;
-      this.tasks = await this.familyService.getFamilyTasks(this.family);
-    }
+      this.tasks = await this.familyService.getFamilyTasks();
     this.form = this.fb.group({
       task: [undefined, [Validators.required]],
       taskStart: [new Date(), [Validators.required]],
       taskEnd: []
     });
-    if (this.family?.settings.rewards || this.family?.settings.leaderboard) this.form.addControl('points', this.fb.control(0, [Validators.required, Validators.min(0)]));
+    if (this.userService.family?.settings.rewards || this.userService.family?.settings.leaderboard) this.form.addControl('points', this.fb.control(0, [Validators.required, Validators.min(0)]));
   }
 
   async onSubmit() {
     this.sending = true;
-    if (this.userService.family && this.form && this.member) {
+    if (this.form && this.member) {
       try {
-        const taskList = await this.familyService.assignTask(this.form.value, this.member);
+        await this.familyService.assignTask(this.form.value, this.member);
         this.messageService.add({
           severity: 'success',
           summary: 'Assigned',

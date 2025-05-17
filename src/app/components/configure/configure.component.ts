@@ -6,6 +6,8 @@ import { ConfigureCreateTasksComponent } from "./c-configure-create-tasks/config
 import { ConfigureLeaderboardComponent } from "./d-configure-leaderboard/configure-leaderboard.component";
 import { ConfigureRewardsComponent } from "./e-configure-rewards/configure-rewards.component";
 import { ConfigureSummaryComponent } from "./f-configure-summary/configure-summary.component";
+import { FamilyService } from '../../services/family.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-configure',
@@ -14,8 +16,12 @@ import { ConfigureSummaryComponent } from "./f-configure-summary/configure-summa
   styleUrl: './configure.component.less'
 })
 export class ConfigureComponent implements OnInit {
+  currentStep?: number;
+
   constructor(
-    private userService: UserService
+    private userService: UserService,
+    private familyService: FamilyService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -26,5 +32,12 @@ export class ConfigureComponent implements OnInit {
     this.currentStep = this.userService.family?.configStep;
   }
 
-  currentStep?: number;
+  async nextStep(step: number): Promise<void> {
+    if (this.userService.family) {
+      this.userService.family.configStep = step;
+      await this.familyService.updateFamily();
+      if(step === 6) this.router.navigateByUrl('home');
+    }
+    this.checkStep();
+  }
 }

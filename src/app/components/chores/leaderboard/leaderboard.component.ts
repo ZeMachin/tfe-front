@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { FamilyMember } from '../../../models/FamilyMember';
 import { FamilyService } from '../../../services/family.service';
-import { UserService } from '../../../services/user.service';
 import { TableModule } from 'primeng/table';
 
 @Component({
@@ -15,7 +14,6 @@ export class LeaderboardComponent {
 
   constructor(
     private familyService: FamilyService,
-    private userService: UserService
   ) { }
 
   async ngOnInit(): Promise<void> {
@@ -23,8 +21,7 @@ export class LeaderboardComponent {
   }
 
   async loadMembers() {
-    if (this.userService.family)
-      this.members = await this.familyService.getFamilyMembers(this.userService.family.id);
+    this.members = await this.familyService.getFamilyMembers();
   }
 
   getMemberPoints(member: FamilyMember): number {

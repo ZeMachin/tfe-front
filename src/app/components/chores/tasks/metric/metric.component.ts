@@ -37,32 +37,30 @@ export class MetricComponent {
   onChange() {
     this.hasChanged = true;
   }
- 
+
   toggleEditingName() {
     this.editingName = !this.editingName;
   }
-  
+
   async save() {
     this.sending = true;
-    if (this.userService.family) {
-      try {
-        this.metric = this.metric.new ? await this.familyService.createFamilyMetric(this.userService.family, this.metric) : await this.familyService.updateFamilyMetric(this.userService.family, this.metric);
-        this.messageService.add({
-          severity: 'success',
-          summary: this.metric.new ? 'Created' : 'Updated',
-          detail: this.metric.new ? 'The new metric has been created successfully!' : 'The metric has been updated successfully!'
-        });
-        this.metric.new = false;
-        this.hasChanged = false;
-      } catch (err) {
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Failure',
-          detail: 'Something went wrong, the metric has not been created. Please try again.'
-        });
-      } finally {
-        this.sending = false;
-      }
+    try {
+      this.metric = this.metric.new ? await this.familyService.createFamilyMetric(this.metric) : await this.familyService.updateFamilyMetric(this.metric);
+      this.messageService.add({
+        severity: 'success',
+        summary: this.metric.new ? 'Created' : 'Updated',
+        detail: this.metric.new ? 'The new metric has been created successfully!' : 'The metric has been updated successfully!'
+      });
+      this.metric.new = false;
+      this.hasChanged = false;
+    } catch (err) {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Failure',
+        detail: 'Something went wrong, the metric has not been created. Please try again.'
+      });
+    } finally {
+      this.sending = false;
     }
   }
 
@@ -75,24 +73,22 @@ export class MetricComponent {
   }
 
   async delete() {
-    if (this.userService.family) {
-      try {
-        await this.familyService.deleteFamilyMetric(this.userService.family, this.metric);
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Deleted',
-          detail: 'The metric has been deleted successfully!'
-        });
-        this.onDelete.emit(false);
-      } catch (err) {
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Failure',
-          detail: 'Something went wrong, the metric has not been deleted. Please try again.'
-        });
-      } finally {
-        // this.onDelete.emit(false);
-      }
+    try {
+      await this.familyService.deleteFamilyMetric(this.metric);
+      this.messageService.add({
+        severity: 'success',
+        summary: 'Deleted',
+        detail: 'The metric has been deleted successfully!'
+      });
+      this.onDelete.emit(false);
+    } catch (err) {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Failure',
+        detail: 'Something went wrong, the metric has not been deleted. Please try again.'
+      });
+    } finally {
+      // this.onDelete.emit(false);
     }
   }
 

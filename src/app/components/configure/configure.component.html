@@ -1,20 +1,20 @@
 @switch (currentStep) {
     @case (0) {
-        <app-configure-first-member (nextStep)="checkStep()"></app-configure-first-member>
+        <app-configure-first-member (nextStep)="nextStep(1)"></app-configure-first-member>
     }
     @case (1) {
-        <app-configure-household-type (nextStep)="checkStep()"></app-configure-household-type>
+        <app-configure-household-type (nextStep)="nextStep(2)"></app-configure-household-type>
     }
     @case (2) {
-        <app-configure-create-tasks (nextStep)="checkStep()"></app-configure-create-tasks>
+        <app-configure-create-tasks (nextStep)="nextStep(3)"></app-configure-create-tasks>
     }
     @case (3) {
-        <app-configure-leaderboard (nextStep)="checkStep()"></app-configure-leaderboard>
+        <app-configure-leaderboard (nextStep)="nextStep(4)"></app-configure-leaderboard>
     }
     @case (4) {
-        <app-configure-rewards (nextStep)="checkStep()"></app-configure-rewards>
+        <app-configure-rewards (nextStep)="nextStep(5)"></app-configure-rewards>
     }
     @case (5) {
-        <app-configure-summary (nextStep)="checkStep()"></app-configure-summary>
+        <app-configure-summary (nextStep)="nextStep(6)"></app-configure-summary>
     }
 }

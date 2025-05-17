@@ -9,6 +9,8 @@ import { Task } from '../models/Task';
 import { Metric } from '../models/Metric';
 import { Reward } from '../models/Reward';
 import { TaskList } from '../models/TaskList';
+import { UserService } from './user.service';
+import { MessageService } from 'primeng/api';
 
 @Injectable({
   providedIn: 'root'
@@ -16,36 +18,74 @@ import { TaskList } from '../models/TaskList';
 export class FamilyService {
 
   constructor(
+    private userService: UserService,
+    private messageService: MessageService,
     private communicationService: CommunicationService,
     private rs: RoutesService,
   ) { }
+
+  showNoFamilyErrorMessage() {
+    this.messageService.add({
+      severity: 'error',
+      summary: 'Oops',
+      detail: "Something went wrong with the authentication: your family wasn't retrieved properly. \nPlease try again."
+    });
+    return Error('No family retrieved');
+  }
+
+  showNoUserErrorMessage() {
+    this.messageService.add({
+      severity: 'error',
+      summary: 'Oops',
+      detail: "Something went wrong with the authentication: your user wasn't retrieved properly. \nPlease try again."
+    });
+    return Error('No user retrieved');
+  }
 
   getFamily(id: string | number): Promise<Family | undefined> {
     return this.communicationService.call(this.rs.getFamily, {}, { id });
   }
 
-  updateFamily(family: Family): Promise<Family> {
-    return this.communicationService.call(this.rs.updateFamily, family, { id: family.id });
+  getFamilyMember(id: string | number): Promise<FamilyMember> {
+    return this.communicationService.call(this.rs.getFamilyMember, {}, { id });
+  }
+
+  updateFamily(): Promise<Family> {
+    if (this.userService.family)
+      return this.communicationService.call(this.rs.updateFamily, this.userService.family, { id: this.userService.family.id });
+    else
+      throw this.showNoFamilyErrorMessage();
   }
 
   getStatuses(): Promise<FamilyMemberStatus[]> {
     return this.communicationService.call(this.rs.getFamilyMemberStatuses);
   }
 
-  createMember(family: Family, member: FamilyMember): Promise<FamilyMember> {
-    return this.communicationService.call(this.rs.createFamilyMember, member, { id: family.id });
+  createMember(): Promise<FamilyMember> {
+    if (this.userService.family) {
+      if (this.userService.member) {
+        return this.communicationService.call(this.rs.createFamilyMember, this.userService.member, { id: this.userService.family.id });
+      } else {
+        throw this.showNoUserErrorMessage();
+      }
+    } else {
+      throw this.showNoFamilyErrorMessage();
+    }
   }
 
-  createMemberAndMoveToNextStep(family: Family, member: FamilyMember): Promise<FamilyMember> {
-    return this.communicationService.call(this.rs.createMemberAndMoveToNextStep, member, { id: family.id });
+  createMemberAndMoveToNextStep(member: FamilyMember): Promise<FamilyMember> {
+    if (this.userService.family) {
+      return this.communicationService.call(this.rs.createMemberAndMoveToNextStep, member, { id: this.userService.family.id });
+    } else {
+      throw this.showNoFamilyErrorMessage();
+    }
   }
 
-  getFamilyMembers(id: string | number): Promise<FamilyMember[]> {
-    return this.communicationService.call(this.rs.getFamilyMembers, {}, { id });
-  }
-
-  getFamilyMember(id: string | number): Promise<FamilyMember> {
-    return this.communicationService.call(this.rs.getFamilyMember, {}, { id });
+  getFamilyMembers(): Promise<FamilyMember[]> {
+    if (this.userService.family)
+      return this.communicationService.call(this.rs.getFamilyMembers, {}, { id: this.userService.family.id });
+    else
+      throw this.showNoFamilyErrorMessage();
   }
 
   updateFamilyMember(member: FamilyMember): Promise<FamilyMember> {
@@ -56,67 +96,116 @@ export class FamilyService {
     return this.communicationService.call(this.rs.getHouseholdTypes);
   }
 
-  pickHousehold(family: Family): Promise<Family> {
-    return this.communicationService.call(this.rs.pickHousehold, family, { id: family.id });
+  async pickHousehold(): Promise<void> {
+    if (this.userService.family) {
+      await this.communicationService.call(this.rs.pickHousehold, this.userService.family, { id: this.userService.family.id });
+      await this.userService.refreshFamily();
+    }
+    else
+      throw this.showNoFamilyErrorMessage();
   }
 
-  getFamilyTasks(family: Family): Promise<Task[]> {
-    return this.communicationService.call(this.rs.getFamilyTasks, {}, { family_id: family.id });
+  getFamilyTasks(): Promise<Task[]> {
+    if (this.userService.family)
+      return this.communicationService.call(this.rs.getFamilyTasks, {}, { family_id: this.userService.family.id });
+    else
+      throw this.showNoFamilyErrorMessage();
+
   }
 
-  createFamilyTask(family: Family, task: Task): Promise<Task> {
-    return this.communicationService.call(this.rs.createFamilyTask, task, { family_id: family.id });
+  createFamilyTask(task: Task): Promise<Task> {
+    if (this.userService.family)
+      return this.communicationService.call(this.rs.createFamilyTask, task, { family_id: this.userService.family.id });
+    else
+      throw this.showNoFamilyErrorMessage();
   }
 
-  updateFamilyTask(family: Family, task: Task): Promise<Task> {
-    return this.communicationService.call(this.rs.updateFamilyTask, task, { family_id: family.id, task_id: task.id });
+  updateFamilyTask(task: Task): Promise<Task> {
+    if (this.userService.family)
+      return this.communicationService.call(this.rs.updateFamilyTask, task, { family_id: this.userService.family.id, task_id: task.id });
+    else
+      throw this.showNoFamilyErrorMessage();
   }
 
-  deleteFamilyTask(family: Family, task: Task): Promise<Task> {
-    return this.communicationService.call(this.rs.deleteFamilyTask, {}, { family_id: family.id, task_id: task.id });
+  deleteFamilyTask(task: Task): Promise<Task> {
+    if (this.userService.family)
+      return this.communicationService.call(this.rs.deleteFamilyTask, {}, { family_id: this.userService.family.id, task_id: task.id });
+    else
+      throw this.showNoFamilyErrorMessage();
   }
 
-  getFamilyMetrics(family: Family): Promise<Metric[]> {
-    return this.communicationService.call(this.rs.getFamilyMetrics, {}, { family_id: family.id });
+  getFamilyMetrics(): Promise<Metric[]> {
+    if (this.userService.family)
+      return this.communicationService.call(this.rs.getFamilyMetrics, {}, { family_id: this.userService.family.id });
+    else
+      throw this.showNoFamilyErrorMessage();
   }
 
-  createFamilyMetric(family: Family, metric: Metric): Promise<Metric> {
-    return this.communicationService.call(this.rs.createFamilyMetric, metric, { family_id: family.id });
+  createFamilyMetric(metric: Metric): Promise<Metric> {
+    if (this.userService.family)
+      return this.communicationService.call(this.rs.createFamilyMetric, metric, { family_id: this.userService.family.id });
+    else
+      throw this.showNoFamilyErrorMessage();
   }
 
-  updateFamilyMetric(family: Family, metric: Metric): Promise<Metric> {
-    return this.communicationService.call(this.rs.updateFamilyMetric, metric, { family_id: family.id, task_id: metric.id });
+  updateFamilyMetric(metric: Metric): Promise<Metric> {
+    if (this.userService.family)
+      return this.communicationService.call(this.rs.updateFamilyMetric, metric, { family_id: this.userService.family.id, task_id: metric.id });
+    else
+      throw this.showNoFamilyErrorMessage();
   }
 
-  deleteFamilyMetric(family: Family, metric: Metric): Promise<Metric> {
-    return this.communicationService.call(this.rs.deleteFamilyMetric, {}, { family_id: family.id, task_id: metric.id });
+  deleteFamilyMetric(metric: Metric): Promise<Metric> {
+    if (this.userService.family)
+      return this.communicationService.call(this.rs.deleteFamilyMetric, {}, { family_id: this.userService.family.id, task_id: metric.id });
+    else
+      throw this.showNoFamilyErrorMessage();
   }
 
-  getFamilyRewards(family: Family): Promise<Reward[]> {
-    return this.communicationService.call(this.rs.getFamilyRewards, {}, { family_id: family.id });
+  getFamilyRewards(): Promise<Reward[]> {
+    if (this.userService.family)
+      return this.communicationService.call(this.rs.getFamilyRewards, {}, { family_id: this.userService.family.id });
+    else
+      throw this.showNoFamilyErrorMessage();
   }
 
-  createFamilyReward(family: Family, reward: Reward): Promise<Reward> {
-    return this.communicationService.call(this.rs.createFamilyReward, reward, { family_id: family.id });
+  createFamilyReward(reward: Reward): Promise<Reward> {
+    if (this.userService.family)
+      return this.communicationService.call(this.rs.createFamilyReward, reward, { family_id: this.userService.family.id });
+    else
+      throw this.showNoFamilyErrorMessage();
   }
 
-  updateFamilyReward(family: Family, reward: Reward): Promise<Reward> {
-    return this.communicationService.call(this.rs.updateFamilyReward, reward, { family_id: family.id, reward_id: reward.id });
+  updateFamilyReward(reward: Reward): Promise<Reward> {
+    if (this.userService.family)
+      return this.communicationService.call(this.rs.updateFamilyReward, reward, { family_id: this.userService.family.id, reward_id: reward.id });
+    else
+      throw this.showNoFamilyErrorMessage();
   }
 
-  deleteFamilyReward(family: Family, reward: Reward): Promise<Reward> {
-    return this.communicationService.call(this.rs.deleteFamilyReward, {}, { family_id: family.id, reward_id: reward.id });
+  deleteFamilyReward(reward: Reward): Promise<Reward> {
+    if (this.userService.family)
+      return this.communicationService.call(this.rs.deleteFamilyReward, {}, { family_id: this.userService.family.id, reward_id: reward.id });
+    else
+      throw this.showNoFamilyErrorMessage();
   }
 
   assignTask(taskList: TaskList, member: FamilyMember): Promise<TaskList> {
     return this.communicationService.call(this.rs.assignTask, taskList, { member_id: member.id });
   }
 
-  async completeTask(taskList: TaskList, member: FamilyMember): Promise<TaskList> {
-    return TaskList.taskListDtoToTaskList(await this.communicationService.call(this.rs.completeTask, taskList, { member_id: member.id }));
+  async completeTask(taskList: TaskList): Promise<TaskList> {
+    if (this.userService.member)
+      return TaskList.taskListDtoToTaskList(await this.communicationService.call(this.rs.completeTask, taskList, { member_id: this.userService.member.id }));
+    else
+      throw this.showNoUserErrorMessage();
   }
 
-  buyReward(member: FamilyMember, reward: Reward): Promise<void> {
-    return this.communicationService.call(this.rs.buyReward, {}, { member_id: member.id, reward_id: reward.id });
+  async buyReward(reward: Reward): Promise<void> {
+    if (this.userService.member) {
+      await this.communicationService.call(this.rs.buyReward, {}, { member_id: this.userService.member.id, reward_id: reward.id });
+      await this.userService.refreshMember();
+    } else
+      throw this.showNoUserErrorMessage();
   }
 }

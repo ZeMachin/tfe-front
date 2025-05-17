@@ -34,9 +34,8 @@ export class ConfigureHouseholdTypeComponent implements OnInit {
   async onSubmit(): Promise<void> {
     if (this.form?.valid) {
       if(this.userService.family) {
-        const family = this.userService.family;
-        family.householdType = this.form.value.householdType;
-        await this.familyService.pickHousehold(family); // TODO: handle error
+        this.userService.family.householdType = this.form.value.householdType;
+        await this.familyService.pickHousehold(); // TODO: handle error
         await this.userService.refreshFamily();
         this.nextStep.emit();
       } else {

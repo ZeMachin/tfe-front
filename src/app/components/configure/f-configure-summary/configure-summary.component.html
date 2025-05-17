@@ -1,11 +1,11 @@
 <div>
     <div>
-        <h2>The {{ family.displayName }} household</h2>
+        <h2>The {{ family?.displayName }} household</h2>
     </div>
     <div>
         <h3>Members (so far):</h3>
         <ul>
-            @for(member of family.members; track $index) {
+            @for(member of family?.members; track $index) {
             <li>{{member.name}}</li>
             }
         </ul>
@@ -20,11 +20,11 @@
         </ul>
     </div>
 
-    <div>Leaderboard is <b>{{ family.settings.leaderboard ? 'enabled' : 'disabled' }}</b>.</div>
+    <div>Leaderboard is <b>{{ family?.settings?.leaderboard ? 'enabled' : 'disabled' }}</b>.</div>
 
-    <div>Rewards are <b>{{ family.settings.rewards ? 'enabled' : 'disabled' }}</b>.</div>
+    <div>Rewards are <b>{{ family?.settings?.rewards ? 'enabled' : 'disabled' }}</b>.</div>
 
-    @if(family.settings.rewards) {
+    @if(family?.settings?.rewards) {
     <div>
         <h3>Rewards:</h3>
         <ul>

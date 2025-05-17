@@ -6,7 +6,6 @@ import { InputTextModule } from 'primeng/inputtext';
 import { FormsModule } from '@angular/forms';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { FamilyService } from '../../../../services/family.service';
-import { UserService } from '../../../../services/user.service';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { SelectModule } from 'primeng/select';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
@@ -31,7 +30,6 @@ export class RewardComponent implements OnInit {
 
   constructor(
     private familyService: FamilyService,
-    private userService: UserService,
     private messageService: MessageService,
     private confirmationService: ConfirmationService
   ) { }
@@ -56,25 +54,23 @@ export class RewardComponent implements OnInit {
 
   async save() {
     this.sending = true;
-    if (this.userService.family) {
-      try {
-        this.reward = this.reward.new ? await this.familyService.createFamilyReward(this.userService.family, this.reward) : await this.familyService.updateFamilyReward(this.userService.family, this.reward);
-        this.messageService.add({
-          severity: 'success',
-          summary: this.reward.new ? 'Created' : 'Updated',
-          detail: this.reward.new ? 'The new reward has been created successfully!' : 'The reward has been updated successfully!'
-        });
-        this.reward.new = false;
-        this.hasChanged = false;
-      } catch (err) {
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Failure',
-          detail: 'Something went wrong, the reward has not been created. Please try again.'
-        });
-      } finally {
-        this.sending = false;
-      }
+    try {
+      this.reward = this.reward.new ? await this.familyService.createFamilyReward(this.reward) : await this.familyService.updateFamilyReward(this.reward);
+      this.messageService.add({
+        severity: 'success',
+        summary: this.reward.new ? 'Created' : 'Updated',
+        detail: this.reward.new ? 'The new reward has been created successfully!' : 'The reward has been updated successfully!'
+      });
+      this.reward.new = false;
+      this.hasChanged = false;
+    } catch (err) {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Failure',
+        detail: 'Something went wrong, the reward has not been created. Please try again.'
+      });
+    } finally {
+      this.sending = false;
     }
   }
 
@@ -87,24 +83,22 @@ export class RewardComponent implements OnInit {
   }
 
   async delete() {
-    if (this.userService.family) {
-      try {
-        await this.familyService.deleteFamilyReward(this.userService.family, this.reward);
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Deleted',
-          detail: 'The reward has been deleted successfully!'
-        });
-        this.onDelete.emit(false);
-      } catch (err) {
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Failure',
-          detail: 'Something went wrong, the reward has not been deleted. Please try again.'
-        });
-      } finally {
-        // this.onDelete.emit(false);
-      }
+    try {
+      await this.familyService.deleteFamilyReward(this.reward);
+      this.messageService.add({
+        severity: 'success',
+        summary: 'Deleted',
+        detail: 'The reward has been deleted successfully!'
+      });
+      this.onDelete.emit(false);
+    } catch (err) {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Failure',
+        detail: 'Something went wrong, the reward has not been deleted. Please try again.'
+      });
+    } finally {
+      // this.onDelete.emit(false);
     }
   }
 

@@ -1,7 +1,7 @@
-Points: {{member?.points}}
+Points: {{userService.member?.points || 0}}
 
 <div class="rewards">
     @for(reward of rewards; track $index) {
-        <app-reward-buy [reward]="reward" [availablePoints]="member?.points || 0" (onBuy)="onBuyReward($event, reward)"></app-reward-buy>
+        <app-reward-buy [reward]="reward" [availablePoints]="userService.member?.points || 0" (onBuy)="onBuyReward($event, reward)"></app-reward-buy>
     }
 </div>

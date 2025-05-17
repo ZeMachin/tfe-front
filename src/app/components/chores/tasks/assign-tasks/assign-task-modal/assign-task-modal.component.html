@@ -29,7 +29,7 @@
    </div>
 
    <!-- POINTS -->
-   @if(family?.settings?.rewards || family?.settings?.leaderboard){
+   @if(userService.family?.settings?.rewards || userService.family?.settings?.leaderboard){
    <div class="p-field">
       <label for="points">Points</label>
       <p-inputnumber id="points" formControlName="points" [min]="0" />

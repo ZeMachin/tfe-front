@@ -40,16 +40,14 @@ export class TaskComponent implements OnInit {
   ) { }
 
   async ngOnInit(): Promise<void> {
-    if (this.userService.family) {
-      this.metrics = await this.familyService.getFamilyMetrics(this.userService.family);
-      this.refreshUnusedMetrics();
-    }
+    this.metrics = await this.familyService.getFamilyMetrics();
+    this.refreshUnusedMetrics();
   }
 
   onChange() {
     this.hasChanged = true;
   }
- 
+
   toggleEditingName() {
     this.editingName = !this.editingName;
   }
@@ -76,25 +74,23 @@ export class TaskComponent implements OnInit {
 
   async save() {
     this.sending = true;
-    if (this.userService.family) {
-      try {
-        this.task = this.task.new ? await this.familyService.createFamilyTask(this.userService.family, this.task) : await this.familyService.updateFamilyTask(this.userService.family, this.task);
-        this.messageService.add({
-          severity: 'success',
-          summary: this.task.new ? 'Created' : 'Updated',
-          detail: this.task.new ? 'The new task has been created successfully!' : 'The task has been updated successfully!'
-        });
-        this.task.new = false;
-        this.hasChanged = false;
-      } catch (err) {
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Failure',
-          detail: 'Something went wrong, the task has not been created. Please try again.'
-        });
-      } finally {
-        this.sending = false;
-      }
+    try {
+      this.task = this.task.new ? await this.familyService.createFamilyTask(this.task) : await this.familyService.updateFamilyTask(this.task);
+      this.messageService.add({
+        severity: 'success',
+        summary: this.task.new ? 'Created' : 'Updated',
+        detail: this.task.new ? 'The new task has been created successfully!' : 'The task has been updated successfully!'
+      });
+      this.task.new = false;
+      this.hasChanged = false;
+    } catch (err) {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Failure',
+        detail: 'Something went wrong, the task has not been created. Please try again.'
+      });
+    } finally {
+      this.sending = false;
     }
   }
 
@@ -107,24 +103,22 @@ export class TaskComponent implements OnInit {
   }
 
   async delete() {
-    if (this.userService.family) {
-      try {
-        await this.familyService.deleteFamilyTask(this.userService.family, this.task);
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Deleted',
-          detail: 'The task has been deleted successfully!'
-        });
-        this.onDelete.emit(false);
-      } catch (err) {
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Failure',
-          detail: 'Something went wrong, the task has not been deleted. Please try again.'
-        });
-      } finally {
-        // this.onDelete.emit(false);
-      }
+    try {
+      await this.familyService.deleteFamilyTask(this.task);
+      this.messageService.add({
+        severity: 'success',
+        summary: 'Deleted',
+        detail: 'The task has been deleted successfully!'
+      });
+      this.onDelete.emit(false);
+    } catch (err) {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Failure',
+        detail: 'Something went wrong, the task has not been deleted. Please try again.'
+      });
+    } finally {
+      // this.onDelete.emit(false);
     }
   }
 

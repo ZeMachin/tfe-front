@@ -15,10 +15,10 @@
         Don't worry, you can enable or disable this feature from the settings menu if you change your mind later on.
     </p>
 
-    <div class="leaderboard-switch">
+    @if(userService.family) {<div class="leaderboard-switch">
         <label for="leaderboard">Activate leaderboards?</label>
-        <p-toggleswitch id="leaderboard" [(ngModel)]="family.settings.leaderboard" />
-    </div>
+        <p-toggleswitch id="leaderboard" [(ngModel)]="userService.family.settings.leaderboard" />
+    </div>}
 
     <div>
         <button type="submit" pButton label="Next step" class="p-button-primary" (click)="onNextStep()"></button>

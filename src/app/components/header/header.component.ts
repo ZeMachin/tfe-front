@@ -3,8 +3,6 @@ import { Router } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { AuthService } from '../../services/auth.service';
 import { UserService } from '../../services/user.service';
-import { FamilyMember } from '../../models/FamilyMember';
-import { Family } from '../../models/Family';
 
 @Component({
   selector: 'app-header',
@@ -14,17 +12,12 @@ import { Family } from '../../models/Family';
 })
 export class HeaderComponent {
   @Input('headerSettings') headerSettings: { showNavBar: boolean } = { showNavBar: true };
-  family?: Family;
-  member?: FamilyMember;
 
   constructor(
     private router: Router,
     private authService: AuthService,
-    private userService: UserService
-  ) {
-    this.family = this.userService.family; // TODO: use signal to refresh value automatically
-    this.member = this.userService.member; // TODO: use signal to refresh value automatically
-  }
+    public userService: UserService
+  ) { }
 
   toggleNavBar() {
     this.headerSettings.showNavBar = !this.headerSettings.showNavBar;
