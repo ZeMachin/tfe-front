@@ -42,14 +42,6 @@ export class FamilyService {
     return Error('No user retrieved');
   }
 
-  getFamily(id: string | number): Promise<Family | undefined> {
-    return this.communicationService.call(this.rs.getFamily, {}, { id });
-  }
-
-  getFamilyMember(id: string | number): Promise<FamilyMember> {
-    return this.communicationService.call(this.rs.getFamilyMember, {}, { id });
-  }
-
   updateFamily(): Promise<Family> {
     if (this.userService.family)
       return this.communicationService.call(this.rs.updateFamily, this.userService.family, { id: this.userService.family.id });
@@ -86,10 +78,6 @@ export class FamilyService {
       return this.communicationService.call(this.rs.getFamilyMembers, {}, { id: this.userService.family.id });
     else
       throw this.showNoFamilyErrorMessage();
-  }
-
-  updateFamilyMember(member: FamilyMember): Promise<FamilyMember> {
-    return this.communicationService.call(this.rs.updateFamilyMember, member, { id: member.id });
   }
 
   getHouseholdTypes(): Promise<HouseholdType[]> {

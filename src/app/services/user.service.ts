@@ -1,7 +1,6 @@
 import { Injectable, OnInit } from '@angular/core';
 import { Family } from '../models/Family';
 import { FamilyMember } from '../models/FamilyMember';
-import { FamilyService } from './family.service';
 import { TaskList, TaskListDTO } from '../models/TaskList';
 import { CommunicationService } from './communication.service';
 import { RoutesService } from './routes.service';
@@ -14,7 +13,6 @@ export class UserService implements OnInit {
   member?: FamilyMember;
 
   constructor(
-    private familyService: FamilyService,
     private communicationService: CommunicationService,
     private rs: RoutesService
   ) {
@@ -37,7 +35,7 @@ export class UserService implements OnInit {
   }
 
   async loadFamily(id: string | number): Promise<void> {
-    this.family = await this.familyService.getFamily(id);
+    this.family = await this.getFamily(id);
     // if(!this.family) this.authService.logout(); // TODO: fix circular dependency
     // else 
     localStorage.setItem('family', JSON.stringify(this.family));
@@ -45,7 +43,7 @@ export class UserService implements OnInit {
 
   async updateFamily() {
     if (this.family) {
-      localStorage.setItem('family', JSON.stringify(await this.familyService.updateFamily()));
+      localStorage.setItem('family', JSON.stringify(await this.updateFamily()));
       await this.refreshFamily();
     }
   }
@@ -55,7 +53,7 @@ export class UserService implements OnInit {
   }
 
   async loadMember(id: string | number): Promise<void> {
-    this.member = await this.familyService.getFamilyMember(id);
+    this.member = await this.getFamilyMember(id);
     localStorage.setItem('member', JSON.stringify(this.member));
   }
 
@@ -66,7 +64,7 @@ export class UserService implements OnInit {
 
   async updateMember() {
     if (this.member) {
-      localStorage.setItem('member', JSON.stringify(await this.familyService.updateFamilyMember(this.member)));
+      localStorage.setItem('member', JSON.stringify(await this.updateFamilyMember(this.member)));
       await this.refreshMember();
     }
   }
@@ -80,6 +78,18 @@ export class UserService implements OnInit {
       return (await this.communicationService.call<TaskListDTO[]>(this.rs.getUserTasks, {}, { member_id: this.member.id })).map((t) => TaskList.taskListDtoToTaskList(t));
     else
       throw Error('No user logged on.');
+  }
+
+  getFamily(id: string | number): Promise<Family | undefined> {
+    return this.communicationService.call(this.rs.getFamily, {}, { id });
+  }
+
+  getFamilyMember(id: string | number): Promise<FamilyMember> {
+    return this.communicationService.call(this.rs.getFamilyMember, {}, { id });
+  }
+
+  updateFamilyMember(member: FamilyMember): Promise<FamilyMember> {
+    return this.communicationService.call(this.rs.updateFamilyMember, member, { id: member.id });
   }
 }
 
