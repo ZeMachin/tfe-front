@@ -15,7 +15,6 @@ import * as _ from 'lodash';
 @Component({
   selector: 'app-metric',
   imports: [ButtonModule, SliderModule, InputTextModule, FormsModule, InputNumberModule, SelectModule, ConfirmDialogModule],
-  providers: [ConfirmationService],
   templateUrl: './metric.component.html',
   styleUrl: './metric.component.less'
 })

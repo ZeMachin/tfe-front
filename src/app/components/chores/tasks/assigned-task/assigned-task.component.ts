@@ -8,7 +8,6 @@ import { FamilyService } from '../../../../services/family.service';
 @Component({
   selector: 'app-assigned-task',
   imports: [ButtonModule, CommonModule],
-  providers: [MessageService, FamilyService],
   templateUrl: './assigned-task.component.html',
   styleUrl: './assigned-task.component.less'
 })

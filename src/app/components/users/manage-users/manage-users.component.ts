@@ -10,7 +10,6 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-manage-users',
   imports: [UserSelectionVignetteComponent],
-  providers: [MessageService],
   templateUrl: './manage-users.component.html',
   styleUrl: './manage-users.component.less',
 })

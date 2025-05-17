@@ -15,7 +15,6 @@ import * as _ from 'lodash';
 @Component({
   selector: 'app-reward',
   imports: [ButtonModule, SliderModule, InputTextModule, FormsModule, InputNumberModule, SelectModule, ConfirmDialogModule, ToggleSwitchModule],
-  providers: [ConfirmationService],
   templateUrl: './reward.component.html',
   styleUrl: './reward.component.less'
 })

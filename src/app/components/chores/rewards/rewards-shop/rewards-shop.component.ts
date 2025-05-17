@@ -7,7 +7,6 @@ import { UserService } from '../../../../services/user.service';
 @Component({
   selector: 'app-rewards-shop',
   imports: [RewardBuyComponent],
-  providers: [],
   templateUrl: './rewards-shop.component.html',
   styleUrl: './rewards-shop.component.less'
 })

@@ -16,7 +16,6 @@ import * as _ from 'lodash';
 @Component({
   selector: 'app-task',
   imports: [ButtonModule, SliderModule, InputTextModule, FormsModule, InputNumberModule, SelectModule, ConfirmDialogModule],
-  providers: [ConfirmationService],
   templateUrl: './task.component.html',
   styleUrl: './task.component.less'
 })

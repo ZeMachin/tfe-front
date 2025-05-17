@@ -10,7 +10,6 @@ import { AssignTaskModalComponent } from './assign-task-modal/assign-task-modal.
 @Component({
   selector: 'app-assign-tasks',
   imports: [TableModule, ButtonModule, DynamicDialogModule],
-  providers: [DialogService],
   templateUrl: './assign-tasks.component.html',
   styleUrl: './assign-tasks.component.less'
 })

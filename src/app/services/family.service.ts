@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { CommunicationService } from './communication.service';
 import { RoutesService } from './routes.service';
 import { Family } from '../models/Family';
@@ -13,7 +13,7 @@ import { UserService } from './user.service';
 import { MessageService } from 'primeng/api';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class FamilyService {
 
