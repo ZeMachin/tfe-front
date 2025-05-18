@@ -1,28 +1,28 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MessageService } from 'primeng/api';
-import { Family } from '../../models/Family';
-import { AuthService } from '../../services/auth.service';
-import { UserService } from '../../services/user.service';
+import { AuthService } from '../../../services/auth.service';
+import { UserService } from '../../../services/user.service';
 import { UserSelectionVignetteComponent } from "./user-selection-vignette/user-selection-vignette.component";
-import { FamilyMember } from '../../models/FamilyMember';
+import { FamilyMember } from '../../../models/FamilyMember';
+import { Router } from '@angular/router';
+import { ButtonModule } from 'primeng/button';
 
 @Component({
   selector: 'app-user-selection',
-  imports: [UserSelectionVignetteComponent],
+  imports: [UserSelectionVignetteComponent, ButtonModule],
   templateUrl: './user-selection.component.html',
   styleUrl: './user-selection.component.less'
 })
 export class UserSelectionComponent {
   @Output('onUserSelection') userSelection: EventEmitter<any> = new EventEmitter();
-  family: Family;
+  @Input('edit') edit: boolean = false;
 
   constructor(
-    private userService: UserService,
+    public userService: UserService,
     private authService: AuthService,
-    private messageService: MessageService
-  ) {
-    this.family = this.userService.family!;
-  }
+    private messageService: MessageService,
+    private router: Router
+  ) { }
 
   ngOnInit(): void {
     if (!this.userService.family) {
@@ -35,7 +35,12 @@ export class UserSelectionComponent {
     }
   }
 
-  async userSelect(member: FamilyMember) {
-    this.userSelection.emit(member);
+  userSelect(member?: FamilyMember) {
+    if(this.edit) this.router.navigateByUrl('users/user_profile', { state: { member } });
+    else this.userSelection.emit(member);
+  }
+
+  toggleEdit() {
+    this.edit = !this.edit;
   }
 }

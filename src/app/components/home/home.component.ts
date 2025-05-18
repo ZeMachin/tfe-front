@@ -3,7 +3,7 @@ import { UserService } from '../../services/user.service';
 import { AuthService } from '../../services/auth.service';
 import { MessageService } from 'primeng/api';
 import { TaskList } from '../../models/TaskList';
-import { UserSelectionComponent } from "../user-selection/user-selection.component";
+import { UserSelectionComponent } from "../users/user-selection/user-selection.component";
 import { AssignedTaskComponent } from "../chores/tasks/assigned-task/assigned-task.component";
 
 @Component({

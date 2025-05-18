@@ -1,0 +1,14 @@
+@if(userService.family){
+<div class="main">
+  <h1 class="title">{{ edit ? 'Manage users' : 'Who is using the application?' }}</h1>
+  <div class="user-selection">
+    @for(member of userService.family.members; track $index) {
+    <app-user-selection-vignette [member]="member" [edit]="edit"
+      (click)="userSelect(member)"></app-user-selection-vignette>
+    }
+    @if(edit) {
+    <app-user-selection-vignette [edit]="true" (click)="userSelect()"></app-user-selection-vignette>
+    }
+  </div>
+  <p-button [label]="edit ? 'Done' : 'Manage users'" (onClick)="toggleEdit()"></p-button>
+</div>}

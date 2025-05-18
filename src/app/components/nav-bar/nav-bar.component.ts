@@ -47,7 +47,7 @@ export class NavBarComponent implements OnInit {
         items: [
           {
             name: 'Manage users',
-            link: 'manage_users'
+            link: 'user_selection'
           }
         ]
       }

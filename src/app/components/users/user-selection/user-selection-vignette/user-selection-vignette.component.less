@@ -2,7 +2,6 @@
 
 .vignette {
   display: flex;
-  color: white;
   width: @vignetteSize;
   height: @vignetteSize;
   border-radius: @vignetteSize;
@@ -10,11 +9,14 @@
   justify-content: center;
   font-weight: bolder;
   font-size: x-large;
-  border: 2px solid white; // TODO: check netflix for border
-  // box-shadow: 0 0 4px 4px #4c4c4c;
+
+  .name {}
 
   &:hover {
+    color: white;
     cursor: pointer;
+    filter: brightness(80%);
+    border: 3px solid white; // TODO: check netflix for border
   }
 
   .edit {
@@ -22,13 +24,13 @@
     height: @vignetteSize;
     border-radius: @vignetteSize;
     position: fixed;
-    background-color: #878686a8;
+    background-color: #8786867a;
     display: flex;
     align-items: center;
     justify-content: center;
 
     &:hover {
-      background-color: #878686d3;
+      background-color: #878686ad;
 
       .icon {
         opacity: 1;

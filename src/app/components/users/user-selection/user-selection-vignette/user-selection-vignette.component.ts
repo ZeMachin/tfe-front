@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { FamilyMember } from '../../../models/FamilyMember';
+import { FamilyMember } from '../../../../models/FamilyMember';
 
 @Component({
   selector: 'app-user-selection-vignette',

@@ -17,15 +17,15 @@ import { EditRewardsComponent } from './components/chores/rewards/edit-rewards/e
 import { RewardsShopComponent } from './components/chores/rewards/rewards-shop/rewards-shop.component';
 import { TasksComponent } from './components/chores/tasks/tasks.component';
 import { UsersComponent } from './components/users/users.component';
-import { ManageUsersComponent } from './components/users/manage-users/manage-users.component';
 import { UserProfileComponent } from './components/users/user-profile/user-profile.component';
+import { UserSelectionComponent } from './components/users/user-selection/user-selection.component';
 
 export const routes: Routes = [
     { path: 'login', component: LoginComponent },
     { path: 'register', component: RegisterComponent },
     { path: 'configure', component: ConfigureComponent, canActivate: [AuthGuard] },
     { path: 'users', component: UsersComponent, canActivate: [AuthGuard] },
-    { path: 'users/manage_users', component: ManageUsersComponent, canActivate: [AuthGuard] },
+    { path: 'users/user_selection', component: UserSelectionComponent, canActivate: [AuthGuard] },
     { path: 'users/user_profile', component: UserProfileComponent, canActivate: [AuthGuard] }, // TODO: add a guard for access and a guard if no infos about user are passed through route state
     { path: 'budget', component: BudgetComponent, canActivate: [AuthGuard, ConfigureGuard] },
     { path: 'chores', component: ChoresComponent, canActivate: [AuthGuard, ConfigureGuard] },
