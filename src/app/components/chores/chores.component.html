@@ -1,1 +1,7 @@
-<p>chores works!</p>
+<ul>
+    @for(chore of chores; track $index) {
+        <li>
+            <a [href]="`chores/${chore.link}`">{{chore.name}}</a>
+        </li>
+    }
+</ul>

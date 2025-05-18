@@ -10,5 +10,5 @@
     <app-user-selection-vignette [edit]="true" (click)="userSelect()"></app-user-selection-vignette>
     }
   </div>
-  <p-button [label]="edit ? 'Done' : 'Manage users'" (onClick)="toggleEdit()"></p-button>
+  @if(allowEditToggle){<p-button [label]="edit ? 'Done' : 'Manage users'" (onClick)="toggleEdit()"></p-button>}
 </div>}

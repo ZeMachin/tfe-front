@@ -1,1 +1,16 @@
-<app-user-profile></app-user-profile>
+<app-user-selection [allowEditToggle]="false" [edit]="true"></app-user-selection>
+<div>
+    <p>
+        User creation tutorial!
+    </p>
+    <p>
+        You can now create the profiles for the members of your household.
+    </p>
+    <p>
+        Don't worry, you will be able to change them in the future from the settings menu.
+    </p>
+    
+    <app-user-selection [allowEditToggle]="false" [edit]="true"></app-user-selection>
+
+    <button type="submit" pButton label="Next step" class="p-button-primary" (click)="onNextStep()"></button>
+</div>

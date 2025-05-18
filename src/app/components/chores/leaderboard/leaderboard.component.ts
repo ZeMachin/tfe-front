@@ -25,6 +25,6 @@ export class LeaderboardComponent {
   }
 
   getMemberPoints(member: FamilyMember): number {
-    return member.taskLists ? member.taskLists.map((tl) => tl.points ?? 0).reduce((a, b) => a + b) : 0;
+    return member.taskLists ? member.taskLists.filter((tl) => tl.completedAt).map((tl) => tl.points ?? 0).reduce((a, b) => a + b, 0) : 0;
   }
 }

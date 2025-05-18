@@ -14,8 +14,8 @@ import { ButtonModule } from 'primeng/button';
   styleUrl: './user-selection.component.less'
 })
 export class UserSelectionComponent {
-  @Output('onUserSelection') userSelection: EventEmitter<any> = new EventEmitter();
   @Input('edit') edit: boolean = false;
+  @Input('allowEditToggle') allowEditToggle: boolean = true;
 
   constructor(
     public userService: UserService,
@@ -35,12 +35,15 @@ export class UserSelectionComponent {
     }
   }
 
-  userSelect(member?: FamilyMember) {
-    if(this.edit) this.router.navigateByUrl('users/user_profile', { state: { member } });
-    else this.userSelection.emit(member);
+  async userSelect(member?: FamilyMember) {
+    if (this.edit) this.router.navigateByUrl('users/user_profile', { state: { member } });
+    else if (member) {
+      await this.userService.selectUser(member);
+      this.router.navigateByUrl('home');
+    }
   }
 
   toggleEdit() {
-    this.edit = !this.edit;
+    if (this.allowEditToggle) this.edit = !this.edit;
   }
 }

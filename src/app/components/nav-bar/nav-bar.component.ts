@@ -92,7 +92,7 @@ export interface NavBarItem {
   items?: NavBarSubItem[];
 }
 
-interface NavBarSubItem {
+export interface NavBarSubItem {
   name: string;
   link: string;
 }
