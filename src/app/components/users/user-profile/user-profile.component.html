@@ -45,4 +45,6 @@
             [disabled]="form.invalid || sending"></button>
     </form>
     }
+
+    @if(!isNewMember){<p-button label="Delete profile" (onClick)="confirmDeletion()" icon="pi pi-trash" severity="danger" [disabled]="sending"></p-button>}
 </div>

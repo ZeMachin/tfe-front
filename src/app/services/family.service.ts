@@ -56,6 +56,13 @@ export class FamilyService {
       throw this.showNoFamilyErrorMessage();
   }
 
+  deleteFamilyMember(member: FamilyMember): Promise<Family> {
+    if (this.userService.family)
+      return this.communicationService.call(this.rs.deleteFamilyMember, {}, { id: member.id });
+    else
+      throw this.showNoFamilyErrorMessage();
+  }
+
   getStatuses(): Promise<FamilyMemberStatus[]> {
     return this.communicationService.call(this.rs.getFamilyMemberStatuses);
   }

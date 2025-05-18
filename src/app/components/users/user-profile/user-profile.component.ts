@@ -9,10 +9,11 @@ import { FamilyService } from '../../../services/family.service';
 import { UserService } from '../../../services/user.service';
 import { FamilyMemberStatus } from '../../../models/FamilyMemberStatus';
 import { SelectModule } from 'primeng/select';
-import { MessageService } from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { InputTextModule } from 'primeng/inputtext';
 import { ToggleSwitchModule } from 'primeng/toggleswitch';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
 
 @Component({
   selector: 'app-user-profile',
@@ -31,7 +32,8 @@ export class UserProfileComponent implements OnInit {
     private userService: UserService,
     private familyService: FamilyService,
     private messageService: MessageService,
-    private location: Location
+    private location: Location,
+    private confirmService: ConfirmationService
   ) {
     this.form = new FormGroup({
       name: new FormControl(),
@@ -107,4 +109,79 @@ export class UserProfileComponent implements OnInit {
   }
 
   get submitButtonLabel() { return history.state.member ? 'Update details' : 'Create family member'; }
+  get isNewMember() { return !history.state.member }
+
+  confirmDeletion() {
+    if (history.state.member) {
+      if ((history.state.member as FamilyMember).status.name === 'Adult' && this.userService.family?.members?.filter((m) => m.status.name === 'Adult').length && this.userService.family?.members?.filter((m) => m.status.name === 'Adult').length > 1)
+        this.openConfirmDeletion();
+      else
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Adult needed',
+          detail: 'You need to keep at least one adult in your family!'
+        });
+    } else {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Hey!',
+        detail: "You're not supposed to be able to do that!"
+      });
+    }
+  }
+
+  openConfirmDeletion() {
+    this.confirmService.confirm({
+      message: 'Are you sure that you want to delete this profile?',
+      header: 'Deletion confirmation',
+      closable: true,
+      closeOnEscape: true,
+      icon: 'pi pi-exclamation-triangle',
+      rejectButtonProps: {
+        label: 'No',
+        severity: 'secondary',
+        outlined: true,
+      },
+      acceptButtonProps: {
+        label: 'Yes',
+        severity: 'danger',
+        outtlined: true
+      },
+      accept: async () => {
+        this.deleteMember();
+      },
+    });
+  }
+
+  async deleteMember() {
+    if (history.state.member) {
+      this.sending = true;
+      try {
+        await this.familyService.deleteFamilyMember(history.state.member);
+        await this.userService.refreshFamily();
+        const delay = 3000;
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Deleted',
+          detail: 'The profile has been deleted successfully!',
+          life: delay
+        });
+        this.location.back();
+      } catch (err) {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Oops',
+          detail: "Something went wrong.\nPlease refresh the page."
+        });
+      } finally {
+        this.sending = false;
+      }
+    } else {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Oops',
+        detail: "Something went wrong.\nPlease refresh the page."
+      });
+    }
+  }
 }

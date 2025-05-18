@@ -55,6 +55,11 @@ export class RoutesService implements OnInit {
     method: 'PUT'
   };
 
+  deleteFamilyMember: Connection = {
+    url: `${this.baseUrl}/families/member/:id`,
+    method: 'DELETE'
+  };
+
   getHouseholdTypes: Connection = {
     url: `${this.baseUrl}/families/household_types`,
     method: 'GET'
