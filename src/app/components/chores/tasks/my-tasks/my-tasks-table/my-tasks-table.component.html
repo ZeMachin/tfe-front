@@ -1,0 +1,25 @@
+<p-table [value]="tasks">
+    <ng-template #header>
+        <tr>
+            <th>Name</th>
+            <th>Start</th>
+            <th>End</th>
+            @if(usesPoints){<th>Points</th>}
+            <th>Completion</th>
+        </tr>
+    </ng-template>
+    <ng-template #body let-taskList>
+        <tr>
+            <td [ngClass]="setCurrentClasses(taskList)" class="task">{{ taskList.task.name }}</td>
+            <td>{{ taskList.taskStart | date:'short' }}</td>
+            <td>{{ taskList.taskEnd | date:'short' }}</td>
+            @if(usesPoints){<td>{{ taskList.points }}</td>}
+            <td>
+                @if(!taskList.completedAt){<p-button label="Complete" [disabled]="sendings[taskList.id]" (onClick)="completeTask(taskList)"></p-button>}
+                @else{
+                {{ taskList.completedAt | date:'short' }}
+                }
+            </td>
+        </tr>
+    </ng-template>
+</p-table>
