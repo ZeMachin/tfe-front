@@ -33,7 +33,6 @@ export class TaskComponent implements OnInit {
 
   constructor(
     private familyService: FamilyService,
-    private userService: UserService,
     private messageService: MessageService,
     private confirmationService: ConfirmationService
   ) { }

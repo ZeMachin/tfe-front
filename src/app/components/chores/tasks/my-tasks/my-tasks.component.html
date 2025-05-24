@@ -9,7 +9,7 @@
             assigned to you. Hurry up and do it!</span>}
     </div>
 
-    <p-tabs value="0">
+    <p-tabs value="1">
         <p-tablist>
             <p-tab value="0">Table</p-tab>
             <p-tab value="1">Calendar</p-tab>
@@ -19,7 +19,10 @@
                 <app-my-tasks-table [tasks]="assignedTasks" (onCompleteTask)="completeTask($event)"></app-my-tasks-table>
             </p-tabpanel>
             <p-tabpanel value="1">
-                <app-my-tasks-calendar [tasks]="assignedTasks"></app-my-tasks-calendar>
+                @if(assignedTasks.length > 0){<app-my-tasks-calendar [tasks]="assignedTasks"></app-my-tasks-calendar>}
+                @else {
+                    <div>No tasks assigned yet.</div>
+                }
             </p-tabpanel>
         </p-tabpanels>
     </p-tabs>

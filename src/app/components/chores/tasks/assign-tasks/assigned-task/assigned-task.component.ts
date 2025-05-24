@@ -1,9 +1,9 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { TaskList } from '../../../../models/TaskList';
+import { TaskList } from '../../../../../models/TaskList';
 import { ButtonModule } from 'primeng/button';
 import { CommonModule } from '@angular/common';
 import { MessageService } from 'primeng/api';
-import { FamilyService } from '../../../../services/family.service';
+import { FamilyService } from '../../../../../services/family.service';
 
 @Component({
   selector: 'app-assigned-task',

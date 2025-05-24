@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { FamilyMember } from '../../../../models/FamilyMember';
 import { TaskList } from '../../../../models/TaskList';
 import { MessageService } from 'primeng/api';
 import { AuthService } from '../../../../services/auth.service';
@@ -63,6 +62,6 @@ export class MyTasksComponent implements OnInit {
         summary: 'Failure',
         detail: 'Something went wrong, the reward has not been created. Please try again.'
       });
-    } 
+    }
   }
 }

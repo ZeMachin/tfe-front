@@ -4,7 +4,7 @@ import { AuthService } from '../../services/auth.service';
 import { MessageService } from 'primeng/api';
 import { TaskList } from '../../models/TaskList';
 import { UserSelectionComponent } from "../users/user-selection/user-selection.component";
-import { AssignedTaskComponent } from "../chores/tasks/assigned-task/assigned-task.component";
+import { AssignedTaskComponent } from "../chores/tasks/assign-tasks/assigned-task/assigned-task.component";
 
 @Component({
   selector: 'app-home',
