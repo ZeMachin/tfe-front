@@ -57,9 +57,7 @@ export class MyTasksComponent implements OnInit {
         detail: 'The task has been completed successfully!'
       });
       await this.refreshTaskList();
-      console.log('before next');
       next();
-      console.log('after next')
     } catch (err) {
       this.messageService.add({
         severity: 'error',

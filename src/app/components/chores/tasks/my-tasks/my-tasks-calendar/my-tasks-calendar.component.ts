@@ -67,7 +67,7 @@ export class MyTasksCalendarComponent implements OnInit {
     this.createCalendarEvents();
   }
 
-  async createCalendarEvents() {
+  createCalendarEvents() {
     this.events = [];
     for (const taskList of this.tasks) {
       this.events.push({
@@ -75,6 +75,7 @@ export class MyTasksCalendarComponent implements OnInit {
         end: taskList.taskEnd,
         title: `${taskList.task.name}${taskList.points ? ` - ${taskList.points} pts` : ''}`,
         color: colors[taskList.status],
+        actions: this.actions,
         meta: taskList
       })
     };
@@ -86,14 +87,11 @@ export class MyTasksCalendarComponent implements OnInit {
       this.sendings[taskList.id] = true;
       await this.onCompleteTask.emit(taskList)
         .then(() => {
-          console.log('complete task then');
           this.sendings[taskList.id!] = false;
         })
         .catch((err) => this.sendings[taskList.id!] = false)
         .finally(async () => {
-          console.log('complete task finally');
-          console.log('tasks:', this.tasks);
-          await this.createCalendarEvents();
+          setTimeout(() => this.createCalendarEvents(), 1); // Very stupid, but it doesn't want to refresh the list otherwise, and I don't feel like refactoring the taskLists to Subject yet
         });
     }
   }
