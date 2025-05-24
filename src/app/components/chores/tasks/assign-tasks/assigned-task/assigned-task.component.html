@@ -1,4 +1,4 @@
-<div class="task" [ngClass]="currentClasses">
+<div class="task" [ngClass]="taskList.status">
   <h3>{{ taskList.task.name }}</h3>
   <div>Start: {{ taskList.taskStart }}</div>
   @if(taskList.taskEnd){<div>End: {{ taskList.taskEnd }}</div>}

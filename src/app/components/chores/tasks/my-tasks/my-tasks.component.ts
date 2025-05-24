@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { TaskList } from '../../../../models/TaskList';
+import { CompletionStatus, TaskList } from '../../../../models/TaskList';
 import { MessageService } from 'primeng/api';
 import { AuthService } from '../../../../services/auth.service';
 import { UserService } from '../../../../services/user.service';
@@ -42,12 +42,13 @@ export class MyTasksComponent implements OnInit {
   async refreshTaskList() {
     if (this.userService.member) {
       this.assignedTasks = await this.userService.getAssignedTasks();
+      console.log('assigned tasks:', this.assignedTasks);
       this.pendingTasks = this.assignedTasks.filter((at) => !at.completedAt)
-      this.lateTasks = this.pendingTasks.filter((pt) => pt.taskEnd ? pt.taskEnd.getTime() < Date.now() : false);
+      this.lateTasks = this.pendingTasks.filter((pt) => pt.status === CompletionStatus.late);
     }
   }
 
-  async completeTask(taskList: TaskList) {
+  async completeTask({ value: taskList, next }: { value: TaskList, next: (value?: unknown) => void }): Promise<void> {
     try {
       await this.familyService.completeTask(taskList);
       this.messageService.add({
@@ -56,6 +57,9 @@ export class MyTasksComponent implements OnInit {
         detail: 'The task has been completed successfully!'
       });
       await this.refreshTaskList();
+      console.log('before next');
+      next();
+      console.log('after next')
     } catch (err) {
       this.messageService.add({
         severity: 'error',
@@ -65,3 +69,4 @@ export class MyTasksComponent implements OnInit {
     }
   }
 }
+

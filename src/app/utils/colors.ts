@@ -1,10 +1,5 @@
 import { EventColor } from "calendar-utils";
-
-enum CompletionStatus {
-  'late' = 'late',
-  'completed' = 'completed',
-  'pending' = 'pending'
-} 
+import { CompletionStatus } from "../models/TaskList";
 
 export const colors: Record<CompletionStatus, EventColor> = {
   late: {

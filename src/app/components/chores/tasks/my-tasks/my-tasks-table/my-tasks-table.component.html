@@ -10,7 +10,7 @@
     </ng-template>
     <ng-template #body let-taskList>
         <tr>
-            <td [ngClass]="setCurrentClasses(taskList)" class="task">{{ taskList.task.name }}</td>
+            <td [ngClass]="taskList.status" class="task">{{ taskList.task.name }}</td>
             <td>{{ taskList.taskStart | date:'short' }}</td>
             <td>{{ taskList.taskEnd | date:'short' }}</td>
             @if(usesPoints){<td>{{ taskList.points }}</td>}

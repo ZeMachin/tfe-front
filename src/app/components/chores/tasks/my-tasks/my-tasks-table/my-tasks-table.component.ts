@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TaskList } from '../../../../../models/TaskList';
 import { TableModule } from 'primeng/table';
@@ -23,14 +23,6 @@ export class MyTasksTableComponent {
   ) {}
 
   get usesPoints() { return this.userService.family?.settings?.rewards || this.userService.family?.settings?.leaderboard}
-  
-  setCurrentClasses(taskList: TaskList) {
-    // CSS classes: added/removed per current state of component properties
-    return {
-      completed: !!taskList.completedAt,
-      late: taskList.taskEnd ? taskList.taskEnd.getTime() < Date.now() : false,
-    };
-  }
 
   async completeTask(taskList: TaskList) {
     if(taskList.id) {

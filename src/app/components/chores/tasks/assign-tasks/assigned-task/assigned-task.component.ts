@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { TaskList } from '../../../../../models/TaskList';
 import { ButtonModule } from 'primeng/button';
 import { CommonModule } from '@angular/common';
@@ -11,9 +11,8 @@ import { FamilyService } from '../../../../../services/family.service';
   templateUrl: './assigned-task.component.html',
   styleUrl: './assigned-task.component.less'
 })
-export class AssignedTaskComponent implements OnInit {
+export class AssignedTaskComponent {
   @Input('task') taskList!: TaskList;
-  currentClasses: Record<string, boolean> = {};
   sending: boolean = false;
 
   constructor(
@@ -30,7 +29,6 @@ export class AssignedTaskComponent implements OnInit {
         summary: 'Completed',
         detail: 'The task has been completed successfully!'
       });
-      this.setCurrentClasses();
     } catch (err) {
       this.messageService.add({
         severity: 'error',
@@ -40,17 +38,5 @@ export class AssignedTaskComponent implements OnInit {
     } finally {
       this.sending = false;
     }
-  }
-
-  ngOnInit(): void {
-    this.setCurrentClasses();
-  }
-
-  setCurrentClasses() {
-    // CSS classes: added/removed per current state of component properties
-    this.currentClasses = {
-      completed: !!this.taskList.completedAt,
-      late: this.taskList.taskEnd ? this.taskList.taskEnd.getTime() < Date.now() : false,
-    };
   }
 }

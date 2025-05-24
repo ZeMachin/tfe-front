@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, Output } from '@angular/core';
 import { TaskList } from '../../../../../models/TaskList';
 import { CalendarEventAction, CalendarEventTimesChangedEvent, CalendarModule, CalendarView } from 'angular-calendar';
 import { CommonModule } from '@angular/common';
@@ -17,15 +17,19 @@ import { SelectButtonModule } from 'primeng/selectbutton';
 import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { colors } from '../../../../../utils/colors';
+import { ThenableEventEmitter } from '../../../../../utils/thenable-event';
 
 @Component({
   selector: 'app-my-tasks-calendar',
-  imports: [CalendarModule, CommonModule, SelectButtonModule, FormsModule, ButtonModule ],
+  imports: [CalendarModule, CommonModule, SelectButtonModule, FormsModule, ButtonModule],
   templateUrl: './my-tasks-calendar.component.html',
   styleUrl: './my-tasks-calendar.component.less'
 })
 export class MyTasksCalendarComponent implements OnInit {
   @Input('tasks') tasks: TaskList[] = [];
+  @Output('onCompleteTask') onCompleteTask: ThenableEventEmitter<TaskList> = new ThenableEventEmitter();
+
+  sendings: { [key: number]: boolean } = {};
 
   view: CalendarView = CalendarView.Month;
 
@@ -34,11 +38,11 @@ export class MyTasksCalendarComponent implements OnInit {
   calendarView = Object.values(CalendarView);
 
   viewDate: Date = new Date();
-  
+
   refresh = new Subject<void>();
 
   activeDayIsOpen: boolean = true;
-  
+
   weekStartsOn: number = DAYS_OF_WEEK.MONDAY;
 
   weekendDays: number[] = [];
@@ -47,7 +51,7 @@ export class MyTasksCalendarComponent implements OnInit {
 
   actions: CalendarEventAction[] = [
     {
-      label: '<i class="pi pi-check"></i>',
+      label: '<i class="pi pi-check""></i>',
       a11yLabel: 'Edit',
       onClick: ({ event }: { event: CalendarEvent }): void => {
         this.completeTask(event);
@@ -55,29 +59,43 @@ export class MyTasksCalendarComponent implements OnInit {
     },
   ];
 
-  events: CalendarEvent[] = [
-  ];
+  events: CalendarEvent<TaskList>[] = [];
 
-  constructor() {}
+  constructor() { }
 
   ngOnInit(): void {
     this.createCalendarEvents();
   }
 
-  createCalendarEvents() {
-    for(const taskList of this.tasks) {
+  async createCalendarEvents() {
+    this.events = [];
+    for (const taskList of this.tasks) {
       this.events.push({
         start: taskList.taskStart,
         end: taskList.taskEnd,
         title: `${taskList.task.name}${taskList.points ? ` - ${taskList.points} pts` : ''}`,
-        color: taskList.completedAt ? colors.completed : (taskList.taskEnd ? taskList.taskEnd.getTime() < Date.now() ? colors.late : colors.pending : colors.pending),
-        actions: this.actions,
+        color: colors[taskList.status],
+        meta: taskList
       })
     };
   }
 
-  completeTask($event: any) {
-    console.log('complete task:', $event)
+  async completeTask(event: CalendarEvent<TaskList>) {
+    const taskList = event.meta as TaskList;
+    if (taskList.id) {
+      this.sendings[taskList.id] = true;
+      await this.onCompleteTask.emit(taskList)
+        .then(() => {
+          console.log('complete task then');
+          this.sendings[taskList.id!] = false;
+        })
+        .catch((err) => this.sendings[taskList.id!] = false)
+        .finally(async () => {
+          console.log('complete task finally');
+          console.log('tasks:', this.tasks);
+          await this.createCalendarEvents();
+        });
+    }
   }
 
   setView(view: CalendarView) {
@@ -96,8 +114,8 @@ export class MyTasksCalendarComponent implements OnInit {
       }
       this.viewDate = date;
     }
-  }  
-  
+  }
+
   handleEvent(action: string, event: CalendarEvent): void {
     // TODO: open descriptive modal
   }
