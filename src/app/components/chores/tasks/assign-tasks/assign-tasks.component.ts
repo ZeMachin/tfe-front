@@ -1,51 +1,33 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FamilyService } from '../../../../services/family.service';
 import { FamilyMember } from '../../../../models/FamilyMember';
 import { Task } from '../../../../models/Task';
-import { TableModule, TableRowCollapseEvent, TableRowExpandEvent } from 'primeng/table';
-import { ButtonModule } from 'primeng/button';
-import { DialogService, DynamicDialogModule, DynamicDialogRef } from 'primeng/dynamicdialog';
-import { AssignTaskModalComponent } from './assign-task-modal/assign-task-modal.component';
+import { TabsModule } from 'primeng/tabs';
+import { AssignTasksCalendarComponent } from './assign-tasks-calendar/assign-tasks-calendar.component';
+import { AssignTasksTableComponent } from './assign-tasks-table/assign-tasks-table.component';
 
 @Component({
   selector: 'app-assign-tasks',
-  imports: [TableModule, ButtonModule, DynamicDialogModule],
+  imports: [TabsModule, AssignTasksCalendarComponent, AssignTasksTableComponent],
   templateUrl: './assign-tasks.component.html',
   styleUrl: './assign-tasks.component.less'
 })
-export class AssignTasksComponent implements OnInit, OnDestroy {
-  ref: DynamicDialogRef | undefined;
-
+export class AssignTasksComponent implements OnInit {
   members: FamilyMember[] = [];
   tasks: Task[] = [];
 
-  expandedRows: { [key: number]: boolean } = {};
-
   constructor(
     private familyService: FamilyService,
-    private dialogService: DialogService
   ) { }
 
   async ngOnInit(): Promise<void> {
-    this.loadTasks();
-    this.loadMembers();
+    await this.refresh();
   }
 
-    //TODO: base for CalendarEvents
-    // {
-    //   start: subDays(startOfDay(new Date()), 1), // startOfDay(new Date()),
-    //   end: addDays(new Date(), 1),
-    //   title: 'A 3 day event',
-    //   color: { ...colors['red'] },
-    //   actions: this.actions,
-    //   allDay: true,
-    //   resizable: {
-    //     beforeStart: true,
-    //     afterEnd: true,
-    //   },
-    //   draggable: true,
-    // },
-
+  async refresh() {
+    await this.loadTasks();
+    await this.loadMembers();
+  }
 
   async loadTasks() {
       this.tasks = await this.familyService.getFamilyTasks();
@@ -53,46 +35,5 @@ export class AssignTasksComponent implements OnInit, OnDestroy {
 
   async loadMembers() {
       this.members = await this.familyService.getFamilyMembers();
-  }
-
-  expandAll() {
-    const initialValue: { [key: number]: boolean } = {};
-    this.expandedRows = this.members.reduce((acc, m) => (acc[m.id] = true) && acc, initialValue);
-  }
-
-  collapseAll() {
-    this.expandedRows = {};
-  }
-
-  onRowExpand(event: TableRowExpandEvent) {
-    // this.messageService.add({ severity: 'info', summary: 'Product Expanded', detail: event.data.name, life: 3000 });
-  }
-
-  onRowCollapse(event: TableRowCollapseEvent) {
-    // this.messageService.add({ severity: 'success', summary: 'Product Collapsed', detail: event.data.name, life: 3000 });
-  }
-
-  openTaskAssignmentModal(member: FamilyMember) {
-    this.ref = this.dialogService.open(
-      AssignTaskModalComponent,
-      {
-        header: `Assign task to ${member.name}`,
-        modal: true,
-        closable: true,
-        data: {
-          member
-        }
-      })
-
-      this.ref.onClose.subscribe((x) => {
-        this.loadTasks();
-        this.loadMembers();
-      })
-  }
-
-  ngOnDestroy(): void {
-    if (this.ref) {
-      this.ref.close();
-    }
   }
 }

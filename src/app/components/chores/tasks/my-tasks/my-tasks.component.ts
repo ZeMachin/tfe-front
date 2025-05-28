@@ -42,7 +42,6 @@ export class MyTasksComponent implements OnInit {
   async refreshTaskList() {
     if (this.userService.member) {
       this.assignedTasks = await this.userService.getAssignedTasks();
-      console.log('assigned tasks:', this.assignedTasks);
       this.pendingTasks = this.assignedTasks.filter((at) => !at.completedAt)
       this.lateTasks = this.pendingTasks.filter((pt) => pt.status === CompletionStatus.late);
     }
