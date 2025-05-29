@@ -24,10 +24,11 @@ import { MessageService } from 'primeng/api';
 })
 export class AssignTaskModalComponent implements OnInit {
   form?: FormGroup;
-  member?: FamilyMember;
   tasks: Task[] = [];
+  members: FamilyMember[] = [];
   sending: boolean = false;
   now: Date = new Date();
+  new: boolean = false;
 
   constructor(
     private ref: DynamicDialogRef,
@@ -39,25 +40,28 @@ export class AssignTaskModalComponent implements OnInit {
   ) { }
 
   async ngOnInit(): Promise<void> {
-    this.member = this.config.data.member;
-      this.tasks = await this.familyService.getFamilyTasks();
-    this.form = this.fb.group({
-      task: [undefined, [Validators.required]],
-      taskStart: [new Date(), [Validators.required]],
-      taskEnd: []
+    this.tasks = await this.familyService.getFamilyTasks();
+    this.members = await this.familyService.getFamilyMembers();
+    const taskList = this.config.data.taskList;
+    this.new = this.config.data.new;
+    this.form = this.fb.group({ 
+      member: [taskList.member, [Validators.required]],
+      task: [taskList.task, [Validators.required]],
+      taskStart: [taskList.taskStart ?? new Date(), [Validators.required]],
+      taskEnd: [taskList.taskEnd ],
     });
-    if (this.userService.family?.settings.rewards || this.userService.family?.settings.leaderboard) this.form.addControl('points', this.fb.control(0, [Validators.required, Validators.min(0)]));
+    if (this.userService.family?.settings.rewards || this.userService.family?.settings.leaderboard) this.form.addControl('points', this.fb.control(taskList.points ?? 0, [Validators.required, Validators.min(0)]));
   }
 
   async onSubmit() {
     this.sending = true;
-    if (this.form && this.member) {
+    if (this.form) {
       try {
-        await this.familyService.assignTask(this.form.value, this.member);
+        this.new ? await this.familyService.assignTask(this.form.value, this.form.value.member) : await this.familyService.editAssignedTask(this.form.value, this.form.value.member);
         this.messageService.add({
           severity: 'success',
           summary: 'Assigned',
-          detail: `The task has been assigned to ${this.member.name}!`
+          detail: `The task has been assigned to ${this.form.value.member.name}!`
         });
         this.ref.close();
       } catch (err) {

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { DynamicDialogRef, DialogService, DynamicDialogModule } from 'primeng/dynamicdialog';
 import { TableRowExpandEvent, TableRowCollapseEvent, TableModule } from 'primeng/table';
 import { FamilyMember } from '../../../../../models/FamilyMember';
@@ -6,6 +6,7 @@ import { Task } from '../../../../../models/Task';
 import { AssignTaskModalComponent } from '../assign-task-modal/assign-task-modal.component';
 import { ButtonModule } from 'primeng/button';
 import { DatePipe } from '@angular/common';
+import { TaskList } from '../../../../../models/TaskList';
 
 @Component({
   selector: 'app-assign-tasks-table',
@@ -13,7 +14,7 @@ import { DatePipe } from '@angular/common';
   templateUrl: './assign-tasks-table.component.html',
   styleUrl: './assign-tasks-table.component.less'
 })
-export class AssignTasksTableComponent implements OnDestroy {
+export class AssignTasksTableComponent implements OnDestroy, OnInit {
   @Input('members') members: FamilyMember[] = [];
   @Input('tasks') tasks: Task[] = [];
   @Output('refresh') refresh: EventEmitter<any> = new EventEmitter();
@@ -25,6 +26,10 @@ export class AssignTasksTableComponent implements OnDestroy {
   constructor(
     private dialogService: DialogService
   ) { }
+
+  ngOnInit(): void {
+    this.refresh.emit();
+  }
 
   expandAll() {
     const initialValue: { [key: number]: boolean } = {};
@@ -47,17 +52,41 @@ export class AssignTasksTableComponent implements OnDestroy {
     this.ref = this.dialogService.open(
       AssignTaskModalComponent,
       {
-        header: `Assign task to ${member.name}`,
+        header: `Assign task`,
         modal: true,
         closable: true,
         data: {
-          member
+          taskList: {
+            member
+          },
+          new: true
         }
       })
 
-      this.ref.onClose.subscribe((x) => {
-        this.refresh.emit();
+    this.ref.onClose.subscribe((x) => {
+      this.refresh.emit();
+    })
+  }
+
+  editTask(member: FamilyMember, taskList: TaskList) {
+    this.ref = this.dialogService.open(
+      AssignTaskModalComponent,
+      {
+        header: `Edit task`,
+        modal: true,
+        closable: true,
+        data: {
+          taskList: {
+            ...taskList,
+            member
+          },
+          new: false
+        }
       })
+
+    this.ref.onClose.subscribe((x) => {
+      this.refresh.emit();
+    })
   }
 
   ngOnDestroy(): void {

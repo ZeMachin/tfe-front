@@ -1,13 +1,15 @@
+import { FamilyMember } from "./FamilyMember";
 import { Task } from "./Task";
 
 export class TaskList {
-    constructor(taskList: TaskList) {
-        this.id = taskList.id;
-        this.createdAt = taskList.createdAt;
-        this.completedAt = taskList.completedAt;
-        this.taskStart = taskList.taskStart;
-        this.taskEnd = taskList.taskEnd;
-        this.task = taskList.task;
+    constructor(dto: TaskList) {
+        Object.assign(this, dto);
+        this.createdAt = dto.createdAt ? new Date(dto.createdAt) : dto.createdAt;
+        this.completedAt = dto.completedAt ? new Date(dto.completedAt) : dto.completedAt;
+        this.taskStart = new Date(dto.taskStart);
+        this.taskEnd = dto.taskEnd ? new Date(dto.taskEnd) : dto.taskEnd;
+        this.task = new Task(dto.task);
+        this.member = dto.member ? new FamilyMember(dto.member) : dto.member;
     }
 
     id?: number;
@@ -17,6 +19,8 @@ export class TaskList {
     taskEnd?: Date;
     points?: number;
     task: Task;
+    member?: FamilyMember;
+    recurrence?: Recurrence;
 
     static taskListDtoToTaskList(dto: TaskListDTO): TaskList {
         return new TaskList({
@@ -47,4 +51,15 @@ export interface TaskListDTO {
     taskEnd?: string;
     points?: number;
     task: Task;
+}
+
+export interface Recurrence {
+    type: RecurrenceType;
+}
+
+export enum RecurrenceType {
+    'daily' = 'daily',
+    'weekly' = 'weekly',
+    'monthly' = 'monthly',
+    'yearly' = 'yearly',
 }

@@ -140,6 +140,11 @@ export class RoutesService implements OnInit {
     method: 'POST'
   }
 
+  editAssignedTask: Connection = {
+    url:  `${this.baseUrl}/tasks/member/:member_id/assign_task`,
+    method: 'PUT'
+  }
+
   completeTask: Connection = {
     url:  `${this.baseUrl}/tasks/member/:member_id/complete_task`,
     method: 'PUT'
@@ -148,6 +153,11 @@ export class RoutesService implements OnInit {
   buyReward: Connection = {
     url:  `${this.baseUrl}/rewards/member/:member_id/reward/:reward_id/buy_reward`,
     method: 'PUT'
+  }
+
+  getAssignedTasks: Connection = {
+    url:  `${this.baseUrl}/tasks/family/:family_id/assigned_tasks`,
+    method: 'GET'
   }
 }
 

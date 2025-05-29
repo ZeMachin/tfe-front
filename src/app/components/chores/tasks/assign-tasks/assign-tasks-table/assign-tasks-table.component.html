@@ -44,8 +44,7 @@
                                 <td>{{ taskList.taskStart | date:'medium' }}</td>
                                 <td>{{ taskList.taskEnd | date:'medium'  }}</td>
                                 <td>{{ taskList.points }}</td>
-                                <td><p-button type="button" icon="pi pi-pencil" /></td>
-                                <!-- TODO: allow editing of tasklist -->
+                                <td><p-button type="button" icon="pi pi-pencil" (onClick)="editTask(member, taskList)"/></td>
                             </tr>
                         </ng-template>
                         <ng-template #emptymessage>

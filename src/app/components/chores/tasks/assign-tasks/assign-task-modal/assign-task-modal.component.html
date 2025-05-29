@@ -1,9 +1,18 @@
 @if(form) {<form [formGroup]="form" (ngSubmit)="onSubmit()" class="p-fluid">
+   <!-- TASK -->
+   <div class="p-field">
+      <label for="member">Member</label>
+      <p-select id="member" formControlName="member" [options]="members" optionLabel="name" appendTo="body" dataKey="id"></p-select>
+      @if (form.get('member')?.invalid && form.get('task')?.touched) {
+      @if(form.get('member')?.errors?.['required']) {<small class="p-error">You must select a member.</small>
+      }
+      }
+   </div>
 
    <!-- TASK -->
    <div class="p-field">
       <label for="task">Task</label>
-      <p-select id="task" formControlName="task" [options]="tasks" optionLabel="name" appendTo="body"></p-select>
+      <p-select id="task" formControlName="task" [options]="tasks" optionLabel="name" appendTo="body"  dataKey="id"></p-select>
       @if (form.get('task')?.invalid && form.get('task')?.touched) {
       @if(form.get('task')?.errors?.['required']) {<small class="p-error">You must select a task.</small>
       }

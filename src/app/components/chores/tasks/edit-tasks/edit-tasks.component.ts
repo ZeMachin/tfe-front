@@ -16,7 +16,6 @@ export class EditTasksComponent implements OnInit {
   tasks: Task[] = [];
 
   constructor(
-    private userService: UserService,
     private familyService: FamilyService
   ) { }
 

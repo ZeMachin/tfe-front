@@ -4,19 +4,19 @@ import { Task } from "./Task";
 import { TaskList } from "./TaskList";
 
 export class FamilyMember {
-    constructor(member: FamilyMember) {
-        this.id = member.id;
-        this.name = member.name;
-        this.color = member.color;
-        this.requiresPin = member.requiresPin;
-        this.status = member.status;
-        this.taskLists = member.taskLists;
-        this.metricPreferences = member.metricPreferences;
-        this.favoriteTasks = member.favoriteTasks;
-        this.favoriteTasks = member.favoriteTasks;
-        this.leastFavoriteTasks = member.leastFavoriteTasks;
-        this.points = member.points;
-        this.pin = member.pin;
+    constructor(dto: FamilyMember) {
+        this.id = dto.id;
+        this.name = dto.name;
+        this.color = dto.color;
+        this.requiresPin = dto.requiresPin;
+        this.status = dto.status;
+        this.taskLists = dto.taskLists?.map((tl) => new TaskList(tl)) || [];
+        this.metricPreferences = dto.metricPreferences;
+        this.favoriteTasks = dto.favoriteTasks;
+        this.favoriteTasks = dto.favoriteTasks;
+        this.leastFavoriteTasks = dto.leastFavoriteTasks;
+        this.points = dto.points;
+        this.pin = dto.pin;
     }
     id: number;
     name: string;

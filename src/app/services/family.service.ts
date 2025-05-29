@@ -79,9 +79,9 @@ export class FamilyService {
     }
   }
 
-  getFamilyMembers(): Promise<FamilyMember[]> {
+  async getFamilyMembers(): Promise<FamilyMember[]> {
     if (this.userService.family)
-      return this.communicationService.call(this.rs.getFamilyMembers, {}, { id: this.userService.family.id });
+      return (await this.communicationService.call<FamilyMember[]>(this.rs.getFamilyMembers, {}, { id: this.userService.family.id })).map((fm) => new FamilyMember(fm));
     else
       throw this.showNoFamilyErrorMessage();
   }
@@ -188,6 +188,10 @@ export class FamilyService {
     return this.communicationService.call(this.rs.assignTask, taskList, { member_id: member.id });
   }
 
+  editAssignedTask(taskList: TaskList, member: FamilyMember): Promise<TaskList> {
+    return this.communicationService.call(this.rs.editAssignedTask, taskList, { member_id: member.id });
+  }
+
   async completeTask(taskList: TaskList): Promise<TaskList> {
     if (this.userService.member)
       return TaskList.taskListDtoToTaskList(await this.communicationService.call(this.rs.completeTask, taskList, { member_id: this.userService.member.id }));
@@ -200,6 +204,14 @@ export class FamilyService {
       await this.communicationService.call(this.rs.buyReward, {}, { member_id: this.userService.member.id, reward_id: reward.id });
       await this.userService.refreshMember();
     } else
-      throw this.showNoUserErrorMessage();
+      
+    throw this.showNoUserErrorMessage();
+  }
+
+  async getFamilyTaskList(): Promise<TaskList[]> {
+    if (this.userService.family)
+      return (await this.communicationService.call<TaskList[]>(this.rs.getAssignedTasks, {}, { family_id: this.userService.family.id })).map((t) => new TaskList(t));
+    else
+      throw this.showNoFamilyErrorMessage();
   }
 }

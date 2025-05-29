@@ -3,11 +3,6 @@ import { TaskList } from '../../../../../models/TaskList';
 import { CalendarEventAction, CalendarEventTimesChangedEvent, CalendarModule, CalendarView } from 'angular-calendar';
 import { CommonModule } from '@angular/common';
 import {
-  startOfDay,
-  subDays,
-  addDays,
-  endOfMonth,
-  addHours,
   isSameDay,
   isSameMonth,
 } from 'date-fns';
