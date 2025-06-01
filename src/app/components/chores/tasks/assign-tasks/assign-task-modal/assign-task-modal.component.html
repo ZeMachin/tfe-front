@@ -2,7 +2,8 @@
    <!-- TASK -->
    <div class="p-field">
       <label for="member">Member</label>
-      <p-select id="member" formControlName="member" [options]="members" optionLabel="name" appendTo="body" dataKey="id"></p-select>
+      <p-select id="member" formControlName="member" [options]="members" optionLabel="name" appendTo="body"
+         dataKey="id"></p-select>
       @if (form.get('member')?.invalid && form.get('task')?.touched) {
       @if(form.get('member')?.errors?.['required']) {<small class="p-error">You must select a member.</small>
       }
@@ -12,7 +13,8 @@
    <!-- TASK -->
    <div class="p-field">
       <label for="task">Task</label>
-      <p-select id="task" formControlName="task" [options]="tasks" optionLabel="name" appendTo="body"  dataKey="id"></p-select>
+      <p-select id="task" formControlName="task" [options]="tasks" optionLabel="name" appendTo="body"
+         dataKey="id"></p-select>
       @if (form.get('task')?.invalid && form.get('task')?.touched) {
       @if(form.get('task')?.errors?.['required']) {<small class="p-error">You must select a task.</small>
       }
@@ -51,6 +53,19 @@
    </div>
    }
 
-   <!-- TODO: add recurrence -->
+   <!-- Toggle recurrence -->
+   <div class="p-field">
+      <label for="is-recurrent">Recurrent task?</label>
+      <p-toggleswitch id="is-recurrent" (onChange)="toggleRecurrence()" [(ngModel)]="isRecurrent"
+         [ngModelOptions]="{standalone: true}" />
+   </div>
+
+   <!-- RECURRENCE -->
+   @if(isRecurrent) {<div class="p-field">
+      <label for="recurrence">Recurrence</label>
+      <p-select id="recurrence" formControlName="recurrence" [options]="recurrenceTypes" optionLabel="name" appendTo="body"
+         dataKey="id"></p-select>
+   </div>}
+
    <button type="submit" pButton label="Submit" class="p-button-primary" [disabled]="form.invalid || sending"></button>
 </form>}

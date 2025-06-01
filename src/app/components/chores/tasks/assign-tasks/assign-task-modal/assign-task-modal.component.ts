@@ -11,14 +11,16 @@ import { InputGroupModule } from 'primeng/inputgroup';
 import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { ButtonModule } from 'primeng/button';
-import { Family } from '../../../../../models/Family';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { InputTextModule } from 'primeng/inputtext';
 import { MessageService } from 'primeng/api';
+import { TaskList } from '../../../../../models/TaskList';
+import { ToggleSwitchModule } from 'primeng/toggleswitch';
+import { RecurrenceType } from '../../../../../models/Recurrence';
 
 @Component({
   selector: 'app-assign-task-modal',
-  imports: [ReactiveFormsModule, FormsModule, SelectModule, DatePickerModule, InputGroupModule, InputGroupAddonModule, FloatLabelModule, ButtonModule, InputNumberModule, InputTextModule],
+  imports: [ReactiveFormsModule, FormsModule, SelectModule, DatePickerModule, InputGroupModule, InputGroupAddonModule, FloatLabelModule, ButtonModule, InputNumberModule, InputTextModule, ToggleSwitchModule],
   templateUrl: './assign-task-modal.component.html',
   styleUrl: './assign-task-modal.component.less'
 })
@@ -29,6 +31,8 @@ export class AssignTaskModalComponent implements OnInit {
   sending: boolean = false;
   now: Date = new Date();
   new: boolean = false;
+  isRecurrent: boolean = false;
+  recurrenceTypes: RecurrenceType[] = [];
 
   constructor(
     private ref: DynamicDialogRef,
@@ -42,15 +46,31 @@ export class AssignTaskModalComponent implements OnInit {
   async ngOnInit(): Promise<void> {
     this.tasks = await this.familyService.getFamilyTasks();
     this.members = await this.familyService.getFamilyMembers();
-    const taskList = this.config.data.taskList;
+    this.recurrenceTypes = await this.familyService.getRecurrenceTypes();
+    const taskList: TaskList = this.config.data.taskList;
     this.new = this.config.data.new;
+    this.isRecurrent = !!taskList.recurrence;
     this.form = this.fb.group({ 
       member: [taskList.member, [Validators.required]],
       task: [taskList.task, [Validators.required]],
       taskStart: [taskList.taskStart ?? new Date(), [Validators.required]],
       taskEnd: [taskList.taskEnd ],
+      recurrence: [taskList.recurrence]
     });
     if (this.userService.family?.settings.rewards || this.userService.family?.settings.leaderboard) this.form.addControl('points', this.fb.control(taskList.points ?? 0, [Validators.required, Validators.min(0)]));
+  }
+
+  toggleRecurrence() {
+    if (this.isRecurrent) {
+      const taskList: TaskList = this.config.data.taskList;
+      if (taskList) {
+        this.form?.addControl('recurrence', this.fb.control(taskList.recurrence, [Validators.required]));
+      } else {
+        this.form?.addControl('recurrence', this.fb.control('', [Validators.required]));
+      }
+    } else {
+      this.form?.removeControl('recurrence');
+    }
   }
 
   async onSubmit() {

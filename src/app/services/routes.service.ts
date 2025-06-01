@@ -159,6 +159,11 @@ export class RoutesService implements OnInit {
     url:  `${this.baseUrl}/tasks/family/:family_id/assigned_tasks`,
     method: 'GET'
   }
+
+  getRecurrenceTypes: Connection = {
+    url:  `${this.baseUrl}/tasks/recurrence_types`,
+    method: 'GET'
+  }
 }
 
 export interface Connection {

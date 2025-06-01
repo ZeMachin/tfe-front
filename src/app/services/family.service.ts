@@ -11,6 +11,7 @@ import { Reward } from '../models/Reward';
 import { TaskList } from '../models/TaskList';
 import { UserService } from './user.service';
 import { MessageService } from 'primeng/api';
+import { RecurrenceType } from '../models/Recurrence';
 
 @Injectable({
   providedIn: 'root',
@@ -68,7 +69,7 @@ export class FamilyService {
   }
 
   getFamilyMember(member: FamilyMember): Promise<FamilyMember> {
-    return this.communicationService.call(this.rs.getFamilyMember, {}, { id: member.id }); 
+    return this.communicationService.call(this.rs.getFamilyMember, {}, { id: member.id });
   }
 
   createMember(member: FamilyMember): Promise<FamilyMember> {
@@ -204,8 +205,8 @@ export class FamilyService {
       await this.communicationService.call(this.rs.buyReward, {}, { member_id: this.userService.member.id, reward_id: reward.id });
       await this.userService.refreshMember();
     } else
-      
-    throw this.showNoUserErrorMessage();
+
+      throw this.showNoUserErrorMessage();
   }
 
   async getFamilyTaskList(): Promise<TaskList[]> {
@@ -213,5 +214,9 @@ export class FamilyService {
       return (await this.communicationService.call<TaskList[]>(this.rs.getAssignedTasks, {}, { family_id: this.userService.family.id })).map((t) => new TaskList(t));
     else
       throw this.showNoFamilyErrorMessage();
+  }
+
+  async getRecurrenceTypes(): Promise<RecurrenceType[]> {
+    return (await this.communicationService.call<RecurrenceType[]>(this.rs.getRecurrenceTypes)).map((r) => new RecurrenceType(r));
   }
 }

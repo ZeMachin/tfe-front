@@ -1,4 +1,5 @@
 import { FamilyMember } from "./FamilyMember";
+import { RecurrenceType } from "./Recurrence";
 import { Task } from "./Task";
 
 export class TaskList {
@@ -20,7 +21,7 @@ export class TaskList {
     points?: number;
     task: Task;
     member?: FamilyMember;
-    recurrence?: Recurrence;
+    recurrence?: RecurrenceType;
 
     static taskListDtoToTaskList(dto: TaskListDTO): TaskList {
         return new TaskList({
@@ -29,6 +30,7 @@ export class TaskList {
             completedAt: dto.completedAt ? new Date(dto.completedAt) : undefined,
             taskStart: new Date(dto.taskStart),
             taskEnd: dto.taskEnd ? new Date(dto.taskEnd) : undefined,
+            recurrence: dto.recurrence ? new RecurrenceType(dto.recurrence) : undefined
         } as TaskList);
     }   
 
@@ -51,15 +53,5 @@ export interface TaskListDTO {
     taskEnd?: string;
     points?: number;
     task: Task;
-}
-
-export interface Recurrence {
-    type: RecurrenceType;
-}
-
-export enum RecurrenceType {
-    'daily' = 'daily',
-    'weekly' = 'weekly',
-    'monthly' = 'monthly',
-    'yearly' = 'yearly',
+    recurrence: RecurrenceType;
 }
