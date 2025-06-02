@@ -25,7 +25,7 @@
    <div class="p-field">
       <label for="start">Start</label>
       <p-datePicker id="start" formControlName="taskStart" appendTo="body" styleClass="w-12" [showTime]="true"
-         [hourFormat]="'24'" dateFormat="dd/mm/yy" [minDate]="now"></p-datePicker>
+         [hourFormat]="'24'" dateFormat="dd/mm/yy" [minDate]="new ? now : undefined"></p-datePicker>
       @if (form.get('start')?.invalid && form.get('start')?.touched) {
       @if(form.get('start')?.errors?.['required']) {<small class="p-error">A starting date/time is required.</small>
       }

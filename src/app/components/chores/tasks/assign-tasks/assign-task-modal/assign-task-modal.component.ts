@@ -51,6 +51,7 @@ export class AssignTaskModalComponent implements OnInit {
     this.new = this.config.data.new;
     this.isRecurrent = !!taskList.recurrence;
     this.form = this.fb.group({ 
+      id: [taskList.id],
       member: [taskList.member, [Validators.required]],
       task: [taskList.task, [Validators.required]],
       taskStart: [taskList.taskStart ?? new Date(), [Validators.required]],
