@@ -9,7 +9,7 @@
         <nav [class]="'primnav ' + (expand ? 'expand' : '')">
             <ul>
                 @for(item of navBarItems; track $index) {
-                    <li nav-bar-item [item]="item" [iconOnly]="!expand" class="nav-bar-item"></li>
+                    <li nav-bar-item [item]="item" [iconOnly]="!expand" [class]="item.displayCondition ? (item.displayCondition() ? 'nav-bar-item' : 'hidden') : 'hidden'"></li>
                 }
             </ul>
         </nav>
