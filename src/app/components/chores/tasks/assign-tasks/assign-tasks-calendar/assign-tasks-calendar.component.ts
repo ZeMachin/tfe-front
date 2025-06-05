@@ -141,6 +141,17 @@ export class AssignTasksCalendarComponent implements OnInit {
     // TODO: open descriptive modal
   }
 
+  onChangeViewDate(type: ViewDateChange) {
+    switch(type) {
+      case ViewDateChange.previous:
+      case ViewDateChange.today:
+      case ViewDateChange.next:
+      case ViewDateChange.day:
+      case ViewDateChange.week:
+      case ViewDateChange.month:
+    }
+  }
+
   onContextMenu(date: Date) {
     this.date = date;
   }
@@ -192,4 +203,13 @@ export class AssignTasksCalendarComponent implements OnInit {
     });
     this.handleEvent('Dropped or resized', event);
   }
+}
+
+enum ViewDateChange {
+  previous = 'previous',
+  today = 'today',
+  next = 'next',
+  day = 'day',
+  week = 'week',
+  month = 'month'
 }

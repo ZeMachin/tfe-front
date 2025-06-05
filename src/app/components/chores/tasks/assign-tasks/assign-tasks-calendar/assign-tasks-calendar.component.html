@@ -104,7 +104,7 @@
 <div class="header">
     <div class="col-md-4">
         <div class="btn-group">
-            <p-button mwlCalendarPreviousView [view]="view" [(viewDate)]="viewDate" label="Previous" />
+            <p-button mwlCalendarPreviousView [view]="view" [(viewDate)]="viewDate" label="Previous" (viewDateChange)="onChangeViewDate(on)"/>
             <p-button class="btn btn-outline-secondary" mwlCalendarToday [(viewDate)]="viewDate" label="Today" />
             <p-button mwlCalendarNextView [view]="view" [(viewDate)]="viewDate" label="Next" />
         </div>
@@ -113,7 +113,7 @@
         <h3>{{ viewDate | calendarDate:(view + 'ViewTitle'):'en' }}</h3>
     </div>
     <div class="col-md-4">
-        <p-selectbutton [options]="calendarView" [(ngModel)]="view" [allowEmpty]="false" />
+        <p-selectbutton [options]="calendarView" [(ngModel)]="view" [allowEmpty]="false" (onOptionClick)="">
     </div>
 </div>
 <br />
