@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CalendarView, DAYS_OF_WEEK, CalendarEventAction, CalendarEvent, CalendarModule, CalendarEventTimesChangedEvent } from 'angular-calendar';
-import { isSameMonth, isSameDay } from 'date-fns';
+import { isSameMonth, isSameDay, addDays, addMonths } from 'date-fns';
 import { Subject } from 'rxjs';
 import { CompletionStatus, TaskList } from '../../../../../models/TaskList';
 import { colors } from '../../../../../utils/colors';
@@ -33,6 +33,8 @@ export class AssignTasksCalendarComponent implements OnInit {
   view: CalendarView = CalendarView.Month;
 
   CalendarView = CalendarView;
+
+  ViewDateChange = ViewDateChange;
 
   calendarView = Object.values(CalendarView);
 
@@ -84,7 +86,36 @@ export class AssignTasksCalendarComponent implements OnInit {
 
   createCalendarEvents() {
     this.events = [];
-    for (const taskList of this.tasks) {
+    const nonRecurrentTasks = this.tasks.filter((t) => !t.recurrence);
+    for (const taskList of nonRecurrentTasks) {
+      this.events.push({
+        start: taskList.taskStart,
+        end: taskList.taskEnd,
+        title: `${taskList.task.name}${taskList.points ? ` - ${taskList.points} pts` : ''}`,
+        color: colors[taskList.status],
+        actions: this.actions,
+        meta: taskList,
+        resizable: {
+          beforeStart: taskList.status != CompletionStatus.completed,
+          afterEnd: taskList.status != CompletionStatus.completed,
+        },
+        draggable: taskList.status != CompletionStatus.completed,
+      })
+    };
+    
+    const recurrentTasks = this.tasks.filter((t) => t.recurrence); 
+
+    
+    for (const taskList of recurrentTasks) {
+      const startDate: Date = new Date(); // TODO: find start date based on viewDate and calendarView. Check CTC Booking, it might be there already, most likely in the ws
+      let endDate: Date = new Date();
+      switch(this.view) {
+        case CalendarView.Month:
+          endDate = addMonths(startDate, 1);
+        case CalendarView.Week:
+        case CalendarView.Day:
+      }
+      const endDate: Date = new Date();                                    
       this.events.push({
         start: taskList.taskStart,
         end: taskList.taskEnd,
@@ -137,19 +168,19 @@ export class AssignTasksCalendarComponent implements OnInit {
     })
   }
 
-  handleEvent(action: string, event: CalendarEvent): void {
-    // TODO: open descriptive modal
-  }
-
   onChangeViewDate(type: ViewDateChange) {
-    switch(type) {
-      case ViewDateChange.previous:
-      case ViewDateChange.today:
-      case ViewDateChange.next:
-      case ViewDateChange.day:
-      case ViewDateChange.week:
-      case ViewDateChange.month:
-    }
+    // console.log('view change type:', type)
+    // console.log('calendar view:', this.calendarView)
+    // console.log('view date:', this.viewDate)
+    this.createCalendarEvents();
+    // switch(type) {
+    //   case ViewDateChange.previous:
+    //   case ViewDateChange.today:
+    //   case ViewDateChange.next:
+    //   case ViewDateChange.day:
+    //   case ViewDateChange.week:
+    //   case ViewDateChange.month:
+    // }
   }
 
   onContextMenu(date: Date) {
@@ -202,6 +233,10 @@ export class AssignTasksCalendarComponent implements OnInit {
       return iEvent;
     });
     this.handleEvent('Dropped or resized', event);
+  }
+
+  handleEvent(action: string, event: CalendarEvent): void {
+    // TODO: open descriptive modal
   }
 }
 
