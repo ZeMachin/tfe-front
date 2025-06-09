@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { CompletionStatus, TaskList } from '../../../../models/TaskList';
+import { TaskList } from '../../../../models/TaskList';
 import { MessageService } from 'primeng/api';
 import { AuthService } from '../../../../services/auth.service';
 import { UserService } from '../../../../services/user.service';
@@ -7,6 +7,7 @@ import { TabsModule } from 'primeng/tabs';
 import { MyTasksTableComponent } from "./my-tasks-table/my-tasks-table.component";
 import { MyTasksCalendarComponent } from "./my-tasks-calendar/my-tasks-calendar.component";
 import { FamilyService } from '../../../../services/family.service';
+import { CompletionStatus } from '../../../../models/CompletionStatuts';
 
 @Component({
   selector: 'app-my-tasks',

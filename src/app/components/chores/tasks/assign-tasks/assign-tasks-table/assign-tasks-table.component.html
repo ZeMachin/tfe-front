@@ -32,8 +32,8 @@
                         <ng-template #header>
                             <tr>
                                 <th pSortableColumn="task.name">Name <p-sortIcon field="task.name" /></th>
-                                <th pSortableColumn="taskStart">Start <p-sortIcon field="taskStart" /></th>
-                                <th pSortableColumn="taskEnd">End <p-sortIcon field="taskEnd" /></th>
+                                <th pSortableColumn="start">Start <p-sortIcon field="start" /></th>
+                                <th pSortableColumn="end">End <p-sortIcon field="end" /></th>
                                 <th pSortableColumn="points">Points <p-sortIcon field="points" /></th>
                                 <th pSortableColumn="recurrence.name">Recurrence <p-sortIcon field="recurrence.name" /></th>
                                 <th style="width: 4rem"></th>
@@ -42,8 +42,8 @@
                         <ng-template #body let-taskList>
                             <tr>
                                 <td>{{ taskList.task.name }}</td>
-                                <td>{{ taskList.taskStart | date:'medium' }}</td>
-                                <td>{{ taskList.taskEnd | date:'medium'  }}</td>
+                                <td>{{ taskList.start | date:'medium' }}</td>
+                                <td>{{ taskList.end | date:'medium'  }}</td>
                                 <td>{{ taskList.points }}</td>
                                 <td>{{ taskList.recurrence?.name }}</td>
                                 <td><p-button type="button" icon="pi pi-pencil" (onClick)="editTask(member, taskList)"/></td>

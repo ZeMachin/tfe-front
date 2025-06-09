@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CalendarView, DAYS_OF_WEEK, CalendarEventAction, CalendarEvent, CalendarModule, CalendarEventTimesChangedEvent } from 'angular-calendar';
-import { isSameMonth, isSameDay, addDays, addMonths } from 'date-fns';
+import { isSameMonth, isSameDay, addDays, addMonths, addWeeks, startOfMonth, startOfWeek } from 'date-fns';
 import { Subject } from 'rxjs';
-import { CompletionStatus, TaskList } from '../../../../../models/TaskList';
+import { TaskList } from '../../../../../models/TaskList';
 import { colors } from '../../../../../utils/colors';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -13,6 +13,7 @@ import { ContextMenuModule } from 'primeng/contextmenu';
 import { MenuItem, MenuItemCommandEvent } from 'primeng/api';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { AssignTaskModalComponent } from '../assign-task-modal/assign-task-modal.component';
+import { CompletionStatus } from '../../../../../models/CompletionStatuts';
 
 @Component({
   selector: 'app-assign-tasks-calendar',
@@ -89,8 +90,8 @@ export class AssignTasksCalendarComponent implements OnInit {
     const nonRecurrentTasks = this.tasks.filter((t) => !t.recurrence);
     for (const taskList of nonRecurrentTasks) {
       this.events.push({
-        start: taskList.taskStart,
-        end: taskList.taskEnd,
+        start: taskList.start,
+        end: taskList.end,
         title: `${taskList.task.name}${taskList.points ? ` - ${taskList.points} pts` : ''}`,
         color: colors[taskList.status],
         actions: this.actions,
@@ -107,28 +108,45 @@ export class AssignTasksCalendarComponent implements OnInit {
 
     
     for (const taskList of recurrentTasks) {
-      const startDate: Date = new Date(); // TODO: find start date based on viewDate and calendarView. Check CTC Booking, it might be there already, most likely in the ws
-      let endDate: Date = new Date();
+      const displayedDates: {
+        start: Date,
+        end?: Date
+      } = {
+        start: this.viewDate,
+        end: this.viewDate
+      };
+      
+      // TODO: find start date based on viewDate and calendarView
+      // End date is required in case of recurrent task
       switch(this.view) {
         case CalendarView.Month:
-          endDate = addMonths(startDate, 1);
+          displayedDates.start = startOfMonth(this.viewDate);
+          displayedDates.end = addMonths(displayedDates.start, 1);
+          break;
         case CalendarView.Week:
+          displayedDates.start = startOfWeek(this.viewDate);
+          displayedDates.end = addWeeks(displayedDates.start, 1);
+          break;
         case CalendarView.Day:
+          // start date is already correct
+          displayedDates.end = addDays(displayedDates.start, 1);
+          break;
       }
-      const endDate: Date = new Date();                                    
-      this.events.push({
-        start: taskList.taskStart,
-        end: taskList.taskEnd,
-        title: `${taskList.task.name}${taskList.points ? ` - ${taskList.points} pts` : ''}`,
-        color: colors[taskList.status],
-        actions: this.actions,
-        meta: taskList,
-        resizable: {
-          beforeStart: taskList.status != CompletionStatus.completed,
-          afterEnd: taskList.status != CompletionStatus.completed,
-        },
-        draggable: taskList.status != CompletionStatus.completed,
-      })
+
+      if(taskList.start.getTime() < displayedDates.end.getTime() && taskList.end && taskList.end.getTime() > displayedDates.start.getTime())                          
+        this.events.push({
+          start: displayedDates.start,
+          end: displayedDates.end,
+          title: `${taskList.task.name}${taskList.points ? ` - ${taskList.points} pts` : ''}`,
+          color: colors[taskList.status],
+          actions: this.actions,
+          meta: taskList,
+          resizable: {
+            beforeStart: taskList.status != CompletionStatus.completed,
+            afterEnd: taskList.status != CompletionStatus.completed,
+          },
+          draggable: taskList.status != CompletionStatus.completed,
+        })
     };
   }
 
@@ -200,7 +218,7 @@ export class AssignTasksCalendarComponent implements OnInit {
         closable: true,
         data: {
           taskList: {
-            taskStart: date
+            start: date
           },
           new: true
         }

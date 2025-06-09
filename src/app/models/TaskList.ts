@@ -1,3 +1,5 @@
+import { AssignedTask, AssignedTaskDTO } from "./AssignedTask";
+import { CompletionStatus } from "./CompletionStatuts";
 import { FamilyMember } from "./FamilyMember";
 import { RecurrenceType } from "./Recurrence";
 import { Task } from "./Task";
@@ -7,51 +9,60 @@ export class TaskList {
         Object.assign(this, dto);
         this.createdAt = dto.createdAt ? new Date(dto.createdAt) : dto.createdAt;
         this.completedAt = dto.completedAt ? new Date(dto.completedAt) : dto.completedAt;
-        this.taskStart = new Date(dto.taskStart);
-        this.taskEnd = dto.taskEnd ? new Date(dto.taskEnd) : dto.taskEnd;
+        this.start = new Date(dto.start);
+        this.end = dto.end ? new Date(dto.end) : dto.end;
         this.task = new Task(dto.task);
         this.member = dto.member ? new FamilyMember(dto.member) : dto.member;
+        this.recurrenceEnd = dto.recurrenceEnd ? new Date(dto.recurrenceEnd) : dto.recurrenceEnd;
+        this.assignedTasks = dto.assignedTasks?.map((t) => new AssignedTask(t));
     }
 
     id?: number;
     createdAt?: Date;
     completedAt?: Date;
-    taskStart: Date;
-    taskEnd?: Date;
+    start: Date;
+    end?: Date;
     points?: number;
     task: Task;
     member?: FamilyMember;
     recurrence?: RecurrenceType;
+    recurrenceEnd?: Date;
+    assignedTasks: AssignedTask[];
 
     static taskListDtoToTaskList(dto: TaskListDTO): TaskList {
         return new TaskList({
             ...dto,
             createdAt: dto.createdAt ? new Date(dto.createdAt) : undefined,
             completedAt: dto.completedAt ? new Date(dto.completedAt) : undefined,
-            taskStart: new Date(dto.taskStart),
-            taskEnd: dto.taskEnd ? new Date(dto.taskEnd) : undefined,
-            recurrence: dto.recurrence ? new RecurrenceType(dto.recurrence) : undefined
+            start: new Date(dto.start),
+            end: dto.end ? new Date(dto.end) : undefined,
+            recurrence: dto.recurrence ? new RecurrenceType(dto.recurrence) : undefined,
+            recurrenceEnd: dto.recurrenceEnd ? new Date(dto.recurrenceEnd) : undefined,
+            assignedTasks: dto.assignedTasks?.map((t) => AssignedTask.assignedTaskDtoToAssignedTask(t))
         } as TaskList);
-    }   
+    }
 
+    // TODO: change logic
     get status(): CompletionStatus {
-        return this.completedAt ? CompletionStatus.completed : (this.taskEnd ? this.taskEnd.getTime() < Date.now() ? CompletionStatus.late : CompletionStatus.pending : CompletionStatus.pending)
+        if (this.completedAt)
+            return CompletionStatus.completed;
+        else if (Date.now() < this.start.getTime())
+            return CompletionStatus.unstarted;
+        else if (this.end && this.end.getTime() < Date.now())
+            return CompletionStatus.late;
+        else
+            return CompletionStatus.pending;
     }
 }
-
-export enum CompletionStatus {
-  'late' = 'late',
-  'completed' = 'completed',
-  'pending' = 'pending'
-} 
-
 export interface TaskListDTO {
     id?: number;
     createdAt?: string;
     completedAt?: string;
-    taskStart: string;
-    taskEnd?: string;
+    start: string;
+    end?: string;
     points?: number;
     task: Task;
     recurrence: RecurrenceType;
+    recurrenceEnd?: Date;
+    assignedTasks: AssignedTaskDTO[];
 }

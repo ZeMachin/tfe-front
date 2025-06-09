@@ -66,8 +66,8 @@ export class MyTasksCalendarComponent implements OnInit {
     this.events = [];
     for (const taskList of this.tasks) {
       this.events.push({
-        start: taskList.taskStart,
-        end: taskList.taskEnd,
+        start: taskList.start,
+        end: taskList.end,
         title: `${taskList.task.name}${taskList.points ? ` - ${taskList.points} pts` : ''}`,
         color: colors[taskList.status],
         actions: this.actions,

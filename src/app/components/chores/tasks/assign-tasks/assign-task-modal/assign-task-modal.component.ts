@@ -54,8 +54,8 @@ export class AssignTaskModalComponent implements OnInit {
       id: [taskList.id],
       member: [taskList.member, [Validators.required]],
       task: [taskList.task, [Validators.required]],
-      taskStart: [taskList.taskStart ?? new Date(), [Validators.required]],
-      taskEnd: [taskList.taskEnd ],
+      start: [taskList.start ?? new Date(), [Validators.required]],
+      end: [taskList.end ],
       recurrence: [taskList.recurrence]
     });
     if (this.userService.family?.settings.rewards || this.userService.family?.settings.leaderboard) this.form.addControl('points', this.fb.control(taskList.points ?? 0, [Validators.required, Validators.min(0)]));

@@ -11,8 +11,8 @@
     <ng-template #body let-taskList>
         <tr>
             <td [ngClass]="taskList.status" class="task">{{ taskList.task.name }}</td>
-            <td>{{ taskList.taskStart | date:'short' }}</td>
-            <td>{{ taskList.taskEnd | date:'short' }}</td>
+            <td>{{ taskList.start | date:'short' }}</td>
+            <td>{{ taskList.end | date:'short' }}</td>
             @if(usesPoints){<td>{{ taskList.points }}</td>}
             <td>
                 @if(!taskList.completedAt){<p-button label="Complete" [disabled]="sendings[taskList.id]" (onClick)="completeTask(taskList)"></p-button>}
