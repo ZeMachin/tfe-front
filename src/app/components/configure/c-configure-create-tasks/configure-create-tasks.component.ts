@@ -12,10 +12,15 @@ import { EditTasksComponent } from "../../chores/tasks/edit-tasks/edit-tasks.com
 })
 export class ConfigureCreateTasksComponent {
   @Output('nextStep') nextStep: EventEmitter<any> = new EventEmitter();
+  @Output('previousStep') previousStep: EventEmitter<any> = new EventEmitter();
 
   tasks: Task[] = [];
 
   async onNextStep() {
       this.nextStep.emit();
+  }
+
+  onPreviousStep() {
+    this.previousStep.emit();
   }
 }

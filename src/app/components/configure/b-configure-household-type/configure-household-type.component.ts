@@ -14,6 +14,7 @@ import { ButtonModule } from 'primeng/button';
 })
 export class ConfigureHouseholdTypeComponent implements OnInit {
   @Output('nextStep') nextStep: EventEmitter<any> = new EventEmitter();
+  @Output('previousStep') previousStep: EventEmitter<any> = new EventEmitter();
   form?: FormGroup;
   householdTypes?: HouseholdType[] = [];
 
@@ -44,5 +45,9 @@ export class ConfigureHouseholdTypeComponent implements OnInit {
     } else {
       console.error('Form invalid');
     }
+  }
+
+  onPreviousStep() {
+    this.previousStep.emit();
   }
 }

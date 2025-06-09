@@ -1,16 +1,21 @@
-<app-user-selection [allowEditToggle]="false" [edit]="true"></app-user-selection>
-<div>
-    <p>
-        User creation tutorial!
-    </p>
+<div class="configurator-step">
+    <h3>
+        User creation
+    </h3>
     <p>
         You can now create the profiles for the members of your household.
     </p>
     <p>
+        You must create at least one adult for your household before being able to move to the next step.
+    </p>
+    <p>
         Don't worry, you will be able to change them in the future from the settings menu.
     </p>
-    
+
     <app-user-selection [allowEditToggle]="false" [edit]="true"></app-user-selection>
 
-    <button type="submit" pButton label="Next step" class="p-button-primary" (click)="onNextStep()"></button>
+    <div class="buttons">
+        <button type="submit" pButton label="Next step" class="p-button-primary" (click)="onNextStep()"
+            [disabled]="noAdultInFamily"></button>
+    </div>
 </div>

@@ -11,8 +11,13 @@ import { EditRewardsComponent } from "../../chores/rewards/edit-rewards/edit-rew
 })
 export class ConfigureRewardsComponent {
   @Output('nextStep') nextStep: EventEmitter<any> = new EventEmitter();
+  @Output('previousStep') previousStep: EventEmitter<any> = new EventEmitter();
 
   async onNextStep() {
       this.nextStep.emit();
+  }
+
+  onPreviousStep() {
+    this.previousStep.emit();
   }
 }

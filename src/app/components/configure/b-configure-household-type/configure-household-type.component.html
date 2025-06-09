@@ -1,17 +1,21 @@
 <div class="form-wrapper">
     @if(form) {
-    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="p-fluid">
+    <form [formGroup]="form" class="p-fluid">
         <div class="p-field">
             <label for="householdType">Household type</label>
-            <p-select formControlName="householdType" [options]="householdTypes" optionLabel="name" placeholder="Select a household type"
-                class="w-full md:w-56" />
+            <p-select formControlName="householdType" [options]="householdTypes" optionLabel="name"
+                placeholder="Select a household type" class="w-full md:w-56" />
             @if (form.get('householdType')?.invalid && form.get('householdType')?.touched) {
-            @if (form.get('householdType')?.errors?.['required']) {<small class="p-error">Household type is required.</small>
+            @if (form.get('householdType')?.errors?.['required']) {<small class="p-error">Household type is
+                required.</small>
             }
             }
         </div>
 
-        <button type="submit" pButton label="Next step" class="p-button-primary" [disabled]="form.invalid"></button>
+        <div>
+            <button pButton label="Previous step" class="p-button-primary" (click)="onPreviousStep()"></button>
+            <button type="submit" pButton label="Next step" class="p-button-primary" [disabled]="form.invalid" (click)="onSubmit()"></button>
+        </div>
     </form>
     }
 </div>

@@ -14,6 +14,7 @@ import { ButtonModule } from 'primeng/button';
 })
 export class ConfigureSummaryComponent implements OnInit {
   @Output('nextStep') nextStep: EventEmitter<any> = new EventEmitter();
+  @Output('previousStep') previousStep: EventEmitter<any> = new EventEmitter();
   family?: Family;
   tasks: Task[] = [];
   rewards: Reward[] = [];
@@ -32,5 +33,9 @@ export class ConfigureSummaryComponent implements OnInit {
 
   async finalizeConfiguration() {
     this.nextStep.emit();
+  }
+
+  onPreviousStep() {
+    this.previousStep.emit();
   }
 }

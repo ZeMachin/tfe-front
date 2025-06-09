@@ -12,6 +12,7 @@ import { FormsModule } from '@angular/forms';
 })
 export class ConfigureLeaderboardComponent {
   @Output('nextStep') nextStep: EventEmitter<any> = new EventEmitter();
+  @Output('previousStep') previousStep: EventEmitter<any> = new EventEmitter();
 
   constructor(
     public userService: UserService
@@ -19,5 +20,9 @@ export class ConfigureLeaderboardComponent {
 
   async onNextStep() {
       this.nextStep.emit();
+  }
+
+  onPreviousStep() {
+    this.previousStep.emit();
   }
 }

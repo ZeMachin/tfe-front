@@ -32,7 +32,7 @@ export class ConfigureComponent implements OnInit {
     this.currentStep = this.userService.family?.configStep;
   }
 
-  async nextStep(step: number): Promise<void> {
+  async changeStep(step: number): Promise<void> {
     if (this.userService.family) {
       this.userService.family.configStep = step;
       await this.familyService.updateFamily();

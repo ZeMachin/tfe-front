@@ -3,13 +3,17 @@
         Task tutorial!
     </p>
     <p>
-        Here are some default tasks. You can already edit or delete them or even create new ones! 
+        Here are some default tasks. You can already edit or delete them or even create new ones!
     </p>
     <p>
         Don't worry, you will be able to change them in the future from the settings menu.
     </p>
-    
+
     <app-edit-tasks></app-edit-tasks>
 
-    <button type="submit" pButton label="Next step" class="p-button-primary" (click)="onNextStep()"></button>
+    <div>
+        <button pButton label="Previous step" class="p-button-primary" (click)="onPreviousStep()"></button>
+        <button type="submit" pButton label="Next step" class="p-button-primary" (click)="onNextStep()"></button>
+    </div>
+
 </div>

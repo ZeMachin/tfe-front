@@ -1,20 +1,23 @@
-@switch (currentStep) {
+<div class="configurator">
+    @switch (currentStep) {
     @case (0) {
-        <app-configure-first-member (nextStep)="nextStep(1)"></app-configure-first-member>
+    <app-configure-first-member (nextStep)="changeStep(1)" class="configurator-step"></app-configure-first-member>
     }
     @case (1) {
-        <app-configure-household-type (nextStep)="nextStep(2)"></app-configure-household-type>
+    <app-configure-household-type (nextStep)="changeStep(2)"
+        (previousStep)="changeStep(0)"></app-configure-household-type>
     }
     @case (2) {
-        <app-configure-create-tasks (nextStep)="nextStep(3)"></app-configure-create-tasks>
+    <app-configure-create-tasks (nextStep)="changeStep(3)" (previousStep)="changeStep(1)"></app-configure-create-tasks>
     }
     @case (3) {
-        <app-configure-leaderboard (nextStep)="nextStep(4)"></app-configure-leaderboard>
+    <app-configure-leaderboard (nextStep)="changeStep(4)" (previousStep)="changeStep(2)"></app-configure-leaderboard>
     }
     @case (4) {
-        <app-configure-rewards (nextStep)="nextStep(5)"></app-configure-rewards>
+    <app-configure-rewards (nextStep)="changeStep(5)" (previousStep)="changeStep(3)"></app-configure-rewards>
     }
     @case (5) {
-        <app-configure-summary (nextStep)="nextStep(6)"></app-configure-summary>
+    <app-configure-summary (nextStep)="changeStep(6)" (previousStep)="changeStep(4)"></app-configure-summary>
     }
-}
+    }
+</div>
