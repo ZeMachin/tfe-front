@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { FamilyMember } from '../../../../../models/FamilyMember';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { SelectModule } from 'primeng/select';
 import { Task } from '../../../../../models/Task';
 import { FamilyService } from '../../../../../services/family.service';
@@ -50,13 +50,14 @@ export class AssignTaskModalComponent implements OnInit {
     const taskList: TaskList = this.config.data.taskList;
     this.new = this.config.data.new;
     this.isRecurrent = !!taskList.recurrence;
-    this.form = this.fb.group({ 
+    this.form = this.fb.group({
       id: [taskList.id],
       member: [taskList.member, [Validators.required]],
       task: [taskList.task, [Validators.required]],
       start: [taskList.start ?? new Date(), [Validators.required]],
-      end: [taskList.end ],
-      recurrence: [taskList.recurrence]
+      end: [taskList.end],
+      recurrence: [taskList.recurrence],
+      recurrenceEnd: [taskList.recurrenceEnd]
     });
     if (this.userService.family?.settings.rewards || this.userService.family?.settings.leaderboard) this.form.addControl('points', this.fb.control(taskList.points ?? 0, [Validators.required, Validators.min(0)]));
   }
@@ -64,13 +65,33 @@ export class AssignTaskModalComponent implements OnInit {
   toggleRecurrence() {
     if (this.isRecurrent) {
       const taskList: TaskList = this.config.data.taskList;
-      if (taskList) {
-        this.form?.addControl('recurrence', this.fb.control(taskList.recurrence, [Validators.required]));
+      if (this.new) {
+        this.form?.addControl('recurrence', this.fb.control(undefined, Validators.required));
+        this.form?.addControl('recurrenceEnd', this.fb.control(undefined, [Validators.required]));
       } else {
-        this.form?.addControl('recurrence', this.fb.control('', [Validators.required]));
+        this.form?.addControl('recurrence', this.fb.control(taskList.recurrence, [Validators.required]));
+        this.form?.addControl('recurrenceEnd', this.fb.control(taskList.recurrenceEnd, [Validators.required]));
       }
+      // Note: for some crazy reason the Validators.required does not seem to work when added to the form on line 70. Therefore I had it AGAIN afterwards and it then works. No idea why and no time to debug it, I'll leave it to later me to figure it out. If you read this and do not believe me, feel free to uncomment the console.log()'s underneath or use the debugger for some fun with the amazing Angular ReactiveForms. This is insane.
+
+      const recurrenceControl: FormControl = this.form?.get('recurrence') as FormControl;
+      const recurrenceEndControl: FormControl = this.form?.get('recurrenceEnd') as FormControl;
+
+      // recurrenceControl.updateValueAndValidity();
+      // console.log('recurrence has validator required before:', recurrenceControl.hasValidator(Validators.required));
+      // console.log('recurrence is valid before:', recurrenceControl.valid)
+
+      recurrenceControl.addValidators(Validators.required)
+      recurrenceControl.updateValueAndValidity();
+      recurrenceEndControl.addValidators(Validators.required)
+      recurrenceEndControl.updateValueAndValidity();
+
+      // console.log('recurrence has validator required after:', recurrenceControl.hasValidator(Validators.required));
+      // console.log('recurrence is valid after:', recurrenceControl.valid)
+      // console.log('new form:', this.form)
     } else {
       this.form?.removeControl('recurrence');
+      this.form?.removeControl('recurrenceEnd');
     }
   }
 
@@ -85,11 +106,12 @@ export class AssignTaskModalComponent implements OnInit {
           detail: `The task has been assigned to ${this.form.value.member.name}!`
         });
         this.ref.close();
-      } catch (err) {
+      } catch (err: any) {
+        const detail = err.error?.message ? `The following error occured: ${err.error?.message }` : 'Something went wrong, the task has not been assigned. Please try again.'
         this.messageService.add({
           severity: 'error',
           summary: 'Failure',
-          detail: 'Something went wrong, the task has not been assigned. Please try again.'
+          detail
         });
       } finally {
         this.sending = false;

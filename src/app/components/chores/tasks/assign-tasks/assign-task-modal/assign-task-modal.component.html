@@ -61,10 +61,21 @@
    </div>
 
    <!-- RECURRENCE -->
-   @if(isRecurrent) {<div class="p-field">
+   @if(isRecurrent) {
+   <div class="p-field">
       <label for="recurrence">Recurrence</label>
-      <p-select id="recurrence" formControlName="recurrence" [options]="recurrenceTypes" optionLabel="name" appendTo="body"
-         dataKey="id"></p-select>
+      <p-select id="recurrence" formControlName="recurrence" [options]="recurrenceTypes" optionLabel="name"
+         appendTo="body" dataKey="id"></p-select>
+   </div>
+
+   <div class="p-field">
+      <label for="recurrenceEnd">Recurrence End</label>
+      <p-datePicker id="recurrenceEnd" formControlName="recurrenceEnd" appendTo="body" styleClass="w-12" [showTime]="true"
+         [hourFormat]="'24'" dateFormat="dd/mm/yy" [minDate]="new ? now : undefined"></p-datePicker>
+      @if (form.get('recurrenceEnd')?.invalid && form.get('recurrenceEnd')?.touched) {
+      @if(form.get('recurrenceEnd')?.errors?.['required']) {<small class="p-error">A recurrence end is required.</small>
+      }
+      }
    </div>}
 
    <button type="submit" pButton label="Submit" class="p-button-primary" [disabled]="form.invalid || sending"></button>
