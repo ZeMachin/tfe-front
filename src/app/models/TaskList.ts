@@ -42,13 +42,12 @@ export class TaskList {
         } as TaskList);
     }
 
-    // TODO: change logic
     get status(): CompletionStatus {
-        if (this.completedAt)
+        if (this.assignedTasks?.filter((at) => at.status === CompletionStatus.completed).length === this.assignedTasks?.length)
             return CompletionStatus.completed;
         else if (Date.now() < this.start.getTime())
             return CompletionStatus.unstarted;
-        else if (this.end && this.end.getTime() < Date.now())
+        else if (this.assignedTasks?.filter((at) => at.status === CompletionStatus.late).length > 0)
             return CompletionStatus.late;
         else
             return CompletionStatus.pending;

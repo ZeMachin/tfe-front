@@ -7,7 +7,7 @@
     </ng-template>
     <ng-template #body let-member let-expanded="expanded">
         <tr>
-            <td>{{ member.name }}</td>
+            <td [style]="{'color': member.color}">{{ member.name }}</td>
             <td>{{ getMemberPoints(member) }}</td>
         </tr>
     </ng-template>

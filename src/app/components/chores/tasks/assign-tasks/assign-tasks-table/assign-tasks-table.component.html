@@ -41,9 +41,9 @@
                         </ng-template>
                         <ng-template #body let-taskList>
                             <tr>
-                                <td>{{ taskList.task.name }}</td>
-                                <td>{{ taskList.start | date:'medium' }}</td>
-                                <td>{{ taskList.end | date:'medium'  }}</td>
+                                <td class="task" [ngClass]="taskList.status">{{ taskList.task.name }}</td>
+                                <td>{{ taskList.start | date:'short':'':'fr-FR' }}</td>
+                                <td>{{ taskList.end | date:'short':'':'fr-FR' }}</td>
                                 <td>{{ taskList.points }}</td>
                                 <td>{{ taskList.recurrence?.name }}</td>
                                 <td><p-button type="button" icon="pi pi-pencil" (onClick)="editTask(member, taskList)"/></td>

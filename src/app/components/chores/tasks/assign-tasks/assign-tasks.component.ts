@@ -30,10 +30,23 @@ export class AssignTasksComponent implements OnInit {
   }
 
   async loadTasks() {
-      this.tasks = await this.familyService.getFamilyTasks();
+    this.tasks = await this.familyService.getFamilyTasks();
   }
 
   async loadMembers() {
-      this.members = await this.familyService.getFamilyMembers();
+    this.members = await this.familyService.getFamilyMembers();
+    // console.log(this.members);
+    // for (const member of this.members)
+    //   if (member.taskLists)
+    //     for (const taskList of member.taskLists) {
+    //       console.log('taskList:', taskList);
+    //       console.log('status:', taskList.status);
+    //       for (const assignedTask of taskList.assignedTasks) {
+    //         console.log('assignedTask:', assignedTask);
+    //         console.log('status:', assignedTask.status);
+    //       }
+    //       console.log('***********************************')
+    //     }
+
   }
 }

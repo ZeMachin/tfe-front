@@ -16,7 +16,7 @@
         </p-tablist>
         <p-tabpanels>
             <p-tabpanel value="0">
-                <app-assign-tasks-table [tasks]="tasks" [members]="members" (refresh)="refresh()"></app-assign-tasks-table>
+                @if(members.length){<app-assign-tasks-table [tasks]="tasks" [members]="members" (refresh)="refresh()"></app-assign-tasks-table>}
             </p-tabpanel>
             <p-tabpanel value="1">
                 <app-assign-tasks-calendar></app-assign-tasks-calendar>

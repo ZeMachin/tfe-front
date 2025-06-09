@@ -1,4 +1,4 @@
-import { Injectable, OnInit } from '@angular/core';
+import { Inject, Injectable, LOCALE_ID, OnInit } from '@angular/core';
 import { Family } from '../models/Family';
 import { FamilyMember } from '../models/FamilyMember';
 import { TaskList, TaskListDTO } from '../models/TaskList';
@@ -13,6 +13,7 @@ export class UserService implements OnInit {
   member?: FamilyMember;
 
   constructor(
+    @Inject(LOCALE_ID) public locale: string,
     private communicationService: CommunicationService,
     private rs: RoutesService
   ) {
@@ -26,7 +27,6 @@ export class UserService implements OnInit {
       this.member = JSON.parse(memberStorage);
       this.refreshMember();
     }
-
   }
 
   async ngOnInit(): Promise<void> {

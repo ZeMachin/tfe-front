@@ -5,12 +5,13 @@ import { FamilyMember } from '../../../../../models/FamilyMember';
 import { Task } from '../../../../../models/Task';
 import { AssignTaskModalComponent } from '../assign-task-modal/assign-task-modal.component';
 import { ButtonModule } from 'primeng/button';
-import { DatePipe } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { TaskList } from '../../../../../models/TaskList';
+import { UserService } from '../../../../../services/user.service';
 
 @Component({
   selector: 'app-assign-tasks-table',
-  imports: [TableModule, ButtonModule, DynamicDialogModule, DatePipe],
+  imports: [TableModule, ButtonModule, DynamicDialogModule, DatePipe, CommonModule],
   templateUrl: './assign-tasks-table.component.html',
   styleUrl: './assign-tasks-table.component.less'
 })
@@ -24,7 +25,8 @@ export class AssignTasksTableComponent implements OnDestroy, OnInit {
   expandedRows: { [key: number]: boolean } = {};
 
   constructor(
-    private dialogService: DialogService
+    private dialogService: DialogService,
+    public userService: UserService
   ) { }
 
   ngOnInit(): void {

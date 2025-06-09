@@ -16,7 +16,7 @@ export class NavBarComponent implements OnInit {
 
   navBarItems: NavBarItem[] = [];
 
-  constructor(private userService: UserService) {}
+  constructor(private userService: UserService) { }
 
   ngOnInit(): void {
     const chores: NavBarItem = {
@@ -92,10 +92,18 @@ export class NavBarComponent implements OnInit {
       ],
     };
 
+    const settings: NavBarItem = {
+      label: 'Settings',
+      link: 'settings',
+      icon: 'cog',
+      displayCondition: () => this.userService.member?.status.name === 'Adult'
+    }
+
     this.navBarItems = [
       chores,
       // budget,
       users,
+      settings
     ];
   }
 

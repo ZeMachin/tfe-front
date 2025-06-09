@@ -1,1 +1,11 @@
-<p>settings works!</p>
+@if(userService.family) {<div class="leaderboard-switch">
+    <label for="leaderboard">Leaderboard active:</label>
+    <p-toggleswitch id="leaderboard" [(ngModel)]="userService.family.settings.leaderboard" />
+</div>}
+
+@if(userService.family) {<div class="rewards-switch">
+    <label for="rewards">Rewards active:</label>
+    <p-toggleswitch id="rewards" [(ngModel)]="userService.family.settings.rewards" />
+</div>}
+
+<button type="submit" pButton label="Save" class="p-button-primary"></button>
