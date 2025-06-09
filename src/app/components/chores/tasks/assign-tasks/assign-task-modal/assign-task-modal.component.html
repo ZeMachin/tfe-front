@@ -37,6 +37,10 @@
       <label for="end">End</label>
       <p-datePicker id="end" formControlName="end" appendTo="body" styleClass="w-12" [showTime]="true"
          [hourFormat]="'24'" dateFormat="dd/mm/yy" [minDate]="now"></p-datePicker>
+      @if (form.get('end')?.invalid && form.get('end')?.touched) {
+      @if(form.get('end')?.errors?.['required']) {<small class="p-error">An end date/time is required for recurrent tasks.</small>
+      }
+      }
    </div>
 
    <!-- POINTS -->
@@ -73,7 +77,7 @@
       <p-datePicker id="recurrenceEnd" formControlName="recurrenceEnd" appendTo="body" styleClass="w-12" [showTime]="true"
          [hourFormat]="'24'" dateFormat="dd/mm/yy" [minDate]="new ? now : undefined"></p-datePicker>
       @if (form.get('recurrenceEnd')?.invalid && form.get('recurrenceEnd')?.touched) {
-      @if(form.get('recurrenceEnd')?.errors?.['required']) {<small class="p-error">A recurrence end is required.</small>
+      @if(form.get('recurrenceEnd')?.errors?.['required']) {<small class="p-error">A recurrence end date/time is required.</small>
       }
       }
    </div>}

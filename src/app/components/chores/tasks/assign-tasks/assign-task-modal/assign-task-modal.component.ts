@@ -89,9 +89,16 @@ export class AssignTaskModalComponent implements OnInit {
       // console.log('recurrence has validator required after:', recurrenceControl.hasValidator(Validators.required));
       // console.log('recurrence is valid after:', recurrenceControl.valid)
       // console.log('new form:', this.form)
+      const endDateControl: FormControl = this.form?.get('end') as FormControl;
+      endDateControl.addValidators(Validators.required)
+      endDateControl.updateValueAndValidity();
+
     } else {
       this.form?.removeControl('recurrence');
       this.form?.removeControl('recurrenceEnd');
+      const endDateControl: FormControl = this.form?.get('end') as FormControl;
+      endDateControl.removeValidators(Validators.required)
+      endDateControl.updateValueAndValidity();
     }
   }
 
