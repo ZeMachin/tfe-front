@@ -14,6 +14,7 @@ import { MenuItem, MenuItemCommandEvent } from 'primeng/api';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { AssignTaskModalComponent } from '../assign-task-modal/assign-task-modal.component';
 import { CompletionStatus } from '../../../../../models/CompletionStatuts';
+import { AssignedTask } from '../../../../../models/AssignedTask';
 
 @Component({
   selector: 'app-assign-tasks-calendar',
@@ -27,7 +28,7 @@ export class AssignTasksCalendarComponent implements OnInit {
 
   ref: DynamicDialogRef | undefined;
 
-  tasks: TaskList[] = [];
+  taskLists: TaskList[] = [];
 
   sendings: { [key: number]: boolean } = {};
 
@@ -61,7 +62,7 @@ export class AssignTasksCalendarComponent implements OnInit {
     },
   ];
 
-  events: CalendarEvent<TaskList>[] = [];
+  events: CalendarEvent<{taskList: TaskList, assignedTask: AssignedTask}>[] = [];
 
   items: MenuItem[] = [
     {
@@ -81,71 +82,30 @@ export class AssignTasksCalendarComponent implements OnInit {
   }
 
   async refreshData() {
-    this.tasks = await this.familyService.getFamilyTaskList();
+    this.taskLists = await this.familyService.getFamilyTaskLists();
     this.createCalendarEvents();
   }
 
   createCalendarEvents() {
     this.events = [];
-    const nonRecurrentTasks = this.tasks.filter((t) => !t.recurrence);
-    for (const taskList of nonRecurrentTasks) {
-      this.events.push({
-        start: taskList.start,
-        end: taskList.end,
-        title: `${taskList.task.name}${taskList.points ? ` - ${taskList.points} pts` : ''}`,
-        color: colors[taskList.status],
-        actions: this.actions,
-        meta: taskList,
-        resizable: {
-          beforeStart: taskList.status != CompletionStatus.completed,
-          afterEnd: taskList.status != CompletionStatus.completed,
-        },
-        draggable: taskList.status != CompletionStatus.completed,
-      })
-    };
-    
-    const recurrentTasks = this.tasks.filter((t) => t.recurrence); 
 
-    
-    for (const taskList of recurrentTasks) {
-      const displayedDates: {
-        start: Date,
-        end?: Date
-      } = {
-        start: this.viewDate,
-        end: this.viewDate
-      };
-      
-      // TODO: find start date based on viewDate and calendarView
-      // End date is required in case of recurrent task
-      switch(this.view) {
-        case CalendarView.Month:
-          displayedDates.start = startOfMonth(this.viewDate);
-          displayedDates.end = addMonths(displayedDates.start, 1);
-          break;
-        case CalendarView.Week:
-          displayedDates.start = startOfWeek(this.viewDate);
-          displayedDates.end = addWeeks(displayedDates.start, 1);
-          break;
-        case CalendarView.Day:
-          // start date is already correct
-          displayedDates.end = addDays(displayedDates.start, 1);
-          break;
-      }
-
-      if(taskList.start.getTime() < displayedDates.end.getTime() && taskList.end && taskList.end.getTime() > displayedDates.start.getTime())                          
+    for (const taskList of this.taskLists) {
+      for (const assignedTask of taskList.assignedTasks)
         this.events.push({
-          start: displayedDates.start,
-          end: displayedDates.end,
+          start: assignedTask.start,
+          end: assignedTask.end,
           title: `${taskList.task.name}${taskList.points ? ` - ${taskList.points} pts` : ''}`,
-          color: colors[taskList.status],
+          color: colors[assignedTask.status],
           actions: this.actions,
-          meta: taskList,
-          resizable: {
-            beforeStart: taskList.status != CompletionStatus.completed,
-            afterEnd: taskList.status != CompletionStatus.completed,
+          meta: {
+            taskList,
+            assignedTask
           },
-          draggable: taskList.status != CompletionStatus.completed,
+          resizable: {
+            beforeStart: assignedTask.status != CompletionStatus.completed && assignedTask.status != CompletionStatus.pending,
+            afterEnd: assignedTask.status != CompletionStatus.completed,
+          },
+          draggable: assignedTask.status != CompletionStatus.completed,
         })
     };
   }

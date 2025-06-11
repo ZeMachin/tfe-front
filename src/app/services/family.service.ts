@@ -209,7 +209,7 @@ export class FamilyService {
       throw this.showNoUserErrorMessage();
   }
 
-  async getFamilyTaskList(): Promise<TaskList[]> {
+  async getFamilyTaskLists(): Promise<TaskList[]> {
     if (this.userService.family)
       return (await this.communicationService.call<TaskList[]>(this.rs.getAssignedTasks, {}, { family_id: this.userService.family.id })).map((t) => new TaskList(t));
     else
