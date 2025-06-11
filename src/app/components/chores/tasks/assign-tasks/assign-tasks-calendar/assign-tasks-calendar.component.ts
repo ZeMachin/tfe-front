@@ -136,7 +136,7 @@ export class AssignTasksCalendarComponent implements OnInit {
         modal: true,
         closable: true,
         data: {
-          taskList: event.meta,
+          ...event.meta,
           new: false
         }
       })
@@ -147,18 +147,7 @@ export class AssignTasksCalendarComponent implements OnInit {
   }
 
   onChangeViewDate(type: ViewDateChange) {
-    // console.log('view change type:', type)
-    // console.log('calendar view:', this.calendarView)
-    // console.log('view date:', this.viewDate)
     this.createCalendarEvents();
-    // switch(type) {
-    //   case ViewDateChange.previous:
-    //   case ViewDateChange.today:
-    //   case ViewDateChange.next:
-    //   case ViewDateChange.day:
-    //   case ViewDateChange.week:
-    //   case ViewDateChange.month:
-    // }
   }
 
   onContextMenu(date: Date) {
@@ -200,6 +189,7 @@ export class AssignTasksCalendarComponent implements OnInit {
     newStart,
     newEnd,
   }: CalendarEventTimesChangedEvent): void {
+    //TODO: handle eventTimesChanged
     this.events = this.events.map((iEvent) => {
       if (iEvent === event) {
         return {
