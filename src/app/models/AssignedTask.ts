@@ -14,6 +14,7 @@ export class AssignedTask {
     completedAt?: Date;
     start: Date;
     end?: Date;
+    points?: number;
 
     static assignedTaskDtoToAssignedTask(dto: AssignedTaskDTO): AssignedTask {
         return new AssignedTask({

@@ -1,7 +1,8 @@
-<div class="task" [ngClass]="taskList.status">
-  <h3>{{ taskList.task.name }}</h3>
-  <div>Start: {{ taskList.start }}</div>
-  @if(taskList.end){<div>End: {{ taskList.end }}</div>}
-  @if(taskList.points){<div>Points: {{ taskList.points }}</div>}
-  @if(!taskList.completedAt) {<p-button icon="pi pi-check" label="Completed task" (onClick)="submit()" [disabled]="sending" />}
+<div class="task" [ngClass]="assignedTask.status">
+  <!-- TODO: get task name -->
+  <!-- <h3>{{ taskList.task.name }}</h3> -->
+  <div>Start: {{ assignedTask.start }}</div>
+  @if(assignedTask.end){<div>End: {{ assignedTask.end }}</div>}
+  @if(assignedTask.points){<div>Points: {{ assignedTask.points }}</div>}
+  @if(!assignedTask.completedAt) {<p-button icon="pi pi-check" label="Completed task" (onClick)="submit()" [disabled]="sending" />}
 </div>

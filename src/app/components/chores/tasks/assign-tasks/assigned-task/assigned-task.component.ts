@@ -4,6 +4,7 @@ import { ButtonModule } from 'primeng/button';
 import { CommonModule } from '@angular/common';
 import { MessageService } from 'primeng/api';
 import { FamilyService } from '../../../../../services/family.service';
+import { AssignedTask } from '../../../../../models/AssignedTask';
 
 @Component({
   selector: 'app-assigned-task',
@@ -12,7 +13,7 @@ import { FamilyService } from '../../../../../services/family.service';
   styleUrl: './assigned-task.component.less'
 })
 export class AssignedTaskComponent {
-  @Input('task') taskList!: TaskList;
+  @Input('task') assignedTask!: AssignedTask;
   sending: boolean = false;
 
   constructor(
@@ -23,7 +24,7 @@ export class AssignedTaskComponent {
   async submit() {
     this.sending = true;
     try {
-      await this.familyService.completeTask(this.taskList);
+      await this.familyService.completeTask(this.assignedTask);
       this.messageService.add({
         severity: 'success',
         summary: 'Completed',

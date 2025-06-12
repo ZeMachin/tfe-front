@@ -13,6 +13,8 @@ import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { colors } from '../../../../../utils/colors';
 import { ThenableEventEmitter } from '../../../../../utils/thenable-event';
+import { CompletionStatus } from '../../../../../models/CompletionStatuts';
+import { AssignedTask } from '../../../../../models/AssignedTask';
 
 @Component({
   selector: 'app-my-tasks-calendar',
@@ -21,7 +23,7 @@ import { ThenableEventEmitter } from '../../../../../utils/thenable-event';
   styleUrl: './my-tasks-calendar.component.less'
 })
 export class MyTasksCalendarComponent implements OnInit {
-  @Input('tasks') tasks: TaskList[] = [];
+  @Input('tasks') taskLists: TaskList[] = [];
   @Output('onCompleteTask') onCompleteTask: ThenableEventEmitter<TaskList> = new ThenableEventEmitter();
 
   sendings: { [key: number]: boolean } = {};
@@ -54,7 +56,7 @@ export class MyTasksCalendarComponent implements OnInit {
     },
   ];
 
-  events: CalendarEvent<TaskList>[] = [];
+  events: CalendarEvent<{taskList: TaskList, assignedTask: AssignedTask}>[] = [];
 
   constructor() { }
 
@@ -64,15 +66,20 @@ export class MyTasksCalendarComponent implements OnInit {
 
   createCalendarEvents() {
     this.events = [];
-    for (const taskList of this.tasks) {
-      this.events.push({
-        start: taskList.start,
-        end: taskList.end,
-        title: `${taskList.task.name}${taskList.points ? ` - ${taskList.points} pts` : ''}`,
-        color: colors[taskList.status],
-        actions: this.actions,
-        meta: taskList
-      })
+
+    for (const taskList of this.taskLists) {
+      for (const assignedTask of taskList.assignedTasks)
+        this.events.push({
+          start: assignedTask.start,
+          end: assignedTask.end,
+          title: `${taskList.task.name}${assignedTask.points ? ` - ${assignedTask.points} pts` : ''}`,
+          color: colors[assignedTask.status],
+          actions: assignedTask.status != CompletionStatus.completed ? this.actions : [],
+          meta: {
+            taskList,
+            assignedTask
+          },
+        })
     };
   }
 

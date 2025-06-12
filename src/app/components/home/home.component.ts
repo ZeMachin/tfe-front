@@ -5,6 +5,7 @@ import { MessageService } from 'primeng/api';
 import { TaskList } from '../../models/TaskList';
 import { UserSelectionComponent } from "../users/user-selection/user-selection.component";
 import { AssignedTaskComponent } from "../chores/tasks/assign-tasks/assigned-task/assigned-task.component";
+import { AssignedTask } from '../../models/AssignedTask';
 
 @Component({
   selector: 'app-home',
@@ -13,7 +14,7 @@ import { AssignedTaskComponent } from "../chores/tasks/assign-tasks/assigned-tas
   styleUrl: './home.component.less'
 })
 export class HomeComponent implements OnInit {
-  assignedTasks: TaskList[] = [];
+  assignedTasks: AssignedTask[] = [];
 
   constructor(
     public userService: UserService,
@@ -34,7 +35,10 @@ export class HomeComponent implements OnInit {
   }
 
   async getAssignedTasks() {
-    if (this.userService.member) this.assignedTasks = await this.userService.getAssignedTasks();
+    if (this.userService.member) {
+      const taskLists: TaskList[] = await this.userService.getTaskLists();
+      this.assignedTasks = taskLists.map((tl) => tl.assignedTasks).reduce((a, b) => a.concat(b), []);
+    }
   }
 
   async userSelected($event: any) {

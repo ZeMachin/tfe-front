@@ -94,7 +94,7 @@ export class AssignTasksCalendarComponent implements OnInit {
         this.events.push({
           start: assignedTask.start,
           end: assignedTask.end,
-          title: `${taskList.task.name}${taskList.points ? ` - ${taskList.points} pts` : ''}`,
+          title: `${taskList.task.name}${assignedTask.points ? ` - ${assignedTask.points} pts` : ''}`,
           color: colors[assignedTask.status],
           actions: assignedTask.status != CompletionStatus.completed ? this.actions : [],
           meta: {

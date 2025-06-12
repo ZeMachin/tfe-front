@@ -43,7 +43,7 @@ export class MyTasksComponent implements OnInit {
 
   async refreshTaskList() {
     if (this.userService.member) {
-      this.assignedTasks = await this.userService.getAssignedTasks();
+      this.assignedTasks = await this.userService.getTaskLists();
       this.pendingTasks = this.assignedTasks.filter((at) => !at.completedAt)
       this.lateTasks = this.pendingTasks.filter((pt) => pt.status === CompletionStatus.late);
     }

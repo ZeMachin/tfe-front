@@ -79,7 +79,7 @@ export class AssignTaskModalComponent implements OnInit {
       this.form = this.fb.group({
         member: [undefined, [Validators.required]],
         task: [undefined, [Validators.required]],
-        start: [taskList.start ?? new Date(), [Validators.required, beforeDateValidator('start', 'end', new Date())]],
+        start: [assignedTask.start ?? new Date(), [Validators.required, beforeDateValidator('start', 'end', new Date())]],
         end: [undefined, [afterDateValidator('end', 'start')]],
       });
       if (
@@ -106,7 +106,7 @@ export class AssignTaskModalComponent implements OnInit {
       )
         this.form.addControl(
           'points',
-          this.fb.control(taskList.points ?? 0, [
+          this.fb.control(assignedTask.points ?? 0, [
             Validators.required,
             Validators.min(0),
           ])

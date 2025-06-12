@@ -74,7 +74,7 @@ export class UserService implements OnInit {
     if (this.member) await this.loadMember(this.member.id);
   }
 
-  async getAssignedTasks(): Promise<TaskList[]> {
+  async getTaskLists(): Promise<TaskList[]> {
     if (this.member)
       return (await this.communicationService.call<TaskListDTO[]>(this.rs.getUserTasks, {}, { member_id: this.member.id })).map((t) => TaskList.taskListDtoToTaskList(t));
     else
