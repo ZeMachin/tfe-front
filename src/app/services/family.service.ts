@@ -12,6 +12,7 @@ import { TaskList } from '../models/TaskList';
 import { UserService } from './user.service';
 import { MessageService } from 'primeng/api';
 import { RecurrenceType } from '../models/Recurrence';
+import { AssignedTask } from '../models/AssignedTask';
 
 @Injectable({
   providedIn: 'root',
@@ -193,9 +194,9 @@ export class FamilyService {
     return this.communicationService.call(this.rs.editAssignedTask, taskList, { member_id: member.id });
   }
 
-  async completeTask(taskList: TaskList): Promise<TaskList> {
+  async completeTask(assignedTask: AssignedTask): Promise<AssignedTask> {
     if (this.userService.member)
-      return TaskList.taskListDtoToTaskList(await this.communicationService.call(this.rs.completeTask, taskList, { member_id: this.userService.member.id }));
+      return AssignedTask.assignedTaskDtoToAssignedTask(await this.communicationService.call(this.rs.completeTask, assignedTask, { member_id: this.userService.member.id }));
     else
       throw this.showNoUserErrorMessage();
   }

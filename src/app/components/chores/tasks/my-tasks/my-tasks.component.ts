@@ -8,6 +8,7 @@ import { MyTasksTableComponent } from "./my-tasks-table/my-tasks-table.component
 import { MyTasksCalendarComponent } from "./my-tasks-calendar/my-tasks-calendar.component";
 import { FamilyService } from '../../../../services/family.service';
 import { CompletionStatus } from '../../../../models/CompletionStatuts';
+import { AssignedTask } from '../../../../models/AssignedTask';
 
 @Component({
   selector: 'app-my-tasks',
@@ -48,9 +49,9 @@ export class MyTasksComponent implements OnInit {
     }
   }
 
-  async completeTask({ value: taskList, next }: { value: TaskList, next: (value?: unknown) => void }): Promise<void> {
+  async completeTask({ value: assignedTask, next }: { value: AssignedTask, next: (value?: unknown) => void }): Promise<void> {
     try {
-      await this.familyService.completeTask(taskList);
+      await this.familyService.completeTask(assignedTask);
       this.messageService.add({
         severity: 'success',
         summary: 'Completed',
@@ -59,11 +60,13 @@ export class MyTasksComponent implements OnInit {
       await this.refreshTaskList();
       next();
     } catch (err) {
+      console.error(err);
       this.messageService.add({
         severity: 'error',
         summary: 'Failure',
-        detail: 'Something went wrong, the reward has not been created. Please try again.'
+        detail: 'Something went wrong, the task has not been completed succesfully. Please try again.'
       });
+      next();
     }
   }
 }

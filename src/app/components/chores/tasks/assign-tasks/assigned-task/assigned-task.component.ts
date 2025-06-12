@@ -23,7 +23,7 @@ export class AssignedTaskComponent {
   async submit() {
     this.sending = true;
     try {
-      this.taskList = await this.familyService.completeTask(this.taskList);
+      await this.familyService.completeTask(this.taskList);
       this.messageService.add({
         severity: 'success',
         summary: 'Completed',

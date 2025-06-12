@@ -5,6 +5,7 @@ import { TableModule } from 'primeng/table';
 import { UserService } from '../../../../../services/user.service';
 import { ButtonModule } from 'primeng/button';
 import { ThenableEventEmitter } from '../../../../../utils/thenable-event';
+import { AssignedTask } from '../../../../../models/AssignedTask';
 
 @Component({
   selector: 'app-my-tasks-table',
@@ -14,22 +15,27 @@ import { ThenableEventEmitter } from '../../../../../utils/thenable-event';
 })
 export class MyTasksTableComponent {
   @Input('tasks') tasks: TaskList[] = [];
-  @Output('onCompleteTask') onCompleteTask: ThenableEventEmitter<TaskList> = new ThenableEventEmitter();
+  @Output('onCompleteTask') onCompleteTask: ThenableEventEmitter<AssignedTask> = new ThenableEventEmitter();
 
   sendings: { [key: number]: boolean } = {};
 
   constructor(
     private userService: UserService
-  ) {}
+  ) { }
 
-  get usesPoints() { return this.userService.family?.settings?.rewards || this.userService.family?.settings?.leaderboard}
+  get usesPoints() { return this.userService.family?.settings?.rewards || this.userService.family?.settings?.leaderboard }
 
-  async completeTask(taskList: TaskList) {
-    if(taskList.id) {
-      this.sendings[taskList.id] = true;
-      await this.onCompleteTask.emit(taskList)
-      .then(() => this.sendings[taskList.id!] = false)
-      .catch((err) => this.sendings[taskList.id!] = false);
+  async completeTask(assignedTask: AssignedTask) {
+    if (assignedTask.id) {
+      this.sendings[assignedTask.id] = true;
+      await this.onCompleteTask.emit(assignedTask)
+        .then()
+        .catch()
+        .finally(() => { 
+          this.sendings[assignedTask.id!] = false;
+          console.log(this.sendings);
+         });
+
     }
   }
 }

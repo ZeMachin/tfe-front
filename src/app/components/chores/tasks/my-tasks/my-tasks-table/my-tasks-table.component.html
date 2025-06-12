@@ -11,13 +11,18 @@
     <ng-template #body let-taskList>
         <tr>
             <td [ngClass]="taskList.status" class="task">{{ taskList.task.name }}</td>
-            <td>{{ taskList.start | date:'short' }}</td>
-            <td>{{ taskList.end | date:'short' }}</td>
+            <td>{{ taskList.start | date:'short':'':'fr-FR' }}</td>
+            <td>{{ taskList.end | date:'short':'':'fr-FR' }}</td>
             @if(usesPoints){<td>{{ taskList.points }}</td>}
             <td>
-                @if(!taskList.completedAt){<p-button label="Complete" [disabled]="sendings[taskList.id]" (onClick)="completeTask(taskList)"></p-button>}
+                <!-- TODO: expand subrows -->
+                @for(assignedTask of taskList.assignedTasks; track $index) {
+                    {{assignedTask.start | date:'short':'':'fr-FR' }} - 
+                @if(!assignedTask.completedAt){<p-button label="Complete" [disabled]="sendings[assignedTask.id]"
+                    (onClick)="completeTask(assignedTask)"></p-button>}
                 @else{
-                {{ taskList.completedAt | date:'short' }}
+                {{ assignedTask.completedAt | date:'short':'':'fr-FR' }}
+                }
                 }
             </td>
         </tr>
