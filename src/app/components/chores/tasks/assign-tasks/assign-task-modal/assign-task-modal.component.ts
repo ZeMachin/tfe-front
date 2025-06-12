@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { DialogService, DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { FamilyMember } from '../../../../../models/FamilyMember';
 import {
   AbstractControl,
@@ -23,7 +23,7 @@ import { FloatLabelModule } from 'primeng/floatlabel';
 import { ButtonModule } from 'primeng/button';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { InputTextModule } from 'primeng/inputtext';
-import { MessageService } from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { TaskList } from '../../../../../models/TaskList';
 import { ToggleSwitchModule } from 'primeng/toggleswitch';
 import { RecurrenceType } from '../../../../../models/Recurrence';
@@ -63,8 +63,9 @@ export class AssignTaskModalComponent implements OnInit {
     private fb: FormBuilder,
     private familyService: FamilyService,
     public userService: UserService,
-    private messageService: MessageService
-  ) {}
+    private messageService: MessageService,
+    private confirmationService: ConfirmationService
+  ) { }
 
   async ngOnInit(): Promise<void> {
     this.tasks = await this.familyService.getFamilyTasks();
@@ -94,10 +95,10 @@ export class AssignTaskModalComponent implements OnInit {
         id: [taskList.id],
         member: [taskList.member, [Validators.required]],
         task: [taskList.task, [Validators.required]],
-        start: [assignedTask.start ?? new Date(), [Validators.required, beforeDateValidator('start', 'end', new Date())]], 
+        start: [assignedTask.start ?? new Date(), [Validators.required, beforeDateValidator('start', 'end', new Date())]],
         end: [assignedTask.end, [afterDateValidator('end', 'start')]], // TODO: if recurrence, add required
-        recurrence: [taskList.recurrence],
-        recurrenceEnd: [taskList.recurrenceEnd, [afterDateValidator('recurrenceEnd', 'start')]], // TODO: if recurrence, add required
+        // recurrence: [taskList.recurrence],
+        // recurrenceEnd: [taskList.recurrenceEnd, [afterDateValidator('recurrenceEnd', 'start')]], // TODO: if recurrence, add required
       });
       if (
         this.userService.family?.settings.rewards ||
@@ -174,17 +175,14 @@ export class AssignTaskModalComponent implements OnInit {
       try {
         this.new
           ? await this.familyService.assignTask(
-              this.form.value,
-              this.form.value.member
-            )
-          : await this.familyService.editAssignedTask(
-              this.form.value,
-              this.form.value.member
-            );
+            this.form.value,
+            this.form.value.member
+          )
+          : await this.openConfirmDialog();
         this.messageService.add({
           severity: 'success',
           summary: 'Assigned',
-          detail: `The task has been assigned to ${this.form.value.member.name}!`,
+          detail: this.new ? `The task has been assigned to ${this.form.value.member.name}!` : 'The assigned task has been edited.',
         });
         this.ref.close();
       } catch (err: any) {
@@ -201,16 +199,36 @@ export class AssignTaskModalComponent implements OnInit {
       }
     }
   }
+
+  async openConfirmDialog() {
+    this.confirmationService.confirm({
+      header: 'Confirm deletion',
+      message: `Do you want to modify future events as well'?`,
+      accept: async () => await this.familyService.editAssignedTask(
+        this.form!.value.member,
+        this.form!.value,
+        true
+      ),
+      reject: async () => await this.familyService.editAssignedTask(
+        this.form!.value.member,
+        this.form!.value,
+        false
+      ),
+      acceptLabel: 'Yes',
+      rejectLabel: 'No'
+    });
+
+  }
 }
 
 const beforeDateValidator = (name: string, controlName?: string, date?: Date): ValidatorFn => {
   return (control: AbstractControl): ValidationErrors | null => {
     let valitionErrors: ValidationErrors = {};
-    if(date && control.value && (control.value as Date).getTime() > date.getTime())
+    if (date && control.value && (control.value as Date).getTime() > date.getTime())
       valitionErrors['dateError'] = `${name} must be before ${date}`;
-    if(controlName && control.parent?.get(controlName) && control.parent.get(controlName)!.value && (control.value as Date).getTime() > control.parent.get(controlName)!.value.getTime())
+    if (controlName && control.parent?.get(controlName) && control.parent.get(controlName)!.value && (control.value as Date).getTime() > control.parent.get(controlName)!.value.getTime())
       valitionErrors['controlError'] = `${name} must be before ${control.parent.get(controlName)!.value}`;
-    if(Object.keys(valitionErrors).length) return valitionErrors;
+    if (Object.keys(valitionErrors).length) return valitionErrors;
     else return null;
   }
 }
@@ -218,11 +236,11 @@ const beforeDateValidator = (name: string, controlName?: string, date?: Date): V
 const afterDateValidator = (name: string, controlName?: string, date?: Date): ValidatorFn => {
   return (control: AbstractControl): ValidationErrors | null => {
     let valitionErrors: ValidationErrors = {};
-    if(date && control.value && (control.value as Date).getTime() < date.getTime())
+    if (date && control.value && (control.value as Date).getTime() < date.getTime())
       valitionErrors['dateError'] = `${name} must be after ${date}`;
-    if(controlName && control.parent?.get(controlName) && control.parent.get(controlName)!.value && (control.value as Date).getTime() < control.parent.get(controlName)!.value.getTime())
+    if (controlName && control.parent?.get(controlName) && control.parent.get(controlName)!.value && (control.value as Date).getTime() < control.parent.get(controlName)!.value.getTime())
       valitionErrors['controlError'] = `${name} must be after ${control.parent.get(controlName)!.value}`;
-    if(Object.keys(valitionErrors).length) return valitionErrors;
+    if (Object.keys(valitionErrors).length) return valitionErrors;
     else return null;
   }
 }

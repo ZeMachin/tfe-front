@@ -96,7 +96,7 @@ export class AssignTasksCalendarComponent implements OnInit {
           end: assignedTask.end,
           title: `${taskList.task.name}${taskList.points ? ` - ${taskList.points} pts` : ''}`,
           color: colors[assignedTask.status],
-          actions: this.actions,
+          actions: assignedTask.status != CompletionStatus.completed ? this.actions : [],
           meta: {
             taskList,
             assignedTask
@@ -190,6 +190,7 @@ export class AssignTasksCalendarComponent implements OnInit {
     newEnd,
   }: CalendarEventTimesChangedEvent): void {
     //TODO: handle eventTimesChanged
+    console.log('eventTimesChange')
     this.events = this.events.map((iEvent) => {
       if (iEvent === event) {
         return {

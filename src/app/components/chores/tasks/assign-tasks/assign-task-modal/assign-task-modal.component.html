@@ -58,11 +58,11 @@
    }
 
    <!-- Toggle recurrence -->
-   <div class="p-field">
+   @if(new){<div class="p-field">
       <label for="is-recurrent">Recurrent task?</label>
       <p-toggleswitch id="is-recurrent" (onChange)="toggleRecurrence()" [(ngModel)]="isRecurrent"
          [ngModelOptions]="{standalone: true}" />
-   </div>
+   </div>}
 
    <!-- RECURRENCE -->
    @if(isRecurrent) {

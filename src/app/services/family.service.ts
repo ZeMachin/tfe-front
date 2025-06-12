@@ -190,8 +190,11 @@ export class FamilyService {
     return this.communicationService.call(this.rs.assignTask, taskList, { member_id: member.id });
   }
 
-  editAssignedTask(taskList: TaskList, member: FamilyMember): Promise<TaskList> {
-    return this.communicationService.call(this.rs.editAssignedTask, taskList, { member_id: member.id });
+  editAssignedTask(member: FamilyMember, assignedTask: AssignedTask, changeFuture: boolean ): Promise<AssignedTask> {
+    if (this.userService.member)
+      return this.communicationService.call(this.rs.editAssignedTask, { assignedTask, changeFuture }, { member_id: member.id });
+    else
+      throw this.showNoUserErrorMessage();
   }
 
   async completeTask(assignedTask: AssignedTask): Promise<AssignedTask> {
