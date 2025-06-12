@@ -2,11 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { FamilyMember } from '../../../../../models/FamilyMember';
 import {
+  AbstractControl,
   FormBuilder,
   FormControl,
   FormGroup,
   FormsModule,
   ReactiveFormsModule,
+  ValidationErrors,
   ValidatorFn,
   Validators,
 } from '@angular/forms';
@@ -76,10 +78,8 @@ export class AssignTaskModalComponent implements OnInit {
       this.form = this.fb.group({
         member: [undefined, [Validators.required]],
         task: [undefined, [Validators.required]],
-        start: [taskList.start ?? new Date(), [Validators.required]],
-        end: [],
-        recurrence: [],
-        recurrenceEnd: [],
+        start: [taskList.start ?? new Date(), [Validators.required, beforeDateValidator('start', 'end', new Date())]],
+        end: [undefined, [afterDateValidator('end', 'start')]],
       });
       if (
         this.userService.family?.settings.rewards ||
@@ -94,10 +94,10 @@ export class AssignTaskModalComponent implements OnInit {
         id: [taskList.id],
         member: [taskList.member, [Validators.required]],
         task: [taskList.task, [Validators.required]],
-        start: [assignedTask.start ?? new Date(), [Validators.required]],
-        end: [assignedTask.end],
+        start: [assignedTask.start ?? new Date(), [Validators.required, beforeDateValidator('start', 'end', new Date())]], 
+        end: [assignedTask.end, [afterDateValidator('end', 'start')]], // TODO: if recurrence, add required
         recurrence: [taskList.recurrence],
-        recurrenceEnd: [taskList.recurrenceEnd],
+        recurrenceEnd: [taskList.recurrenceEnd, [afterDateValidator('recurrenceEnd', 'start')]], // TODO: if recurrence, add required
       });
       if (
         this.userService.family?.settings.rewards ||
@@ -150,7 +150,7 @@ export class AssignTaskModalComponent implements OnInit {
 
       recurrenceControl.addValidators(Validators.required);
       recurrenceControl.updateValueAndValidity();
-      recurrenceEndControl.addValidators(Validators.required);
+      recurrenceEndControl.addValidators([Validators.required, afterDateValidator('recurrenceEnd', 'start')]);
       recurrenceEndControl.updateValueAndValidity();
 
       // console.log('recurrence has validator required after:', recurrenceControl.hasValidator(Validators.required));
@@ -203,6 +203,26 @@ export class AssignTaskModalComponent implements OnInit {
   }
 }
 
-// const beforeDateValidator = (): ValidatorFn {
-//   return () =>
-// }
+const beforeDateValidator = (name: string, controlName?: string, date?: Date): ValidatorFn => {
+  return (control: AbstractControl): ValidationErrors | null => {
+    let valitionErrors: ValidationErrors = {};
+    if(date && control.value && (control.value as Date).getTime() > date.getTime())
+      valitionErrors['dateError'] = `${name} must be before ${date}`;
+    if(controlName && control.parent?.get(controlName) && control.parent.get(controlName)!.value && (control.value as Date).getTime() > control.parent.get(controlName)!.value.getTime())
+      valitionErrors['controlError'] = `${name} must be before ${control.parent.get(controlName)!.value}`;
+    if(Object.keys(valitionErrors).length) return valitionErrors;
+    else return null;
+  }
+}
+
+const afterDateValidator = (name: string, controlName?: string, date?: Date): ValidatorFn => {
+  return (control: AbstractControl): ValidationErrors | null => {
+    let valitionErrors: ValidationErrors = {};
+    if(date && control.value && (control.value as Date).getTime() < date.getTime())
+      valitionErrors['dateError'] = `${name} must be after ${date}`;
+    if(controlName && control.parent?.get(controlName) && control.parent.get(controlName)!.value && (control.value as Date).getTime() < control.parent.get(controlName)!.value.getTime())
+      valitionErrors['controlError'] = `${name} must be after ${control.parent.get(controlName)!.value}`;
+    if(Object.keys(valitionErrors).length) return valitionErrors;
+    else return null;
+  }
+}
