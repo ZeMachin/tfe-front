@@ -23,30 +23,29 @@
             <td><p-button label="Assign task" (onClick)="openTaskAssignmentModal(member)"></p-button></td>
         </tr>
     </ng-template>
+
     <ng-template #expandedrow let-member>
         <tr>
             <td colspan="7">
                 <div class="p-4">
                     <h5>Tasks for {{ member.name }}</h5>
-                    <p-table [value]="member.taskLists" dataKey="id">
+
+                    <p-table [value]="member.taskLists" dataKey="id" [expandedRowKeys]="overExpandedRows[member.id]">
                         <ng-template #header>
                             <tr>
+                                <th style="width: 5rem"></th>
                                 <th pSortableColumn="task.name">Name <p-sortIcon field="task.name" /></th>
-                                <th pSortableColumn="start">Start <p-sortIcon field="start" /></th>
-                                <th pSortableColumn="end">End <p-sortIcon field="end" /></th>
-                                <th pSortableColumn="points">Points <p-sortIcon field="points" /></th>
                                 <th pSortableColumn="recurrence.name">Recurrence <p-sortIcon field="recurrence.name" /></th>
                                 <th style="width: 4rem"></th>
                             </tr>
                         </ng-template>
-                        <ng-template #body let-taskList>
+                        <ng-template #body let-taskList let-expanded="expanded">
                             <tr>
+                                <td>
+                                    <p-button type="button" pRipple [pRowToggler]="taskList" [text]="true" [rounded]="true" [plain]="true" [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'" />
+                                </td>
                                 <td class="task" [ngClass]="taskList.status">{{ taskList.task.name }}</td>
-                                <td>{{ taskList.start | date:'short':'':'fr-FR' }}</td>
-                                <td>{{ taskList.end | date:'short':'':'fr-FR' }}</td>
-                                <td>{{ taskList.points }}</td>
                                 <td>{{ taskList.recurrence?.name }}</td>
-                                <td><p-button type="button" icon="pi pi-pencil" (onClick)="editTask(member, taskList)"/></td>
                             </tr>
                         </ng-template>
                         <ng-template #emptymessage>
@@ -54,9 +53,45 @@
                                 <td colspan="6">There are no tasks assigned to this household member yet.</td>
                             </tr>
                         </ng-template>
+
+                        <ng-template #expandedrow let-taskList>
+                            <tr>
+                                <td colspan="7">
+                                    <div class="p-4">
+                                        <h5>Assigned tasks for {{ taskList.task.name }}</h5>
+                                        <p-table [value]="taskList.assignedTasks" dataKey="id">
+                                            <ng-template #header>
+                                                <tr>
+                                                    <th pSortableColumn="start">Start <p-sortIcon field="start" /></th>
+                                                    <th pSortableColumn="end">End <p-sortIcon field="end" /></th>
+                                                    @if(userService.family?.settings?.rewards){<th pSortableColumn="points">Points <p-sortIcon field="points" /></th>}
+                                                    <th style="width: 4rem"></th>
+                                                </tr>
+                                            </ng-template>
+                                            <ng-template #body let-assignedTask let-expanded="expanded">
+                                                <tr>
+                                                    <td class="task" [ngClass]="assignedTask.status">{{ assignedTask.start | date:'short':'':'fr-FR' }}</td>
+                                                    <td>{{ assignedTask.end | date:'short':'':'fr-FR' }}</td>
+                                                    @if(userService.family?.settings?.rewards){<td>{{ assignedTask.points || 0 }}</td>}
+                                                    @if(assignedTask.notCompleted){<td><p-button type="button" icon="pi pi-pencil" (onClick)="editTask(member, taskList, assignedTask)" /></td>}
+                                                </tr>
+                                            </ng-template>
+                                            <ng-template #emptymessage>
+                                                <tr>
+                                                    <td colspan="6">There are no tasks assigned to this household member yet.</td>
+                                                </tr>
+                                            </ng-template>
+                                        </p-table>
+                                    </div>
+                                </td>
+                            </tr>
+                        </ng-template>
                     </p-table>
+
+
                 </div>
             </td>
         </tr>
     </ng-template>
+
 </p-table>

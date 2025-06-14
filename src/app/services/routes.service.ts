@@ -140,8 +140,13 @@ export class RoutesService implements OnInit {
     method: 'POST'
   }
 
-  editAssignedTask: Connection = {
-    url:  `${this.baseUrl}/tasks/member/:member_id/assign_task`,
+  updateAssignedTask: Connection = {
+    url:  `${this.baseUrl}/tasks/member/:member_id/assigned_task/:id`,
+    method: 'PUT'
+  }
+
+  updateTaskList: Connection = {
+    url:  `${this.baseUrl}/tasks/member/:member_id/tasklist/:id`,
     method: 'PUT'
   }
 

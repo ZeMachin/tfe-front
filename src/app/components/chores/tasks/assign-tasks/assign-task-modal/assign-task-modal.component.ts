@@ -28,6 +28,7 @@ import { TaskList } from '../../../../../models/TaskList';
 import { ToggleSwitchModule } from 'primeng/toggleswitch';
 import { RecurrenceType } from '../../../../../models/Recurrence';
 import { AssignedTask } from '../../../../../models/AssignedTask';
+import { format } from 'date-fns';
 
 @Component({
   selector: 'app-assign-task-modal',
@@ -87,7 +88,7 @@ export class AssignTaskModalComponent implements OnInit {
     this.form = this.fb.group({
       member: [undefined, [Validators.required]],
       task: [undefined, [Validators.required]],
-      start: [assignedTask.start ?? new Date(), [Validators.required, beforeDateValidator('start', 'end', new Date())]],
+      start: [assignedTask?.start ?? new Date(), [Validators.required, beforeDateValidator('start', 'end'), afterDateValidator('start', undefined, new Date())]],
       end: [undefined, [afterDateValidator('end', 'start')]],
     });
     if (
@@ -105,10 +106,10 @@ export class AssignTaskModalComponent implements OnInit {
       id: [taskList.id],
       member: [taskList.member, [Validators.required]],
       task: [taskList.task, [Validators.required]],
-      start: [assignedTask.start ?? new Date(), [Validators.required, beforeDateValidator('start', 'end', new Date())]],
+      start: [assignedTask.start ?? new Date(), [Validators.required, beforeDateValidator('start', 'end'), afterDateValidator('start', undefined, new Date())]],
       end: [assignedTask.end, [afterDateValidator('end', 'start')]],
       recurrence: [taskList.recurrence],
-      recurrenceEnd: [taskList.recurrenceEnd, [afterDateValidator('recurrenceEnd', 'start')]], 
+      recurrenceEnd: [taskList.recurrenceEnd, [afterDateValidator('recurrenceEnd', 'start')]],
     });
     if (
       this.userService.family?.settings.rewards ||
@@ -122,10 +123,14 @@ export class AssignTaskModalComponent implements OnInit {
         ])
       );
     if (taskList.recurrence) this.addRequiredValidatorToRecurrence();
+
     // I choose to not allow change to the member or task after at least one task has been completed to not potentially skew the history
-    if(!taskList.noTaskCompleted) {
+    console.log('tasklist:', taskList)
+    console.log('no task completed for tasklist:', taskList.noTaskCompleted);
+    if (!taskList.noTaskCompleted) {
       this.form.get('member')?.disable();
       this.form.get('task')?.disable();
+      this.form.get('recurrence')?.disable();
     }
   }
 
@@ -191,52 +196,110 @@ export class AssignTaskModalComponent implements OnInit {
   async onSubmit() {
     this.sending = true;
     if (this.form) {
-      try {
-        this.new
-          ? await this.familyService.assignTask(
+      if (this.new) {
+        try {
+          await this.familyService.assignTask(
+            this.form.value.member,
             this.form.value,
-            this.form.value.member
           )
-          : await this.openConfirmDialog();
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Assigned',
-          detail: this.new ? `The task has been assigned to ${this.form.value.member.name}!` : 'The assigned task has been edited.',
-        });
-        this.ref.close();
-      } catch (err: any) {
-        const detail = err.error?.message
-          ? `The following error occured: ${err.error?.message}`
-          : 'Something went wrong, the task has not been assigned. Please try again.';
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Failure',
-          detail,
-        });
-      } finally {
-        this.sending = false;
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Assigned',
+            detail: this.new ? `The task has been assigned to ${this.form.value.member.name}!` : 'The assigned task has been edited.',
+          });
+          this.ref.close();
+        } catch (err: any) {
+          console.error(err);
+          const detail = err.error?.message
+            ? `The following error occured: ${err.error?.message}`
+            : 'Something went wrong, the task has not been assigned. Please try again.';
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Failure',
+            detail,
+          });
+        } finally {
+          this.sending = false;
+        }
+      } else {
+        if (this.form.value.recurrence) {
+          await this.openConfirmDialog();
+        } else {
+          this.updateAssignedTask();
+        }
       }
     }
+
   }
 
   async openConfirmDialog() {
     this.confirmationService.confirm({
-      header: 'Confirm deletion',
-      message: `Do you want to modify future events as well'?`,
-      accept: async () => await this.familyService.editAssignedTask(
-        this.form!.value.member,
-        this.form!.value,
-        true
-      ),
-      reject: async () => await this.familyService.editAssignedTask(
-        this.form!.value.member,
-        this.form!.value,
-        false
-      ),
+      header: 'Change future events',
+      message: `Do you want to modify all future events as well?`,
+      accept: () => this.updateTaskList(),
+      reject: () => this.updateAssignedTask(),
       acceptLabel: 'Yes',
       rejectLabel: 'No'
     });
+  }
 
+  async updateAssignedTask() {
+    try {
+      const taskList: TaskList = this.config.data.taskList;
+      const assignedTask: AssignedTask = this.config.data.assignedTask;
+      await this.familyService.updateAssignedTask(
+        taskList.member!,
+        this.form!.value,
+        assignedTask
+      );
+      this.messageService.add({
+        severity: 'success',
+        summary: 'Assigned',
+        detail: this.new ? `The task has been assigned to ${this.form!.value.member.name}!` : 'The assigned task has been edited.',
+      });
+      this.ref.close();
+    } catch (err: any) {
+      console.error(err);
+      const detail = err.error?.message
+        ? `The following error occured: ${err.error?.message}`
+        : 'Something went wrong, the task has not been assigned. Please try again.';
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Failure',
+        detail,
+      });
+    } finally {
+      this.sending = false;
+    }
+  }
+
+  async updateTaskList() {
+    try {
+      const assignedTask: AssignedTask = this.config.data.assignedTask;
+      await this.familyService.updateTaskList(
+        this.form!.value.member,
+        this.form!.value,
+        assignedTask
+      );
+      this.messageService.add({
+        severity: 'success',
+        summary: 'Assigned',
+        detail: this.new ? `The task has been assigned to ${this.form!.value.member.name}!` : 'The assigned task has been edited.',
+      });
+      this.ref.close();
+    } catch (err: any) {
+      console.error(err);
+      const detail = err.error?.message
+        ? `The following error occured: ${err.error?.message}`
+        : 'Something went wrong, the task has not been assigned. Please try again.';
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Failure',
+        detail,
+      });
+    } finally {
+      this.sending = false;
+    }
   }
 }
 
@@ -244,9 +307,9 @@ const beforeDateValidator = (name: string, controlName?: string, date?: Date): V
   return (control: AbstractControl): ValidationErrors | null => {
     let valitionErrors: ValidationErrors = {};
     if (date && control.value && (control.value as Date).getTime() > date.getTime())
-      valitionErrors['dateError'] = `${name} must be before ${date}`;
+      valitionErrors['dateError'] = `${name} must be before ${format(date, 'Pp')}`;
     if (controlName && control.parent?.get(controlName) && control.parent.get(controlName)!.value && (control.value as Date).getTime() > control.parent.get(controlName)!.value.getTime())
-      valitionErrors['controlError'] = `${name} must be before ${control.parent.get(controlName)!.value}`;
+      valitionErrors['controlError'] = `${name} must be before ${controlName}: ${format(control.parent.get(controlName)!.value, 'Pp')}`;
     if (Object.keys(valitionErrors).length) return valitionErrors;
     else return null;
   }
@@ -256,9 +319,9 @@ const afterDateValidator = (name: string, controlName?: string, date?: Date): Va
   return (control: AbstractControl): ValidationErrors | null => {
     let valitionErrors: ValidationErrors = {};
     if (date && control.value && (control.value as Date).getTime() < date.getTime())
-      valitionErrors['dateError'] = `${name} must be after ${date}`;
-    if (controlName && control.parent?.get(controlName) && control.parent.get(controlName)!.value && (control.value as Date).getTime() < control.parent.get(controlName)!.value.getTime())
-      valitionErrors['controlError'] = `${name} must be after ${control.parent.get(controlName)!.value}`;
+      valitionErrors['dateError'] = `${name} must be after ${format(date, 'Pp')}`;
+    if (controlName && control.parent?.get(controlName) && control.parent.get(controlName)!.value && control.value && (control.value as Date).getTime() < control.parent.get(controlName)!.value.getTime())
+      valitionErrors['controlError'] = `${name} must be after ${controlName}: ${format(control.parent.get(controlName)!.value, 'Pp')}`;
     if (Object.keys(valitionErrors).length) return valitionErrors;
     else return null;
   }

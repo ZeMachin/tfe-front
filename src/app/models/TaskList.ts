@@ -12,7 +12,7 @@ export class TaskList {
         this.task = new Task(dto.task);
         this.member = dto.member ? new FamilyMember(dto.member) : dto.member;
         this.recurrenceEnd = dto.recurrenceEnd ? new Date(dto.recurrenceEnd) : dto.recurrenceEnd;
-        this.assignedTasks = dto.assignedTasks?.map((t) => new AssignedTask(t));
+        this.assignedTasks = dto.assignedTasks?.map((t) => new AssignedTask(t)) || [];
     }
 
     id?: number;

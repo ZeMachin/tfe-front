@@ -32,6 +32,6 @@
     </div>
     }
 
-    <p-button icon="pi pi-save" (onClick)="save()" [disabled]="sending"/>
+    @if(this.hasChanged || this.task.new){<p-button icon="pi pi-save" (onClick)="save()" [disabled]="sending"/>}
 </div>
 <p-confirmdialog />

@@ -29,6 +29,10 @@
       @if (form.get('start')?.invalid && form.get('start')?.touched) {
       @if(form.get('start')?.errors?.['required']) {<small class="p-error">A starting date/time is required.</small>
       }
+      @if(form.get('start')?.errors?.['dateError']) {<small class="p-error">{{form.get('start')?.errors?.['dateError']}}</small>
+      }
+      @if(form.get('start')?.errors?.['controlError']) {<small class="p-error">{{form.get('start')?.errors?.['controlError']}}</small>
+      }
       }
    </div>
 
@@ -39,6 +43,10 @@
          [hourFormat]="'24'" dateFormat="dd/mm/yy" [minDate]="now"></p-datePicker>
       @if (form.get('end')?.invalid && form.get('end')?.touched) {
       @if(form.get('end')?.errors?.['required']) {<small class="p-error">An end date/time is required for recurrent tasks.</small>
+      }
+      @if(form.get('end')?.errors?.['dateError']) {<small class="p-error">{{form.get('end')?.errors?.['dateError']}}</small>
+      }
+      @if(form.get('end')?.errors?.['controlError']) {<small class="p-error">{{form.get('end')?.errors?.['controlError']}}</small>
       }
       }
    </div>
@@ -78,6 +86,10 @@
          [hourFormat]="'24'" dateFormat="dd/mm/yy" [minDate]="new ? now : undefined"></p-datePicker>
       @if (form.get('recurrenceEnd')?.invalid && form.get('recurrenceEnd')?.touched) {
       @if(form.get('recurrenceEnd')?.errors?.['required']) {<small class="p-error">A recurrence end date/time is required.</small>
+      }
+      @if(form.get('recurrenceEnd')?.errors?.['dateError']) {<small class="p-error">{{form.get('recurrenceEnd')?.errors?.['dateError']}}</small>
+      }
+      @if(form.get('recurrenceEnd')?.errors?.['controlError']) {<small class="p-error">{{form.get('recurrenceEnd')?.errors?.['controlError']}}</small>
       }
       }
    </div>}

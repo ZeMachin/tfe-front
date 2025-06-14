@@ -36,6 +36,10 @@ export class AssignedTask {
         else
             return CompletionStatus.pending;
     }
+
+    get notCompleted(): boolean {
+        return this.status !== CompletionStatus.completed;
+    }
 }
 
 export interface AssignedTaskDTO {

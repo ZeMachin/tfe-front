@@ -186,13 +186,21 @@ export class FamilyService {
       throw this.showNoFamilyErrorMessage();
   }
 
-  assignTask(taskList: TaskList, member: FamilyMember): Promise<TaskList> {
+  assignTask(member: FamilyMember, taskList: TaskList): Promise<TaskList> {
+    console.log('member:', member);
     return this.communicationService.call(this.rs.assignTask, taskList, { member_id: member.id });
   }
 
-  editAssignedTask(member: FamilyMember, assignedTask: AssignedTask, changeFuture: boolean ): Promise<AssignedTask> {
+  updateAssignedTask(member: FamilyMember, form: any, assignedTask: AssignedTask): Promise<AssignedTask> {
     if (this.userService.member)
-      return this.communicationService.call(this.rs.editAssignedTask, { assignedTask, changeFuture }, { member_id: member.id });
+      return this.communicationService.call(this.rs.updateAssignedTask, form, { member_id: member.id, id: assignedTask.id! });
+    else
+      throw this.showNoUserErrorMessage();
+  }
+
+  updateTaskList(member: FamilyMember, taskList: TaskList, assignedTask: AssignedTask): Promise<TaskList> {
+    if (this.userService.member)
+      return this.communicationService.call(this.rs.updateTaskList, { taskList, assignedTask }, { member_id: member.id, id: taskList.id! });
     else
       throw this.showNoUserErrorMessage();
   }
@@ -209,7 +217,6 @@ export class FamilyService {
       await this.communicationService.call(this.rs.buyReward, {}, { member_id: this.userService.member.id, reward_id: reward.id });
       await this.userService.refreshMember();
     } else
-
       throw this.showNoUserErrorMessage();
   }
 

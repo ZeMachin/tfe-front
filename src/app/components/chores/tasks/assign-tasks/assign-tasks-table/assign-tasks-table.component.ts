@@ -8,6 +8,7 @@ import { ButtonModule } from 'primeng/button';
 import { CommonModule, DatePipe } from '@angular/common';
 import { TaskList } from '../../../../../models/TaskList';
 import { UserService } from '../../../../../services/user.service';
+import { AssignedTask } from '../../../../../models/AssignedTask';
 
 @Component({
   selector: 'app-assign-tasks-table',
@@ -24,6 +25,8 @@ export class AssignTasksTableComponent implements OnDestroy, OnInit {
 
   expandedRows: { [key: number]: boolean } = {};
 
+  overExpandedRows: { [key: number]: { [key: number]: boolean } } = {};
+
   constructor(
     private dialogService: DialogService,
     public userService: UserService
@@ -31,15 +34,25 @@ export class AssignTasksTableComponent implements OnDestroy, OnInit {
 
   ngOnInit(): void {
     this.refresh.emit();
+    for(const member of this.members) {
+      this.overExpandedRows[member.id] = {};
+    }
   }
 
   expandAll() {
     const initialValue: { [key: number]: boolean } = {};
     this.expandedRows = this.members.reduce((acc, m) => (acc[m.id] = true) && acc, initialValue);
+    for(const member of this.members) {
+      this.overExpandedRows[member.id] = member.taskLists!.reduce((acc, tl) => (acc[tl.id!] = true) && acc, initialValue);
+    }
   }
 
   collapseAll() {
     this.expandedRows = {};
+    this.overExpandedRows = {};
+    for(const member of this.members) {
+      this.overExpandedRows[member.id] = {};
+    }
   }
 
   onRowExpand(event: TableRowExpandEvent) {
@@ -70,7 +83,7 @@ export class AssignTasksTableComponent implements OnDestroy, OnInit {
     })
   }
 
-  editTask(member: FamilyMember, taskList: TaskList) {
+  editTask(member: FamilyMember, taskList: TaskList, assignedTask: AssignedTask) {
     this.ref = this.dialogService.open(
       AssignTaskModalComponent,
       {
@@ -78,13 +91,14 @@ export class AssignTasksTableComponent implements OnDestroy, OnInit {
         modal: true,
         closable: true,
         data: {
-          taskList: {
+          taskList: new TaskList({
             ...taskList,
             member
-          },
+          } as TaskList),
+          assignedTask,
           new: false
         }
-      })
+      });
 
     this.ref.onClose.subscribe((x) => {
       this.refresh.emit();
