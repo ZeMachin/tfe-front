@@ -1,29 +1,54 @@
-<p-table [value]="tasks">
+<p-table [value]="tasks" dataKey="id" [expandedRowKeys]="expandedRows" >
     <ng-template #header>
         <tr>
+            <th style="width: 5rem"></th>
             <th>Name</th>
-            <th>Start</th>
-            <th>End</th>
-            @if(usesPoints){<th>Points</th>}
-            <th>Completion</th>
         </tr>
     </ng-template>
-    <ng-template #body let-taskList>
-        <tr>
-            <td [ngClass]="taskList.status" class="task">{{ taskList.task.name }}</td>
-            <td>{{ taskList.start | date:'short':'':'fr-FR' }}</td>
-            <td>{{ taskList.end | date:'short':'':'fr-FR' }}</td>
-            @if(usesPoints){<td>{{ taskList.points }}</td>}
+    <ng-template #body let-taskList let-expanded="expanded">
+        <tr>            
             <td>
-                <!-- TODO: expand subrows -->
-                @for(assignedTask of taskList.assignedTasks; track $index) {
-                    {{assignedTask.start | date:'short':'':'fr-FR' }} - 
-                @if(!assignedTask.completedAt){<p-button label="Complete" [disabled]="sendings[assignedTask.id]"
-                    (onClick)="completeTask(assignedTask)"></p-button>}
-                @else{
-                {{ assignedTask.completedAt | date:'short':'':'fr-FR' }}
-                }
-                }
+                <p-button type="button" pRipple [pRowToggler]="taskList" [text]="true" [rounded]="true" [plain]="true" [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'" />
+            </td>
+            <td [ngClass]="taskList.status" class="task">{{ taskList.task.name }}</td>
+        </tr>
+    </ng-template>
+
+    <ng-template #expandedrow let-taskList>
+        <tr>
+            <td colspan="7">
+                <div class="p-4">
+                    <h5>Assigned tasks for {{ taskList.task.name }}</h5>
+                    <p-table [value]="taskList.assignedTasks" dataKey="id">
+                        <ng-template #header>
+                            <tr>
+                                <th>Start</th>
+                                <th>End</th>
+                                @if(usesPoints){<th>Points</th>}
+                                <th>Completion</th>
+                            </tr>
+                        </ng-template>
+                        <ng-template #body let-assignedTask let-expanded="expanded">
+                            <tr>
+                                <td>{{ assignedTask.start | date:'short':'':'fr-FR' }}</td>
+                                <td>{{ assignedTask.end | date:'short':'':'fr-FR' }}</td>
+                                @if(usesPoints){<td>{{ assignedTask.points }}</td>}
+                                <td>
+                                    @if(!assignedTask.completedAt){<p-button label="Complete" [disabled]="sendings[assignedTask.id]"
+                                        (onClick)="completeTask(assignedTask)"></p-button>}
+                                    @else{
+                                    {{ assignedTask.completedAt | date:'short':'':'fr-FR' }}
+                                    }
+                                </td>
+                            </tr>
+                        </ng-template>
+                        <ng-template #emptymessage>
+                            <tr>
+                                <td colspan="6">There are no tasks assigned to this you yet.</td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+                </div>
             </td>
         </tr>
     </ng-template>

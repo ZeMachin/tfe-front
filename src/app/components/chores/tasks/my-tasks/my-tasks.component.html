@@ -6,7 +6,8 @@
         @if(!pendingTasks.length) { <span>Congratulations, you're all done for now! </span>}
         @if(lateTasks.length) {<span class="late-tasks"> You have {{ lateTasks.length }} late task{{lateTasks.length > 1
             ? 's' : '' }}
-            assigned to you. Hurry up and do it!</span>}
+            assigned to you. Hurry up and do {{lateTasks.length > 1
+            ? 'them' : 'it' }}!</span>}
     </div>
 
     <p-tabs value="0">

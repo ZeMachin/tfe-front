@@ -18,6 +18,7 @@ export class MyTasksTableComponent {
   @Output('onCompleteTask') onCompleteTask: ThenableEventEmitter<AssignedTask> = new ThenableEventEmitter();
 
   sendings: { [key: number]: boolean } = {};
+  expandedRows: { [key: number]: boolean } = {};
 
   constructor(
     private userService: UserService
@@ -33,9 +34,7 @@ export class MyTasksTableComponent {
         .catch()
         .finally(() => { 
           this.sendings[assignedTask.id!] = false;
-          console.log(this.sendings);
          });
-
     }
   }
 }
