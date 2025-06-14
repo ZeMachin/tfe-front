@@ -45,6 +45,10 @@ export class TaskList {
         else
             return CompletionStatus.pending;
     }
+
+    get noTaskCompleted(): boolean {
+        return this.assignedTasks?.filter((at) => at.status === CompletionStatus.completed).length === 0;
+    }
 }
 export interface TaskListDTO {
     id?: number;

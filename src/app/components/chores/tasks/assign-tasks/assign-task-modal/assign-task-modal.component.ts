@@ -75,42 +75,57 @@ export class AssignTaskModalComponent implements OnInit {
     const assignedTask: AssignedTask = this.config.data.assignedTask;
     this.new = this.config.data.new;
     this.isRecurrent = !!taskList.recurrence;
+
     if (this.new) {
-      this.form = this.fb.group({
-        member: [undefined, [Validators.required]],
-        task: [undefined, [Validators.required]],
-        start: [assignedTask.start ?? new Date(), [Validators.required, beforeDateValidator('start', 'end', new Date())]],
-        end: [undefined, [afterDateValidator('end', 'start')]],
-      });
-      if (
-        this.userService.family?.settings.rewards ||
-        this.userService.family?.settings.leaderboard
-      )
-        this.form.addControl(
-          'points',
-          this.fb.control(0, [Validators.required, Validators.min(0)])
-        );
+      this.createFormNew(assignedTask);
     } else {
-      this.form = this.fb.group({
-        id: [taskList.id],
-        member: [taskList.member, [Validators.required]],
-        task: [taskList.task, [Validators.required]],
-        start: [assignedTask.start ?? new Date(), [Validators.required, beforeDateValidator('start', 'end', new Date())]],
-        end: [assignedTask.end, [afterDateValidator('end', 'start')]], // TODO: if recurrence, add required
-        // recurrence: [taskList.recurrence],
-        // recurrenceEnd: [taskList.recurrenceEnd, [afterDateValidator('recurrenceEnd', 'start')]], // TODO: if recurrence, add required
-      });
-      if (
-        this.userService.family?.settings.rewards ||
-        this.userService.family?.settings.leaderboard
-      )
-        this.form.addControl(
-          'points',
-          this.fb.control(assignedTask.points ?? 0, [
-            Validators.required,
-            Validators.min(0),
-          ])
-        );
+      this.createFormExisting(taskList, assignedTask);
+    }
+  }
+
+  createFormNew(assignedTask: AssignedTask) {
+    this.form = this.fb.group({
+      member: [undefined, [Validators.required]],
+      task: [undefined, [Validators.required]],
+      start: [assignedTask.start ?? new Date(), [Validators.required, beforeDateValidator('start', 'end', new Date())]],
+      end: [undefined, [afterDateValidator('end', 'start')]],
+    });
+    if (
+      this.userService.family?.settings.rewards ||
+      this.userService.family?.settings.leaderboard
+    )
+      this.form.addControl(
+        'points',
+        this.fb.control(0, [Validators.required, Validators.min(0)])
+      );
+  }
+
+  createFormExisting(taskList: TaskList, assignedTask: AssignedTask) {
+    this.form = this.fb.group({
+      id: [taskList.id],
+      member: [taskList.member, [Validators.required]],
+      task: [taskList.task, [Validators.required]],
+      start: [assignedTask.start ?? new Date(), [Validators.required, beforeDateValidator('start', 'end', new Date())]],
+      end: [assignedTask.end, [afterDateValidator('end', 'start')]],
+      recurrence: [taskList.recurrence],
+      recurrenceEnd: [taskList.recurrenceEnd, [afterDateValidator('recurrenceEnd', 'start')]], 
+    });
+    if (
+      this.userService.family?.settings.rewards ||
+      this.userService.family?.settings.leaderboard
+    )
+      this.form.addControl(
+        'points',
+        this.fb.control(assignedTask.points ?? 0, [
+          Validators.required,
+          Validators.min(0),
+        ])
+      );
+    if (taskList.recurrence) this.addRequiredValidatorToRecurrence();
+    // I choose to not allow change to the member or task after at least one task has been completed to not potentially skew the history
+    if(!taskList.noTaskCompleted) {
+      this.form.get('member')?.disable();
+      this.form.get('task')?.disable();
     }
   }
 
@@ -136,30 +151,7 @@ export class AssignTaskModalComponent implements OnInit {
           this.fb.control(taskList.recurrenceEnd, [Validators.required])
         );
       }
-      // Note: for some crazy reason the Validators.required does not seem to work when added to the form on line 70. Therefore I had it AGAIN afterwards and it then works. No idea why and no time to debug it, I'll leave it to later me to figure it out. If you read this and do not believe me, feel free to uncomment the console.log()'s underneath or use the debugger for some fun with the amazing Angular ReactiveForms. This is insane.
-
-      const recurrenceControl: FormControl = this.form?.get(
-        'recurrence'
-      ) as FormControl;
-      const recurrenceEndControl: FormControl = this.form?.get(
-        'recurrenceEnd'
-      ) as FormControl;
-
-      // recurrenceControl.updateValueAndValidity();
-      // console.log('recurrence has validator required before:', recurrenceControl.hasValidator(Validators.required));
-      // console.log('recurrence is valid before:', recurrenceControl.valid)
-
-      recurrenceControl.addValidators(Validators.required);
-      recurrenceControl.updateValueAndValidity();
-      recurrenceEndControl.addValidators([Validators.required, afterDateValidator('recurrenceEnd', 'start')]);
-      recurrenceEndControl.updateValueAndValidity();
-
-      // console.log('recurrence has validator required after:', recurrenceControl.hasValidator(Validators.required));
-      // console.log('recurrence is valid after:', recurrenceControl.valid)
-      // console.log('new form:', this.form)
-      const endDateControl: FormControl = this.form?.get('end') as FormControl;
-      endDateControl.addValidators(Validators.required);
-      endDateControl.updateValueAndValidity();
+      this.addRequiredValidatorToRecurrence();
     } else {
       this.form?.removeControl('recurrence');
       this.form?.removeControl('recurrenceEnd');
@@ -167,6 +159,33 @@ export class AssignTaskModalComponent implements OnInit {
       endDateControl.removeValidators(Validators.required);
       endDateControl.updateValueAndValidity();
     }
+  }
+
+  addRequiredValidatorToRecurrence() {
+    // Note: for some crazy reason the Validators.required does not seem to work when added to the form on line 70. Therefore I had it AGAIN afterwards and it then works. No idea why and no time to debug it, I'll leave it to later me to figure it out. If you read this and do not believe me, feel free to uncomment the console.log()'s underneath or use the debugger for some fun with the amazing Angular ReactiveForms. This is insane.
+
+    const recurrenceControl: FormControl = this.form?.get(
+      'recurrence'
+    ) as FormControl;
+    const recurrenceEndControl: FormControl = this.form?.get(
+      'recurrenceEnd'
+    ) as FormControl;
+
+    // recurrenceControl.updateValueAndValidity();
+    // console.log('recurrence has validator required before:', recurrenceControl.hasValidator(Validators.required));
+    // console.log('recurrence is valid before:', recurrenceControl.valid)
+
+    recurrenceControl.addValidators(Validators.required);
+    recurrenceControl.updateValueAndValidity();
+    recurrenceEndControl.addValidators([Validators.required, afterDateValidator('recurrenceEnd', 'start')]);
+    recurrenceEndControl.updateValueAndValidity();
+
+    // console.log('recurrence has validator required after:', recurrenceControl.hasValidator(Validators.required));
+    // console.log('recurrence is valid after:', recurrenceControl.valid)
+    // console.log('new form:', this.form)
+    const endDateControl: FormControl = this.form?.get('end') as FormControl;
+    endDateControl.addValidators(Validators.required);
+    endDateControl.updateValueAndValidity();
   }
 
   async onSubmit() {
