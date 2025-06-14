@@ -13,7 +13,6 @@ export class ThenableEventEmitter<T> extends EventEmitter {
       next = resolve;
     });
 
-    console.log('emit()')
     super.emit({ value, next });
 
     return promise;

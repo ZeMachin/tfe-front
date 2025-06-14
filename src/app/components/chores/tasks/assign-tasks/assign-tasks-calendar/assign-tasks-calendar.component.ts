@@ -10,7 +10,7 @@ import { ButtonModule } from 'primeng/button';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { FamilyService } from '../../../../../services/family.service';
 import { ContextMenuModule } from 'primeng/contextmenu';
-import { MenuItem, MenuItemCommandEvent } from 'primeng/api';
+import { MenuItem, MenuItemCommandEvent, MessageService } from 'primeng/api';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { AssignTaskModalComponent } from '../assign-task-modal/assign-task-modal.component';
 import { CompletionStatus } from '../../../../../models/CompletionStatuts';
@@ -62,7 +62,7 @@ export class AssignTasksCalendarComponent implements OnInit {
     },
   ];
 
-  events: CalendarEvent<{taskList: TaskList, assignedTask: AssignedTask}>[] = [];
+  events: CalendarEvent<{ taskList: TaskList, assignedTask: AssignedTask }>[] = [];
 
   items: MenuItem[] = [
     {
@@ -74,7 +74,8 @@ export class AssignTasksCalendarComponent implements OnInit {
 
   constructor(
     private familyService: FamilyService,
-    private dialogService: DialogService
+    private dialogService: DialogService,
+    private messageService: MessageService
   ) { }
 
   async ngOnInit(): Promise<void> {
@@ -184,24 +185,48 @@ export class AssignTasksCalendarComponent implements OnInit {
     }
   }
 
-  eventTimesChanged({
+  async eventTimesChanged({
     event,
     newStart,
     newEnd,
-  }: CalendarEventTimesChangedEvent): void {
-    //TODO: handle eventTimesChanged
-    console.log('eventTimesChange')
-    this.events = this.events.map((iEvent) => {
-      if (iEvent === event) {
-        return {
-          ...event,
-          start: newStart,
-          end: newEnd,
-        };
-      }
-      return iEvent;
-    });
-    this.handleEvent('Dropped or resized', event);
+  }: CalendarEventTimesChangedEvent<{ taskList: TaskList, assignedTask: AssignedTask }>): Promise<void> {
+    const taskList: TaskList = event.meta?.taskList!;
+    const assignedTask: AssignedTask = event.meta?.assignedTask!;
+    // TODO: add checks
+    assignedTask.start = newStart;
+    assignedTask.end = newEnd;
+    try {    
+      this.events = this.events.map((iEvent) => {
+        if (iEvent === event) {
+          return {
+            ...event,
+            start: newStart,
+            end: newEnd,
+          };
+        }
+        return iEvent;
+      });
+      await this.familyService.updateAssignedTask(taskList.member!, { ...taskList, ...assignedTask }, assignedTask);
+      this.messageService.add({
+        severity: 'success',
+        summary: 'Edited',
+        detail: 'The assigned task has been edited.',
+      });
+    } catch (err: any) {
+      console.error(err);
+      const detail = err.error?.message
+        ? `The following error occured: ${err.error?.message}`
+        : 'Something went wrong, the task has not been edited. Please try again.';
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Failure',
+        detail,
+      });
+    } finally {
+      this.refreshData();
+    }
+
+    // this.handleEvent('Dropped or resized', event);
   }
 
   handleEvent(action: string, event: CalendarEvent): void {
