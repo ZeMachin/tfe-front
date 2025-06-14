@@ -50,6 +50,8 @@ export class MyTasksComponent implements OnInit {
   }
 
   async completeTask({ value: assignedTask, next }: { value: AssignedTask, next: (value?: unknown) => void }): Promise<void> {
+    console.log('completeTask()')
+    console.log('assigned task:', assignedTask)
     try {
       await this.familyService.completeTask(assignedTask);
       this.messageService.add({

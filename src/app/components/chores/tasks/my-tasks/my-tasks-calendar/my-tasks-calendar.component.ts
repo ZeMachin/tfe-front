@@ -24,7 +24,7 @@ import { AssignedTask } from '../../../../../models/AssignedTask';
 })
 export class MyTasksCalendarComponent implements OnInit {
   @Input('tasks') taskLists: TaskList[] = [];
-  @Output('onCompleteTask') onCompleteTask: ThenableEventEmitter<TaskList> = new ThenableEventEmitter();
+  @Output('onCompleteTask') onCompleteTask: ThenableEventEmitter<AssignedTask> = new ThenableEventEmitter();
 
   sendings: { [key: number]: boolean } = {};
 
@@ -83,15 +83,15 @@ export class MyTasksCalendarComponent implements OnInit {
     };
   }
 
-  async completeTask(event: CalendarEvent<TaskList>) {
-    const taskList = event.meta as TaskList;
-    if (taskList.id) {
-      this.sendings[taskList.id] = true;
-      await this.onCompleteTask.emit(taskList)
+  async completeTask(event: CalendarEvent<{taskList: TaskList, assignedTask: AssignedTask}>) {
+    const assignedTask: AssignedTask = event.meta?.assignedTask as AssignedTask;
+    if (assignedTask.id) {
+      this.sendings[assignedTask.id] = true;
+      await this.onCompleteTask.emit(assignedTask)
         .then(() => {
-          this.sendings[taskList.id!] = false;
+          this.sendings[assignedTask.id!] = false;
         })
-        .catch((err) => this.sendings[taskList.id!] = false)
+        .catch((err) => this.sendings[assignedTask.id!] = false)
         .finally(async () => {
           setTimeout(() => this.createCalendarEvents(), 1); // Very stupid, but it doesn't want to refresh the list otherwise, and I don't feel like refactoring the taskLists to Subject yet
         });
