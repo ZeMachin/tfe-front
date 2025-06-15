@@ -42,8 +42,12 @@ export class AuthService {
     }
   }
 
-  isAuthenticatedUser(): boolean {
+  get isAuthenticatedUser(): boolean {
     return this.isAuthenticated;
+  }
+
+  get isAdult(): boolean {
+    return this.userService.member?.status.name === 'Adult';
   }
 
   logout(): void {

@@ -1,4 +1,4 @@
-import { CanActivate, CanActivateChild, Router } from '@angular/router';
+import { ActivatedRouteSnapshot, CanActivate, CanActivateChild, Router, RouterStateSnapshot } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { Injectable } from '@angular/core';
 
@@ -8,17 +8,24 @@ import { Injectable } from '@angular/core';
 export class AuthGuard implements CanActivate, CanActivateChild  {
   constructor(private authService: AuthService, private router: Router) {}
 
-  canActivate(): boolean {
-    return this.checkAuth();
+  canActivate(
+    route: ActivatedRouteSnapshot,
+    state: RouterStateSnapshot
+  ): boolean {
+    return this.checkAuth(route);
   }
 
-  canActivateChild(): boolean {
-    return this.checkAuth();
+  canActivateChild(
+    route: ActivatedRouteSnapshot,
+    state: RouterStateSnapshot
+  ): boolean {
+    return this.checkAuth(route);
   }
 
-  private checkAuth(): boolean {
-    if (this.authService.isAuthenticatedUser()) {
-      return true;
+  private checkAuth(route: ActivatedRouteSnapshot): boolean {
+    if (this.authService.isAuthenticatedUser) {
+      return this.checkPermissions(route);
+      // TODO: create forbidden access page
     } else {
       // Redirect to the login page if the user is not authenticated
       this.router.navigate(['/login']);
@@ -26,4 +33,16 @@ export class AuthGuard implements CanActivate, CanActivateChild  {
     }
   }
 
+  checkPermissions(route: ActivatedRouteSnapshot): boolean {
+    const url = route.url[0]?.path;
+    const adminLinks: string[] = [
+      'task_assignment',
+      'edit_tasks',
+      'edit_metrics',
+      'edit_rewards',
+      'settings',
+    ];
+    if(adminLinks.includes(url)) return false;
+    else return true;
+  }
 }
