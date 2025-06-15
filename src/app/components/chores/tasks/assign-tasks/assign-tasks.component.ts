@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FamilyService } from '../../../../services/family.service';
 import { FamilyMember } from '../../../../models/FamilyMember';
 import { Task } from '../../../../models/Task';
@@ -13,6 +13,7 @@ import { AssignTasksTableComponent } from './assign-tasks-table/assign-tasks-tab
   styleUrl: './assign-tasks.component.less'
 })
 export class AssignTasksComponent implements OnInit {
+  @ViewChild(AssignTasksCalendarComponent) calendar: AssignTasksCalendarComponent | undefined;
   members: FamilyMember[] = [];
   tasks: Task[] = [];
 
@@ -27,6 +28,7 @@ export class AssignTasksComponent implements OnInit {
   async refresh() {
     await this.loadTasks();
     await this.loadMembers();
+    this.calendar?.refreshData()
   }
 
   async loadTasks() {

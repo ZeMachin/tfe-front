@@ -229,41 +229,47 @@ export class AssignTasksCalendarComponent implements OnInit {
   }: CalendarEventTimesChangedEvent<{ taskList: TaskList, assignedTask: AssignedTask }>): Promise<void> {
     const taskList: TaskList = event.meta?.taskList!;
     const assignedTask: AssignedTask = event.meta?.assignedTask!;
-    // TODO: add checks
-    assignedTask.start = newStart;
-    assignedTask.end = newEnd;
-    try {
-      this.events = this.events.map((iEvent) => {
-        if (iEvent === event) {
-          return {
-            ...event,
-            start: newStart,
-            end: newEnd,
-          };
-        }
-        return iEvent;
-      });
-      await this.familyService.updateAssignedTask(taskList.member!, { ...taskList, ...assignedTask }, assignedTask);
-      this.messageService.add({
-        severity: 'success',
-        summary: 'Edited',
-        detail: 'The assigned task has been edited.',
-      });
-    } catch (err: any) {
-      console.error(err);
-      const detail = err.error?.message
-        ? `The following error occured: ${err.error?.message}`
-        : 'Something went wrong, the task has not been edited. Please try again.';
-      this.messageService.add({
-        severity: 'error',
-        summary: 'Failure',
-        detail,
-      });
-    } finally {
-      this.refreshData();
-    }
 
-    // this.handleEvent('Dropped or resized', event);
+    if (newStart.getTime() < Date.now()) {
+      this.messageService.add({
+          severity: 'error',
+          summary: 'Failure',
+          detail: 'A task cannot be assigned in the past!',
+        });
+    } else {
+      assignedTask.start = newStart;
+      assignedTask.end = newEnd;
+      try {
+        this.events = this.events.map((iEvent) => {
+          if (iEvent === event) {
+            return {
+              ...event,
+              start: newStart,
+              end: newEnd,
+            };
+          }
+          return iEvent;
+        });
+        await this.familyService.updateAssignedTask(taskList.member!, { ...taskList, ...assignedTask }, assignedTask);
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Edited',
+          detail: 'The assigned task has been edited.',
+        });
+      } catch (err: any) {
+        console.error(err);
+        const detail = err.error?.message
+          ? `The following error occured: ${err.error?.message}`
+          : 'Something went wrong, the task has not been edited. Please try again.';
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Failure',
+          detail,
+        });
+      } finally {
+        this.refreshData();
+      }
+    }
   }
 
   handleEvent(action: string, event: CalendarEvent): void {

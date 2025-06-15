@@ -78,15 +78,15 @@ export class AssignTaskModalComponent implements OnInit {
     this.isRecurrent = !!taskList.recurrence;
 
     if (this.new) {
-      this.createFormNew(assignedTask);
+      this.createFormNew(taskList, assignedTask);
     } else {
       this.createFormExisting(taskList, assignedTask);
     }
   }
 
-  createFormNew(assignedTask: AssignedTask) {
+  createFormNew(taskList: TaskList, assignedTask: AssignedTask) {
     this.form = this.fb.group({
-      member: [undefined, [Validators.required]],
+      member: [taskList.member, [Validators.required]],
       task: [undefined, [Validators.required]],
       start: [assignedTask?.start ?? new Date(), [Validators.required, beforeDateValidator('start', 'end'), afterDateValidator('start', undefined, new Date())]],
       end: [undefined, [afterDateValidator('end', 'start')]],
