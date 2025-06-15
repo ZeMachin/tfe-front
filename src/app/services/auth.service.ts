@@ -3,6 +3,7 @@ import { CommunicationService } from './communication.service';
 import { RoutesService } from './routes.service';
 import { UserService } from './user.service';
 import { Router } from '@angular/router';
+import { HttpHeaders } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -26,11 +27,16 @@ export class AuthService {
     email: string,
     password: string
   }) {
+
     return this.communicationService.call<any>(this.rs.register, registerForm);
   }
-  
+
   async login(email: string, password: string): Promise<boolean> {
-    const login = await this.communicationService.call<{ success: boolean, message: string, token: string | undefined }>(this.rs.login, { email, password });
+    const basicAuth = btoa(`${email}:${password}`);
+    const headers: HttpHeaders = new HttpHeaders({
+      'Authorization': `Basic ${basicAuth}`
+    });
+    const login = await this.communicationService.call<{ success: boolean, message: string, token: string | undefined }>(this.rs.login, { }, { }, { }, headers);
     if (login.success && login.token) {
       const authToken = login.token;
       localStorage.setItem(this.authSecretKey, authToken);
