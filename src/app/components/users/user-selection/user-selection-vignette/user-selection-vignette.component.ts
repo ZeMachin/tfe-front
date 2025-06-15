@@ -10,7 +10,7 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './user-selection-vignette.component.less'
 })
 export class UserSelectionVignetteComponent {
-  @Input('member') member!: FamilyMember;
+  @Input('member') member?: FamilyMember;
   @Input('edit') edit: boolean = false;
   @Output('userSelect') userSelect: EventEmitter<FamilyMember> = new EventEmitter();
 
@@ -18,8 +18,8 @@ export class UserSelectionVignetteComponent {
   showErrorMessage: boolean = false;
   pin?: string;
 
-  onUserSelect(member: FamilyMember) {
-    if (member.pin) {
+  onUserSelect(member?: FamilyMember) {
+    if (member?.pin) {
       this.askForPin();
     } else {
       this.userSelect.emit(member);
@@ -33,7 +33,7 @@ export class UserSelectionVignetteComponent {
   checkPin(event: InputOtpChangeEvent) {
     const value = event.value;
     if (value.length === 4) {
-      if (value === this.member.pin) {
+      if (value === this.member!.pin) {
         this.userSelect.emit(this.member);
       } else { 
         // TODO: ideally would autofocus the first element of OtpInput as well

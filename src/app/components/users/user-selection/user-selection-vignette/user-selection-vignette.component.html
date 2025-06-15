@@ -1,6 +1,6 @@
 <div class="vignette-wrapper">
-  <div class="vignette" [style]="{ 'background-color': member.color }" (click)="onUserSelect(member)">
-    <span class="name">{{ member.name }}</span>
+  <div class="vignette" [style]="{ 'background-color': member?.color }" (click)="onUserSelect(member)">
+    <span class="name">{{ member?.name }}</span>
     @if(edit){
     <div class="edit">
       <i [class]="member ? 'pi pi-pencil icon' : 'pi pi-plus icon'"></i>
