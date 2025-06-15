@@ -150,6 +150,16 @@ export class RoutesService implements OnInit {
     method: 'PUT'
   }
 
+  deleteAssignedTask: Connection = {
+    url:  `${this.baseUrl}/tasks/member/:member_id/assigned_task/:id`,
+    method: 'DELETE'
+  }
+
+  deleteTaskList: Connection = {
+    url:  `${this.baseUrl}/tasks/member/:member_id/tasklist/:id`,
+    method: 'DELETE'
+  }
+
   completeTask: Connection = {
     url:  `${this.baseUrl}/tasks/member/:member_id/complete_task`,
     method: 'PUT'

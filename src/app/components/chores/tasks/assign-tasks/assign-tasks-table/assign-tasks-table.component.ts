@@ -9,6 +9,8 @@ import { CommonModule, DatePipe } from '@angular/common';
 import { TaskList } from '../../../../../models/TaskList';
 import { UserService } from '../../../../../services/user.service';
 import { AssignedTask } from '../../../../../models/AssignedTask';
+import { FamilyService } from '../../../../../services/family.service';
+import { ConfirmationService, MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-assign-tasks-table',
@@ -29,12 +31,15 @@ export class AssignTasksTableComponent implements OnDestroy, OnInit {
 
   constructor(
     private dialogService: DialogService,
-    public userService: UserService
+    public userService: UserService,
+    private familyService: FamilyService,
+    private confirmationService: ConfirmationService,
+    private messageService: MessageService
   ) { }
 
   ngOnInit(): void {
     this.refresh.emit();
-    for(const member of this.members) {
+    for (const member of this.members) {
       this.overExpandedRows[member.id] = {};
     }
   }
@@ -42,7 +47,7 @@ export class AssignTasksTableComponent implements OnDestroy, OnInit {
   expandAll() {
     const initialValue: { [key: number]: boolean } = {};
     this.expandedRows = this.members.reduce((acc, m) => (acc[m.id] = true) && acc, initialValue);
-    for(const member of this.members) {
+    for (const member of this.members) {
       this.overExpandedRows[member.id] = member.taskLists!.reduce((acc, tl) => (acc[tl.id!] = true) && acc, initialValue);
     }
   }
@@ -50,7 +55,7 @@ export class AssignTasksTableComponent implements OnDestroy, OnInit {
   collapseAll() {
     this.expandedRows = {};
     this.overExpandedRows = {};
-    for(const member of this.members) {
+    for (const member of this.members) {
       this.overExpandedRows[member.id] = {};
     }
   }
@@ -108,6 +113,34 @@ export class AssignTasksTableComponent implements OnDestroy, OnInit {
   ngOnDestroy(): void {
     if (this.ref) {
       this.ref.close();
+    }
+  }
+
+  async openDeleteConfirmDialog(member: FamilyMember, assignedTask: AssignedTask) {
+    this.confirmationService.confirm({
+      header: 'Confirm deletion',
+      message: `Are you sure you want to delete this task?`,
+      accept: async () => this.deleteTask(member, assignedTask)
+    });
+  }
+
+  async deleteTask(member: FamilyMember, assignedTask: AssignedTask) {
+    try {
+      await this.familyService.deleteAssignedTask(member, assignedTask);
+      this.messageService.add({
+        severity: 'success',
+        summary: 'Deleted',
+        detail: 'The task has been deleted successfully!'
+      });
+    } catch (err) {
+      console.error(err);
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Failure',
+        detail: 'Something went wrong, the task has not been deleted. Please try again.'
+      });
+    } finally {
+      this.refresh.emit();
     }
   }
 }

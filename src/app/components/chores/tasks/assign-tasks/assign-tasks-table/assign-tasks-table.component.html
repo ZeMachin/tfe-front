@@ -73,7 +73,10 @@
                                                     <td class="task" [ngClass]="assignedTask.status">{{ assignedTask.start | date:'short':'':'fr-FR' }}</td>
                                                     <td>{{ assignedTask.end | date:'short':'':'fr-FR' }}</td>
                                                     @if(userService.family?.settings?.rewards){<td>{{ assignedTask.points || 0 }}</td>}
-                                                    @if(assignedTask.notCompleted){<td><p-button type="button" icon="pi pi-pencil" (onClick)="editTask(member, taskList, assignedTask)" /></td>}
+                                                    @if(assignedTask.notCompleted){<td>
+                                                        <p-button type="button" icon="pi pi-pencil" (onClick)="editTask(member, taskList, assignedTask)" />
+                                                        <p-button type="button" icon="pi pi-trash" (onClick)="openDeleteConfirmDialog(member, assignedTask)" />
+                                                    </td>}
                                                 </tr>
                                             </ng-template>
                                             <ng-template #emptymessage>

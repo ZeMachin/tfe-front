@@ -10,11 +10,12 @@ import { ButtonModule } from 'primeng/button';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { FamilyService } from '../../../../../services/family.service';
 import { ContextMenuModule } from 'primeng/contextmenu';
-import { MenuItem, MenuItemCommandEvent, MessageService } from 'primeng/api';
+import { ConfirmationService, MenuItem, MenuItemCommandEvent, MessageService } from 'primeng/api';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { AssignTaskModalComponent } from '../assign-task-modal/assign-task-modal.component';
 import { CompletionStatus } from '../../../../../models/CompletionStatuts';
 import { AssignedTask } from '../../../../../models/AssignedTask';
+import { FamilyMember } from '../../../../../models/FamilyMember';
 
 @Component({
   selector: 'app-assign-tasks-calendar',
@@ -60,6 +61,13 @@ export class AssignTasksCalendarComponent implements OnInit {
         this.editTask(event);
       },
     },
+    {
+      label: '<i class="pi pi-trash""></i>',
+      a11yLabel: 'Delete',
+      onClick: ({ event }: { event: CalendarEvent }): void => {
+        this.openDeleteConfirmDialog(event);
+      },
+    },
   ];
 
   events: CalendarEvent<{ taskList: TaskList, assignedTask: AssignedTask }>[] = [];
@@ -75,7 +83,8 @@ export class AssignTasksCalendarComponent implements OnInit {
   constructor(
     private familyService: FamilyService,
     private dialogService: DialogService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private confirmationService: ConfirmationService
   ) { }
 
   async ngOnInit(): Promise<void> {
@@ -147,6 +156,34 @@ export class AssignTasksCalendarComponent implements OnInit {
     })
   }
 
+  async openDeleteConfirmDialog(event: CalendarEvent<{ taskList: TaskList, assignedTask: AssignedTask }>) {
+    this.confirmationService.confirm({
+      header: 'Confirm deletion',
+      message: `Are you sure you want to delete this task?`,
+      accept: async () => this.deleteTask(event.meta!.taskList.member!, event.meta!.assignedTask)
+    });
+  }
+
+  async deleteTask(member: FamilyMember, assignedTask: AssignedTask) {
+    try {
+      await this.familyService.deleteAssignedTask(member, assignedTask);
+      this.messageService.add({
+        severity: 'success',
+        summary: 'Deleted',
+        detail: 'The task has been deleted successfully!'
+      });
+    } catch (err) {
+      console.error(err);
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Failure',
+        detail: 'Something went wrong, the task has not been deleted. Please try again.'
+      });
+    } finally {
+      await this.refreshData();
+    }
+  }
+
   onChangeViewDate(type: ViewDateChange) {
     this.createCalendarEvents();
   }
@@ -195,7 +232,7 @@ export class AssignTasksCalendarComponent implements OnInit {
     // TODO: add checks
     assignedTask.start = newStart;
     assignedTask.end = newEnd;
-    try {    
+    try {
       this.events = this.events.map((iEvent) => {
         if (iEvent === event) {
           return {

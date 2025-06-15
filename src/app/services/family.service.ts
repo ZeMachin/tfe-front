@@ -230,4 +230,12 @@ export class FamilyService {
   async getRecurrenceTypes(): Promise<RecurrenceType[]> {
     return (await this.communicationService.call<RecurrenceType[]>(this.rs.getRecurrenceTypes)).map((r) => new RecurrenceType(r));
   }
+
+  async deleteAssignedTask(member: FamilyMember, assignedTask: AssignedTask): Promise<any> {
+    return this.communicationService.call<any>(this.rs.deleteAssignedTask, {}, { member_id: member.id, id: assignedTask.id! });
+  }
+
+  async deleteTaskList(member: FamilyMember, taskList: TaskList): Promise<any> {
+    return this.communicationService.call<any>(this.rs.deleteTaskList, {}, { member_id: member.id, id: taskList.id! });
+  }
 }
