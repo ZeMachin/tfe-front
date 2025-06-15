@@ -15,17 +15,21 @@ import { SelectModule } from 'primeng/select';
 })
 export class SettingsComponent implements OnInit {
   householdTypes?: HouseholdType[] = [];
+  name: string;
   
   constructor(
     public userService: UserService,
     private familyService: FamilyService
-  ) {}
+  ) {
+    this.name = userService.family?.displayName || '';
+  }
 
   async ngOnInit(): Promise<void> {
     this.householdTypes = await this.familyService.getHouseholdTypes();
   }
 
   async save() {
+    if(this.userService.family) this.userService.family.displayName = this.name;
     await this.userService.updateFamily();
   }
 }

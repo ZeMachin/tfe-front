@@ -1,17 +1,30 @@
-@if(userService.family) {<div class="leaderboard-switch">
-    <label for="leaderboard">Leaderboard active:</label>
-    <p-toggleswitch id="leaderboard" [(ngModel)]="userService.family.settings.leaderboard" />
-</div>}
+@if(userService.family) {
+<div>
+    <label for="householdType">Household name</label>
+    <input id="display-name" type="text" pInputText [(ngModel)]="name" />
+</div>
+}
 
-@if(userService.family) {<div class="rewards-switch">
-    <label for="rewards">Rewards active:</label>
-    <p-toggleswitch id="rewards" [(ngModel)]="userService.family.settings.rewards" />
-</div>}
-
-@if(userService.family) {<div class="rewards-switch">
+@if(userService.family) {
+<div>
     <label for="householdType">Household type</label>
     <p-select [(ngModel)]="userService.family.householdType" [options]="householdTypes" optionLabel="name"
         placeholder="Select a household type" class="w-full md:w-56" />
-</div>}
+</div>
+}
+
+@if(userService.family) {
+<div class="leaderboard-switch">
+    <label for="leaderboard">Leaderboard active:</label>
+    <p-toggleswitch id="leaderboard" [(ngModel)]="userService.family.settings.leaderboard" />
+</div>
+}
+
+@if(userService.family) {
+<div class="rewards-switch">
+    <label for="rewards">Rewards active:</label>
+    <p-toggleswitch id="rewards" [(ngModel)]="userService.family.settings.rewards" />
+</div>
+}
 
 <button type="submit" pButton label="Save" class="p-button-primary" (click)="save()"></button>
