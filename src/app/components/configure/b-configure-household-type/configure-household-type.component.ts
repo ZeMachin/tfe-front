@@ -5,6 +5,7 @@ import { UserService } from '../../../services/user.service';
 import { HouseholdType } from '../../../models/HouseholdType';
 import { SelectModule } from 'primeng/select';
 import { ButtonModule } from 'primeng/button';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-configure-household-type',
@@ -28,23 +29,17 @@ export class ConfigureHouseholdTypeComponent implements OnInit {
   async ngOnInit(): Promise<void> {
     this.householdTypes = await this.familyService.getHouseholdTypes();
     this.form = this.fb.group({
-      householdType: [undefined, Validators.required],
+      householdType: [this.userService.family?.householdType, Validators.required],
     })
   }
 
-  async onSubmit(): Promise<void> {
-    if (this.form?.valid) {
-      if(this.userService.family) {
-        this.userService.family.householdType = this.form.value.householdType;
-        await this.familyService.pickHousehold(); // TODO: handle error
-        await this.userService.refreshFamily();
+  async onNextStep(): Promise<void> {
+      if (this.userService.family) {
+        this.userService.family.householdType = this.form!.value.householdType;
         this.nextStep.emit();
       } else {
-        // TODO: handle error
+        console.error('Form invalid');
       }
-    } else {
-      console.error('Form invalid');
-    }
   }
 
   onPreviousStep() {

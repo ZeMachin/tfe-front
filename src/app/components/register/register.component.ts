@@ -28,10 +28,10 @@ export class RegisterComponent {
 
   createRegisterForm() {
     this.registerForm = this.fb.group({
-      email: ['sinou.94@hotmail.fr', [Validators.required, Validators.email]],
-      password: ['temp1234', [Validators.required, Validators.minLength(6)]],
-      passwordConfirm: ['temp1234', [Validators.required]],
-      displayName: ['Soupart-Bautista', [Validators.required]],
+      email: [undefined, [Validators.required, Validators.email]],
+      password: [undefined, [Validators.required, Validators.minLength(6)]],
+      passwordConfirm: [undefined, [Validators.required]],
+      displayName: [undefined, [Validators.required]],
     });
     this.registerForm.addValidators(confirmPasswordValidator);
   }

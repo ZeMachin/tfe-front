@@ -8,6 +8,7 @@ import { ConfigureRewardsComponent } from "./e-configure-rewards/configure-rewar
 import { ConfigureSummaryComponent } from "./f-configure-summary/configure-summary.component";
 import { FamilyService } from '../../services/family.service';
 import { Router } from '@angular/router';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-configure',
@@ -21,8 +22,9 @@ export class ConfigureComponent implements OnInit {
   constructor(
     private userService: UserService,
     private familyService: FamilyService,
-    private router: Router
-  ) {}
+    private router: Router,
+    private messageService: MessageService
+  ) { }
 
   ngOnInit(): void {
     this.checkStep();
@@ -34,9 +36,29 @@ export class ConfigureComponent implements OnInit {
 
   async changeStep(step: number): Promise<void> {
     if (this.userService.family) {
+      const currentStep: number = this.userService.family.configStep;
       this.userService.family.configStep = step;
-      await this.familyService.updateFamily();
-      if(step === 6) this.router.navigateByUrl('home');
+      try {
+        await this.familyService.updateFamily();
+      } catch (err: any) {
+        console.error(err);
+        const detail = err.error?.message
+          ? `The following error occured: ${err.error?.message}`
+          : 'Something went wrong. Please try again.';
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Failure',
+          detail,
+        });
+        this.userService.family.configStep = currentStep;
+      }
+      if (step === 6) this.router.navigateByUrl('home');
+    } else {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Failure',
+        detail: 'Error: no family logged in.',
+      });
     }
     this.checkStep();
   }
