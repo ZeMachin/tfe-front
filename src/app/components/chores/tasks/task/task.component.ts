@@ -93,6 +93,7 @@ export class TaskComponent implements OnInit {
   }
 
   async openDeleteConfirmDialog() {
+    console.log('open confirm modal')
     this.confirmationService.confirm({
       header: 'Confirm deletion',
       message: `Are you sure you want to delete '${this.task.name}'?`,

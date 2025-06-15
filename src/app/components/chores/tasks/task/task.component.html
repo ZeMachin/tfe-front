@@ -1,5 +1,5 @@
 <div [class]="this.task.new ? 'task new-task' : this.hasChanged ? 'task changed-task' :'task'">
-    <p-button icon="pi pi-times" (onClick)="task.new ?  deleteNewTask() : openDeleteConfirmDialog()" />
+    <p-button icon="pi pi-times" (onClick)="task.new ? deleteNewTask() : openDeleteConfirmDialog()" />
 
     <div class="task-name">
         @if(editingName) {
@@ -34,4 +34,3 @@
 
     @if(this.hasChanged || this.task.new){<p-button icon="pi pi-save" (onClick)="save()" [disabled]="sending"/>}
 </div>
-<p-confirmdialog />
