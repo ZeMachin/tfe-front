@@ -4,6 +4,7 @@ import { FamilyMember } from '../models/FamilyMember';
 import { TaskList, TaskListDTO } from '../models/TaskList';
 import { CommunicationService } from './communication.service';
 import { RoutesService } from './routes.service';
+import { MessageService } from 'primeng/api';
 
 @Injectable({
   providedIn: 'root'
@@ -15,10 +16,11 @@ export class UserService implements OnInit {
   constructor(
     @Inject(LOCALE_ID) public locale: string,
     private communicationService: CommunicationService,
-    private rs: RoutesService
+    private rs: RoutesService,
+    private messageService: MessageService
   ) {
     const familyStorage = localStorage.getItem('family');
-    if (familyStorage) {
+    if (familyStorage && familyStorage !== 'undefined') {
       this.family = JSON.parse(familyStorage);
       this.refreshFamily();
     }
@@ -43,8 +45,22 @@ export class UserService implements OnInit {
 
   async updateFamily() {
     if (this.family) {
-      localStorage.setItem('family', JSON.stringify(await this.updateFamily()));
-      await this.refreshFamily();
+      try {
+        localStorage.setItem('family', JSON.stringify(await this.communicationService.call(this.rs.updateFamily, this.family, { id: this.family.id })));
+        await this.refreshFamily();
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Assigned',
+          detail: 'The household data has been updated successfully.',
+        });
+      } catch (err) {
+        console.error(err);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Failure',
+          detail: 'Something went wrong, the household has not been updated. Please try again.'
+        });
+      }
     }
   }
 

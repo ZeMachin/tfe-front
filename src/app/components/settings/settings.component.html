@@ -8,4 +8,10 @@
     <p-toggleswitch id="rewards" [(ngModel)]="userService.family.settings.rewards" />
 </div>}
 
-<button type="submit" pButton label="Save" class="p-button-primary"></button>
+@if(userService.family) {<div class="rewards-switch">
+    <label for="householdType">Household type</label>
+    <p-select [(ngModel)]="userService.family.householdType" [options]="householdTypes" optionLabel="name"
+        placeholder="Select a household type" class="w-full md:w-56" />
+</div>}
+
+<button type="submit" pButton label="Save" class="p-button-primary" (click)="save()"></button>
