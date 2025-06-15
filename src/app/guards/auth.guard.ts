@@ -5,8 +5,11 @@ import { Injectable } from '@angular/core';
 @Injectable({
   providedIn: 'root'
 })
-export class AuthGuard implements CanActivate, CanActivateChild  {
-  constructor(private authService: AuthService, private router: Router) {}
+export class AuthGuard implements CanActivate, CanActivateChild {
+  constructor(
+    private authService: AuthService, 
+    private router: Router
+  ) { }
 
   canActivate(
     route: ActivatedRouteSnapshot,
@@ -24,25 +27,27 @@ export class AuthGuard implements CanActivate, CanActivateChild  {
 
   private checkAuth(route: ActivatedRouteSnapshot): boolean {
     if (this.authService.isAuthenticatedUser) {
-      return this.checkPermissions(route);
-      // TODO: create forbidden access page
+      if (!this.checkPermissions(route)) {
+        this.router.navigateByUrl('home'); // TODO: create forbidden access page and redirect there
+        return false;
+      }
+      return true
     } else {
       // Redirect to the login page if the user is not authenticated
-      this.router.navigate(['/login']);
+      this.router.navigateByUrl('login');
       return false;
     }
   }
 
   checkPermissions(route: ActivatedRouteSnapshot): boolean {
-    const url = route.url[0]?.path;
+    const url = route.url.join('/');
     const adminLinks: string[] = [
-      'task_assignment',
-      'edit_tasks',
-      'edit_metrics',
-      'edit_rewards',
+      'chores/task_assignment',
+      'chores/edit_tasks',
+      'chores/edit_metrics',
+      'chores/edit_rewards',
       'settings',
     ];
-    if(adminLinks.includes(url)) return false;
-    else return true;
+    return !adminLinks.includes(url) || this.authService.isAdult;
   }
 }
