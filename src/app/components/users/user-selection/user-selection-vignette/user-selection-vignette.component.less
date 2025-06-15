@@ -1,46 +1,62 @@
 @vignetteSize: 7rem;
 
-.vignette {
+.vignette-wrapper {
   display: flex;
-  width: @vignetteSize;
-  height: @vignetteSize;
-  border-radius: @vignetteSize;
-  align-items: center;
+  flex-direction: column;
   justify-content: center;
-  font-weight: bolder;
-  font-size: x-large;
+  align-items: center;
 
-  .name {}
-
-  &:hover {
-    color: white;
-    cursor: pointer;
-    filter: brightness(80%);
-    border: 3px solid white; // TODO: check netflix for border
+  >* {
+    margin-bottom: 2em;
   }
 
-  .edit {
+  .vignette {
+    display: flex;
+    flex-direction: column;
     width: @vignetteSize;
     height: @vignetteSize;
     border-radius: @vignetteSize;
-    position: fixed;
-    background-color: #8786867a;
-    display: flex;
     align-items: center;
     justify-content: center;
+    font-weight: bolder;
+    font-size: x-large;
+
+    .name {}
 
     &:hover {
-      background-color: #878686ad;
+      color: white;
+      cursor: pointer;
+      filter: brightness(80%);
+      border: 3px solid white; // TODO: check netflix for border
+    }
 
-      .icon {
-        opacity: 1;
+    .edit {
+      width: @vignetteSize;
+      height: @vignetteSize;
+      border-radius: @vignetteSize;
+      position: fixed;
+      background-color: #8786867a;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      &:hover {
+        background-color: #878686ad;
+
+        .icon {
+          opacity: 1;
+        }
+      }
+
+      .pencil-icon {
+        opacity: 0.75;
+        font-weight: bolder;
+        font-size: x-large;
       }
     }
-
-    .pencil-icon {
-      opacity: 0.75;
-      font-weight: bolder;
-      font-size: x-large;
-    }
   }
+}
+
+.p-error {
+    font-size: 0.875rem;
 }

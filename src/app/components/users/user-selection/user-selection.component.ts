@@ -22,7 +22,7 @@ export class UserSelectionComponent {
     private authService: AuthService,
     private messageService: MessageService,
     private router: Router
-  ) { }
+  ) {  }
 
   ngOnInit(): void {
     if (!this.userService.family) {
@@ -35,10 +35,12 @@ export class UserSelectionComponent {
     }
   }
 
-  async userSelect(member?: FamilyMember) {
+  async onUserSelect(member?: FamilyMember) {
     if (this.edit) this.router.navigateByUrl('users/user_profile', { state: { member } });
     else if (member) {
-      await this.userService.selectUser(member);
+      if(this.userService.member?.id === member.id) {
+        await this.userService.selectUser(member);
+      }
       this.router.navigateByUrl('home');
     }
   }
