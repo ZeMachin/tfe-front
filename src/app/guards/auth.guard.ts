@@ -26,7 +26,7 @@ export class AuthGuard implements CanActivate, CanActivateChild {
   }
 
   private checkAuth(route: ActivatedRouteSnapshot): boolean {
-    if (this.authService.isAuthenticatedUser) {
+    if (this.authService.isAuthenticated) {
       if (!this.checkPermissions(route)) {
         this.router.navigateByUrl('home'); // TODO: create forbidden access page and redirect there
         return false;

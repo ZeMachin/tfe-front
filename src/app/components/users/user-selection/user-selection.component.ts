@@ -38,7 +38,7 @@ export class UserSelectionComponent {
   async onUserSelect(member?: FamilyMember) {
     if (this.edit) this.router.navigateByUrl('users/user_profile', { state: { member } });
     else if (member) {
-      if(this.userService.member?.id === member.id) {
+      if(this.userService.member?.id !== member.id) {
         await this.userService.selectUser(member);
       }
       this.router.navigateByUrl('home');
