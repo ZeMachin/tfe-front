@@ -11,9 +11,7 @@ import { JwtHelperService } from '@auth0/angular-jwt';
   providedIn: 'root',
 })
 export class AuthService {
-
-  private authSecretKey = 'Bearer Token';
-    private jwtHelperService: JwtHelperService = new JwtHelperService();
+  private jwtHelperService: JwtHelperService = new JwtHelperService();
 
   constructor(
     private communicationService: CommunicationService,
@@ -46,13 +44,10 @@ export class AuthService {
   }
 
   private async setSession(authResult: LoginResponse) {
-    const authToken = authResult.token;
-    localStorage.setItem(this.authSecretKey, authToken);
-
     const expiresAt: Date = addSeconds(new Date(), authResult.expiresIn);
-    localStorage.setItem('token', authResult.token);
+    localStorage.setItem('id_token', authResult.token);
     localStorage.setItem("expires_at", JSON.stringify(expiresAt.valueOf()));
-    const id = this.jwtHelperService.decodeToken(authToken).sub;
+    const id = this.jwtHelperService.decodeToken(authResult.token).sub;
     await this.userService.loadFamily(id);
   }
 
@@ -75,7 +70,7 @@ export class AuthService {
   }
 
   logout(): void {
-    localStorage.removeItem(this.authSecretKey);
+    localStorage.removeItem('id_token');
     localStorage.removeItem('family');
     localStorage.removeItem('member');
     localStorage.removeItem('expires_at');

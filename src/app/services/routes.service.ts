@@ -11,12 +11,12 @@ export class RoutesService implements OnInit {
   }
 
   register: Connection = {
-    url: `${this.baseUrl}/families/register`,
+    url: `${this.baseUrl}/auth/register`,
     method: 'POST'
   };
 
   login: Connection = {
-    url: `${this.baseUrl}/families/login`,
+    url: `${this.baseUrl}/auth/login`,
     method: 'POST'
   };
 
