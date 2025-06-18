@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { CommunicationService } from './communication.service';
 import { RoutesService } from './routes.service';
 import { UserService } from './user.service';
@@ -41,6 +41,10 @@ export class AuthService {
     } else {
       return false;
     }
+  }
+
+  checkPin(memberId: number, pin: string): Promise<boolean> {
+    return this.communicationService.call<boolean>(this.rs.confirmPin, { member_id: memberId, pin });
   }
 
   private async setSession(authResult: LoginResponse) {

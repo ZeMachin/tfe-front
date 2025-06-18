@@ -2,6 +2,8 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FamilyMember } from '../../../../models/FamilyMember';
 import { InputOtpChangeEvent, InputOtpModule } from 'primeng/inputotp';
 import { FormsModule } from '@angular/forms';
+import { UserService } from '../../../../services/user.service';
+import { AuthService } from '../../../../services/auth.service';
 
 @Component({
   selector: 'app-user-selection-vignette',
@@ -14,12 +16,17 @@ export class UserSelectionVignetteComponent {
   @Input('edit') edit: boolean = false;
   @Output('userSelect') userSelect: EventEmitter<FamilyMember> = new EventEmitter();
 
+  constructor(
+    private userService: UserService,
+    private authService: AuthService
+  ) {}
+
   showPin: boolean = false;
   showErrorMessage: boolean = false;
   pin?: string;
 
   onUserSelect(member?: FamilyMember) {
-    if (member?.pin) {
+    if (member?.requiresPin && member.id !== this.userService.member?.id) {
       this.askForPin();
     } else {
       this.userSelect.emit(member);
@@ -30,10 +37,10 @@ export class UserSelectionVignetteComponent {
     this.showPin = true;
   }
 
-  checkPin(event: InputOtpChangeEvent) {
+  async checkPin(event: InputOtpChangeEvent) {
     const value = event.value;
     if (value.length === 4) {
-      if (value === this.member!.pin) {
+      if (await this.authService.checkPin(this.member!.id, value)) {
         this.userSelect.emit(this.member);
       } else { 
         // TODO: ideally would autofocus the first element of OtpInput as well

@@ -20,6 +20,11 @@ export class RoutesService implements OnInit {
     method: 'POST'
   };
 
+  confirmPin: Connection = {
+    url: `${this.baseUrl}/auth/confirm_pin`,
+    method: 'POST'
+  }; 
+
   getFamily: Connection = {
     url: `${this.baseUrl}/families/:id`,
     method: 'GET'
