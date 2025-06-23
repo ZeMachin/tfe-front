@@ -24,8 +24,8 @@ export class LoginComponent implements OnInit {
   ) {
     this.loginForm = this.fb.group({
       // TODO: revert to '' or undefined
-      email: ['cohabits@email.be', [Validators.required, Validators.email]],
-      password: ['temp1234', [Validators.required, Validators.minLength(6)]],
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required, Validators.minLength(6)]],
     });
   }
 
@@ -40,11 +40,11 @@ export class LoginComponent implements OnInit {
         this.router.navigateByUrl('home');
       }
       else {
-        this.messageService.add({
-          detail: 'Something went wrong.',
-          summary: 'Oops!',
-          severity: 'error'
-        });
+        // this.messageService.add({
+        //   detail: 'Something went wrong.',
+        //   summary: 'Oops!',
+        //   severity: 'error'
+        // });
         this.router.navigateByUrl('login');
       }
     } else {

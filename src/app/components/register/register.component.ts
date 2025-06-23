@@ -40,7 +40,17 @@ export class RegisterComponent {
     if (this.registerForm?.valid) {
       const data = this.registerForm.value;
       const response = await this.authService.register(data)
-        .catch((err) => console.error(err));
+        .catch((err) => {
+          console.error(err);
+          const detail = err.error?.message
+            ? `The following error occured: ${err.error?.message}`
+            : 'Something went wrong during the registering process. Please try again later.';
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Failure',
+            detail,
+          });
+        });
       const message: ToastMessageOptions = {
         summary: 'Registered',
         severity: 'success',

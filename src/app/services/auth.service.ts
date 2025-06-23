@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import { HttpHeaders } from '@angular/common/http';
 import { addSeconds, differenceInSeconds, isBefore } from 'date-fns';
 import { JwtHelperService } from '@auth0/angular-jwt';
+import { MessageService } from 'primeng/api';
 
 @Injectable({
   providedIn: 'root',
@@ -18,6 +19,7 @@ export class AuthService {
     private rs: RoutesService,
     private userService: UserService,
     private router: Router,
+    private messageService: MessageService
   ) { }
 
   register(registerForm: {
@@ -33,12 +35,25 @@ export class AuthService {
     const headers: HttpHeaders = new HttpHeaders({
       'Authorization': `Basic ${basicAuth}`
     });
-    const login = await this.communicationService.call<LoginResponse>(this.rs.login, {}, {}, {}, headers);
+    try {
+      const login = await this.communicationService.call<LoginResponse>(this.rs.login, {}, {}, {}, headers);
 
-    if (login.success && login.token) {
-      await this.setSession(login);
-      return true;
-    } else {
+      if (login.success && login.token) {
+        await this.setSession(login);
+        return true;
+      } else {
+        return false;
+      }
+    } catch (err: any) {
+      console.error(err);
+      const detail = err.error?.message
+        ? `The following error occured: ${err.error?.message}`
+        : 'Something went wrong during the login process. Please try again later.';
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Failure',
+        detail,
+      });
       return false;
     }
   }
