@@ -1,25 +1,19 @@
 import { Injectable } from '@angular/core';
 import { CommunicationService } from './communication.service';
 import { RoutesService } from './routes.service';
-import { UserService } from './user.service';
-import { Router } from '@angular/router';
 import { HttpHeaders } from '@angular/common/http';
-import { addSeconds, differenceInSeconds, isBefore } from 'date-fns';
-import { JwtHelperService } from '@auth0/angular-jwt';
+import { addSeconds, differenceInSeconds, isAfter, isBefore } from 'date-fns';
 import { MessageService } from 'primeng/api';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  private jwtHelperService: JwtHelperService = new JwtHelperService();
-
   constructor(
     private communicationService: CommunicationService,
     private rs: RoutesService,
-    private userService: UserService,
-    private router: Router,
-    private messageService: MessageService
+    private messageService: MessageService,
   ) { }
 
   register(registerForm: {
@@ -66,8 +60,6 @@ export class AuthService {
     const expiresAt: Date = addSeconds(new Date(), authResult.expiresIn);
     localStorage.setItem('id_token', authResult.token);
     localStorage.setItem("expires_at", JSON.stringify(expiresAt.valueOf()));
-    const id = this.jwtHelperService.decodeToken(authResult.token).sub;
-    await this.userService.loadFamily(id);
   }
 
   get tokenExpirationDate(): Date {
@@ -84,8 +76,9 @@ export class AuthService {
     return isBefore(new Date(), this.tokenExpirationDate);
   }
 
-  get isAdult(): boolean {
-    return this.userService.member?.status.name === 'Adult';
+
+  get isTokenExpired(): boolean {
+    return isAfter(new Date(), this.tokenExpirationDate);
   }
 
   logout(): void {
@@ -93,9 +86,6 @@ export class AuthService {
     localStorage.removeItem('family');
     localStorage.removeItem('member');
     localStorage.removeItem('expires_at');
-    this.userService.family = undefined;
-    this.userService.member = undefined;
-    this.router.navigateByUrl('login');
   }
 }
 

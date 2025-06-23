@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { UserService } from '../../services/user.service';
-import { AuthService } from '../../services/auth.service';
 import { MessageService } from 'primeng/api';
 import { TaskList } from '../../models/TaskList';
 import { UserSelectionComponent } from "../users/user-selection/user-selection.component";
@@ -18,7 +17,6 @@ export class HomeComponent implements OnInit {
 
   constructor(
     public userService: UserService,
-    private authService: AuthService,
     private messageService: MessageService
   ) {}
 
@@ -29,7 +27,7 @@ export class HomeComponent implements OnInit {
         summary: 'Oops',
         detail: "Something went wrong with the authentication: your family wasn't retrieved properly. \nPlease try again."
       });
-      this.authService.logout();
+      this.userService.logout();
     }
     await this.getAssignedTasks();
   }

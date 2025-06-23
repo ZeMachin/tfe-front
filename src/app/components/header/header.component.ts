@@ -1,7 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
-import { AuthService } from '../../services/auth.service';
 import { UserService } from '../../services/user.service';
 
 @Component({
@@ -15,7 +14,6 @@ export class HeaderComponent {
 
   constructor(
     private router: Router,
-    private authService: AuthService,
     public userService: UserService
   ) { }
 
@@ -28,6 +26,6 @@ export class HeaderComponent {
   }
 
   logout() {
-    this.authService.logout();
+    this.userService.logout();
   }
 }

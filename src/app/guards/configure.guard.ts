@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, CanActivate, CanActivateFn, GuardResult, MaybeAsync, Router, RouterStateSnapshot } from '@angular/router';
+import { ActivatedRouteSnapshot, CanActivate, GuardResult, MaybeAsync, Router, RouterStateSnapshot } from '@angular/router';
 import { UserService } from '../services/user.service';
 import { NUMBER_OF_CONFIGURATION_STEPS } from '../utils/const';
-import { AuthService } from '../services/auth.service';
 
 @Injectable({
   providedIn: 'root'
@@ -10,7 +9,6 @@ import { AuthService } from '../services/auth.service';
 export class ConfigureGuard implements CanActivate {
   constructor(
     private userService: UserService,
-    private authService: AuthService,
     private router: Router
   ) {}
 
@@ -21,7 +19,7 @@ export class ConfigureGuard implements CanActivate {
         return false;
       }
     } else {
-      this.authService.logout();
+      this.userService.logout();
       return false;
     }
     return true;

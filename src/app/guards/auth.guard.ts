@@ -1,6 +1,7 @@
 import { ActivatedRouteSnapshot, CanActivate, CanActivateChild, Router, RouterStateSnapshot } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { Injectable } from '@angular/core';
+import { UserService } from '../services/user.service';
 
 @Injectable({
   providedIn: 'root'
@@ -8,6 +9,7 @@ import { Injectable } from '@angular/core';
 export class AuthGuard implements CanActivate, CanActivateChild {
   constructor(
     private authService: AuthService, 
+    private userService: UserService,
     private router: Router
   ) { }
 
@@ -48,6 +50,6 @@ export class AuthGuard implements CanActivate, CanActivateChild {
       'chores/edit_rewards',
       'settings',
     ];
-    return !adminLinks.includes(url) || this.authService.isAdult;
+    return !adminLinks.includes(url) || this.userService.isAdult;
   }
 }

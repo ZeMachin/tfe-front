@@ -1,6 +1,5 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { MessageService } from 'primeng/api';
-import { AuthService } from '../../../services/auth.service';
 import { UserService } from '../../../services/user.service';
 import { UserSelectionVignetteComponent } from "./user-selection-vignette/user-selection-vignette.component";
 import { FamilyMember } from '../../../models/FamilyMember';
@@ -19,7 +18,6 @@ export class UserSelectionComponent {
 
   constructor(
     public userService: UserService,
-    private authService: AuthService,
     private messageService: MessageService,
     private router: Router
   ) {  }
@@ -31,7 +29,7 @@ export class UserSelectionComponent {
         summary: 'Oops',
         detail: "Something went wrong with the authentication: your family wasn't retrieved properly. \nPlease try again."
       });
-      this.authService.logout();
+      this.userService.logout();
     }
   }
 
