@@ -24,7 +24,6 @@ export class LoginComponent implements OnInit {
     private userService: UserService
   ) {
     this.loginForm = this.fb.group({
-      // TODO: revert to '' or undefined
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
     });

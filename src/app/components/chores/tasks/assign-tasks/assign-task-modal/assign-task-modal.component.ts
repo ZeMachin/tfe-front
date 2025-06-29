@@ -125,8 +125,8 @@ export class AssignTaskModalComponent implements OnInit {
     if (taskList.recurrence) this.addRequiredValidatorToRecurrence();
 
     // I choose to not allow change to the member or task after at least one task has been completed to not potentially skew the history
-    console.log('tasklist:', taskList)
-    console.log('no task completed for tasklist:', taskList.noTaskCompleted);
+    // console.log('tasklist:', taskList)
+    // console.log('no task completed for tasklist:', taskList.noTaskCompleted);
     if (!taskList.noTaskCompleted) {
       this.form.get('member')?.disable();
       this.form.get('task')?.disable();
@@ -229,7 +229,6 @@ export class AssignTaskModalComponent implements OnInit {
         }
       }
     }
-
   }
 
   async openConfirmDialog() {
